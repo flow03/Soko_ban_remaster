@@ -136,8 +136,9 @@ void SetupSystem()
 
 void RenderLanguage()
 {
-	system("cls");
-	setlocale(LC_ALL, "Russian");
+	//system("cls");
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
+	setlocale(LC_ALL, "Russian"); //setlocale(0, "");
 	printf("\n");
 
 	switch (Localization)
@@ -149,7 +150,7 @@ void RenderLanguage()
 		}
 		case 2:
 		{
-			printf("\n\t\t\t\t Выберите язык"); //46
+			printf("\n\t\t\t\t Выберите язык\t\t\t"); //46
 			break;
 		}
 		case 3:
@@ -211,12 +212,12 @@ void RenderLanguage()
 	}
 	case 2:
 	{
-		printf("\n\t\t\t\t Нажмите Enter"); //33+13
+		printf("\n\t\t\t\t Нажмите Enter\t"); //33+13
 		break;
 	}
 	case 3:
 	{
-		printf("\n\t\t\t\t  Press Enter"); //34+11
+		printf("\n\t\t\t\t  Press Enter\t"); //34+11
 		break;
 	}
 	}
@@ -350,7 +351,7 @@ void Initialise(int rows, int columns)
 
 void Initialise2(int rows, int columns)
 {
-	system("cls");
+	//system("cls");
 	// Load level
 	for (int r = 0; r < rows; r++)
 	{
@@ -1492,7 +1493,7 @@ void Update()
 		// Left
 		case 'a':
 		{
-			MoveHeroTo(heroRow, heroColumn-1);
+			MoveHeroTo(heroRow, heroColumn - 1);
 			break;
 		}
 		case 'A':
@@ -1508,7 +1509,7 @@ void Update()
 		// Right
 		case 'd':
 		{
-			MoveHeroTo(heroRow, heroColumn+1);
+			MoveHeroTo(heroRow, heroColumn + 1);
 			break;
 		}
 		case 'D':
@@ -1523,31 +1524,10 @@ void Update()
 		}
 
 		// Restart level
-		case 'r':
-		{
-			if (levelSelector == 1)
-			{
-				Initialise(rowsCount, columnsCount);
-			}
-			if (levelSelector == 2)
-			{ 
-				LevelClear();
-				Initialise2(rowsCount2, columnsCount2);
-			}
-			if (levelSelector == 3)
-			{
-				LevelClear();
-				Initialise2(rowsCount3, columnsCount3);
-			}
-			if (levelSelector == 4)
-			{
-				levelSelector = 3;
-				LevelClear();
-				Initialise2(rowsCount3, columnsCount3);
-			}
-			break;
-		}
-		case 'R':
+		case 114:
+		case 82:
+		//case 'r':
+		//case 'R':
 		{
 			if (levelSelector == 1)
 			{
@@ -1619,17 +1599,17 @@ int main()
 	while (isGameActive == true);
 	
 	// Level 1
-	system("cls");
-	isGameActive = true;
-	levelSelector = 1;
-	Initialise(rowsCount, columnsCount);
-	do
-	{
-		Render();
-		Update();
-	} 
-	while ( isGameActive );
-	// Level 2
+	//system("cls");
+	//isGameActive = true;
+	//levelSelector = 1;
+	//Initialise(rowsCount, columnsCount);
+	//do
+	//{
+	//	Render();
+	//	Update();
+	//} 
+	//while ( isGameActive );
+	//// Level 2
 	system("cls");
 	isGameActive = true;
 	levelSelector = 2;
