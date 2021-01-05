@@ -7,6 +7,7 @@
 #include <conio.h>
 #include <ctype.h>
 #include <locale.h>
+#include <iostream>
 
 #include "ConsoleColor.h"
 
@@ -138,95 +139,86 @@ void SetupSystem()
 
 void RenderLanguage()
 {
-	system("cls");
-	//SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
+	//system("cls");
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
 	setlocale(LC_ALL, "Russian"); //setlocale(0, "");
-	printf("\n");
+	std::cout << std::endl;
 
 	switch (Localization)
 	{
 		case 1:
 		{
-			printf("\n\t\t\t Будь ласка, оберiть вашу мову"); //54
+			std::cout << "\n\t\t\t Будь ласка, оберiть вашу мову"; //54
 			break;
 		}
 		case 2:
 		{
-			printf("\n\t\t\t\t Выберите язык\t\t\t"); //46
+			std::cout << "\n\t\t\t\t Выберите язык\t\t\t"; //46
 			break;
 		}
 		case 3:
 		{
-			printf("\n\t\t\t      Select your language"); //50
+			std::cout << "\n\t\t\t      Select your language"; //50
 			break;
 		}
 	}
 
-	printf("\n\n");
+	std::cout << "\n\n";
 
 	if (Localization == 1)
 	{
-		SetConsoleTextAttribute(consoleHandle, 10);
-		printf("\n\t\t\t\t %c", symbolHero); //34
-		SetConsoleTextAttribute(consoleHandle, 14);
-		printf(" Українська\n");
-		SetConsoleTextAttribute(consoleHandle, 7);
+		std::cout << "\n\t\t\t\t ";
+		printColorText(consoleHandle, symbolHero, LightGreen);
+		printColorText(consoleHandle, " Українська\n", Yellow);
 	}
 	else
 	{
-		printf("\n\t\t\t\t   Українська\n");
+		std::cout << "\n\t\t\t\t   Українська\n";
 	}
 
 	if (Localization == 2)
 	{
-		/*SetConsoleTextAttribute(consoleHandle, 10);
-		printf("\n\t\t\t\t %c", symbolHero);
-		SetConsoleTextAttribute(consoleHandle, 14);
-		printf("  Русский\n");
-		SetConsoleTextAttribute(consoleHandle, 7);*/
 		std::cout << "\n\t\t\t\t ";
 		printColorText(consoleHandle, symbolHero, LightGreen);
 		printColorText(consoleHandle, "  Русский\n", Yellow);
 	}
 	else
 	{
-		printf("\n\t\t\t\t    Русский\n");
+		std::cout << "\n\t\t\t\t    Русский\n";
 	}
 
 	if (Localization == 3)
 	{
-		SetConsoleTextAttribute(consoleHandle, 10);
-		printf("\n\t\t\t\t %c", symbolHero);
-		SetConsoleTextAttribute(consoleHandle, 14);
-		printf("  English\n");
-		SetConsoleTextAttribute(consoleHandle, 7);
+		std::cout << "\n\t\t\t\t ";
+		printColorText(consoleHandle, symbolHero, LightGreen);
+		printColorText(consoleHandle, "  English\n", Yellow);
 	}
 	else
 	{
-		printf("\n\t\t\t\t    English\n");
+		std::cout << "\n\t\t\t\t    English\n";
 	}
 
-	printf("\n\n");
+	std::cout << "\n\n";
 
 	switch (Localization)
 	{
 	case 1:
 	{
-		printf("\n\t\t\t\tНатиснiть Enter"); //32+15
+		std::cout << "\n\t\t\t\tНатиснiть Enter"; //32+15
 		break;
 	}
 	case 2:
 	{
-		printf("\n\t\t\t\t Нажмите Enter\t"); //33+13
+		std::cout << "\n\t\t\t\t Нажмите Enter\t"; //33+13
 		break;
 	}
 	case 3:
 	{
-		printf("\n\t\t\t\t  Press Enter\t"); //34+11
+		std::cout << "\n\t\t\t\t  Press Enter\t"; //34+11
 		break;
 	}
 	}
-	printf("\n");
+	//std::cout << std::endl;
 }
 
 void UpdateLanguage()
