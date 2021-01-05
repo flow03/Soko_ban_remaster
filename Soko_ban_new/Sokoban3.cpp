@@ -8,6 +8,8 @@
 #include <ctype.h>
 #include <locale.h>
 
+#include "ConsoleColor.h"
+
 
 
 // Game settings
@@ -136,8 +138,8 @@ void SetupSystem()
 
 void RenderLanguage()
 {
-	//system("cls");
-	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
+	system("cls");
+	//SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
 	setlocale(LC_ALL, "Russian"); //setlocale(0, "");
 	printf("\n");
 
@@ -177,11 +179,14 @@ void RenderLanguage()
 
 	if (Localization == 2)
 	{
-		SetConsoleTextAttribute(consoleHandle, 10);
+		/*SetConsoleTextAttribute(consoleHandle, 10);
 		printf("\n\t\t\t\t %c", symbolHero);
 		SetConsoleTextAttribute(consoleHandle, 14);
 		printf("  Русский\n");
-		SetConsoleTextAttribute(consoleHandle, 7);
+		SetConsoleTextAttribute(consoleHandle, 7);*/
+		std::cout << "\n\t\t\t\t ";
+		printColorText(consoleHandle, symbolHero, LightGreen);
+		printColorText(consoleHandle, "  Русский\n", Yellow);
 	}
 	else
 	{
