@@ -13,6 +13,7 @@
 
 
 
+
 // Game settings
 const int rowsCount = 10;
 const int columnsCount = 15;
@@ -92,7 +93,7 @@ const unsigned char levelData4[rowsCount3][columnsCount3 + 1] = {
 	"#   X   X  #  #",
 	"#X  X  X XX   #",
 	"#  #######    #",
-	"#  # v   # #  #",
+	"#  # v        #",
 	"#XX# #   # #  #",
 	"#  # ##### #  #",
 	"#  #       #  #",
@@ -117,6 +118,9 @@ int levelSelector = 1;
 int CrystalCount = 0;
 int KeyCount = 0;
 int Localization = 1;
+
+#include "Warnings.h"
+Warning warning = None;
 
 bool warning1 = false;
 bool warning2 = false;
@@ -353,8 +357,6 @@ void Initialise2(int rows, int columns)
 	{
 		for (int c = 0; c < columns; c++)
 		{
-			
-
 			switch (symbol[r][c])
 			{
 			// Wall
@@ -578,17 +580,19 @@ void Render()
 void Render2(int rows, int columns)
 {
 	// Move console cursor to (0,0)
-	COORD cursorCoord;
+	
+	/*COORD cursorCoord;
 	cursorCoord.X = 0;
-	cursorCoord.Y = 0;
-	SetConsoleCursorPosition(consoleHandle, cursorCoord);
+	cursorCoord.Y = 0;*/
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
+	//warning = None;
 
 	setlocale(LC_ALL, "C");
 
-	printf("\n");
+	std::cout<<'\n';
 	for (int r = 0; r < rows; r++)
 	{
-		printf("\n\t\t\t\t  ");
+		std::cout<< "\n\t\t\t\t  ";
 		for (int c = 0; c < columns; c++)
 		{
 			unsigned char symbol = levelData[r][c];
@@ -623,7 +627,7 @@ void Render2(int rows, int columns)
 			// Exit - red
 			case symbolExit:
 			{
-				SetConsoleTextAttribute(consoleHandle, Red);
+				SetConsoleTextAttribute(consoleHandle, LightRed);
 				break;
 			}
 			// Crystal - fioletovi
@@ -679,7 +683,8 @@ void Render2(int rows, int columns)
 			}
 	 		}
     	
-			printf("%c", symbol);
+			//printf("%c", symbol);
+			std::cout << symbol;
 		}
 		//printf("\n\t\t\t\t  ");
 	}
@@ -702,7 +707,8 @@ void Render2(int rows, int columns)
 	}
 
 	// Warnings
-	Warnings();
+	//Warnings();
+	Warnings1(warning);
 }
 
 void Warnings() {
@@ -1138,6 +1144,8 @@ void MoveHeroTo(int row, int column)
 {
 	unsigned char destinationCell = levelData[row][column];
 	bool canMoveToCell = false;
+	warning = None;
+
 
 	switch (destinationCell)
 	{
@@ -1164,7 +1172,8 @@ void MoveHeroTo(int row, int column)
 			else
 			if ((levelSelector == 4) && (CrystalCount < 13))
 			{
-				warning2 = true;
+				//warning2 = true;
+				warning = crystalWarning;
 				canMoveToCell = false;
 				levelData[4][8] = symbolPortal;
 			}
@@ -1338,7 +1347,8 @@ void MoveHeroTo(int row, int column)
 			}
 			else
 			{
-				warning1 = true;
+				//warning1 = true;
+				warning = keyWarning;
 			}
 			break;
 		}
@@ -1352,17 +1362,31 @@ void MoveHeroTo(int row, int column)
 			}
 			else
 			{
-				warning1 = true;
+				//warning1 = true;
+				warning = keyWarning;
 			}
 			break;
 		}
 		// Bomb
 		case symbolBomb:
 		{
-			levelData[heroRow][heroColumn] = ' ';
+			//levelData[heroRow][heroColumn] = ' ';
 			//Set hero symbol on new position
-			levelData[row][column] = symbolHero;
-			bombSelector = true;
+			//levelData[row][column] = symbolHero;
+			canMoveToCell = true;
+			warning = bombWarning;
+			//bombSelector = true;
+			//_getch();
+			LevelClear();
+			if (levelSelector == 2)
+				Initialise2(rowsCount2, columnsCount2);
+			if (levelSelector == 3)
+				Initialise2(rowsCount3, columnsCount3);
+			if (levelSelector == 4)
+			{
+				levelSelector = 3;
+				Initialise2(rowsCount3, columnsCount3);
+			}
 			break;
 		}
 		// Box
