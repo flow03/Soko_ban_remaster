@@ -51,20 +51,20 @@ const unsigned char levelData2[rowsCount2][columnsCount2 + 1] = {
 	"#############",
 	"#cb   # k# p#",
 	"#  c#g## X  #",
-	"#####   ## ##",
+	"# ###   ## ##",
 	"#     1     2",
 	"#g# #b  ## X#",
 	"# # c# #  X #",
 	"#  # #   # ##",
-	"#X # # ##c c#",
+	"#X   # ##c c#",
 	"#  # #  #####",
-	"# #   # v #k#",
+	"#     # v #k#",
 	"#c#XXX# # b #",
 	"#p#   X #   #",
-	"##    ### ###",
+	"##    ### # #",
 	"#  c# c  X  #",
 	"#   #XbX  bc#",
-	"#c  #c c c  #",
+	"#c   c c c  #",
 	"##2##########",
 
                                                                   };
@@ -97,7 +97,7 @@ const unsigned char levelData4[rowsCount3][columnsCount3 + 1] = {
 	"#XX# #   # #  #",
 	"#  # ##### #  #",
 	"#  #       #  #",
-	"#XX#########  #",
+	"#XX### #####  #",
 	"#  b   bXXXX  #",
 	"#    b  XXXX  #",
 	"###############",
@@ -713,6 +713,7 @@ void Render2(int rows, int columns)
 	// Warnings
 	//Warnings();
 	Warnings(warning); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
+	Description();
 }
 
 //void Warnings() {
@@ -1440,7 +1441,7 @@ void MoveHeroTo(int row, int column)
 		}
 		// Secret bombs
 		if (levelSelector == 4 && ((heroRow == 10 && heroColumn == 12) || (heroRow == 10 && heroColumn == 13)) && ((levelData[7][12] != symbolBomb) && (levelData[7][13] != symbolBomb)) )
-			secretBombsWarning = true;
+			warning = secretBombsWarning;
 		if (levelSelector == 4 && (heroRow == 9 && heroColumn == 12))
 			levelData[7][12] = symbolBomb;
 		if (levelSelector == 4 && (heroRow == 9 && heroColumn == 13))
@@ -1621,7 +1622,7 @@ int main()
 	//while ( isGameActive );
 
 	// Level 2
-	/*system("cls");
+	system("cls");
 	isGameActive = true;
 	levelSelector = 2;
 	Initialise2(rowsCount2, columnsCount2);
@@ -1629,7 +1630,7 @@ int main()
 	{
 		Render2(rowsCount2, columnsCount2);
 		Update();
-	} while (isGameActive);*/
+	} while (isGameActive);
 	
 	// Level 3
 	system("cls");
