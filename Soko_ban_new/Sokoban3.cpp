@@ -52,8 +52,8 @@ const unsigned char levelData2[rowsCount2][columnsCount2 + 1] = {
 	"#cb   # k# p#",
 	"#  c#g## X  #",
 	"#####   ## ##",
-	"#     1 X   #",
-	"#g# #   ## X#",
+	"#     1     2",
+	"#g# #b  ## X#",
 	"# # c# #  X #",
 	"#  # #   # ##",
 	"#X # # ##c c#",
@@ -61,7 +61,7 @@ const unsigned char levelData2[rowsCount2][columnsCount2 + 1] = {
 	"# #   # v #k#",
 	"#c#XXX# # b #",
 	"#p#   X #   #",
-	"####  ### ###",
+	"##    ### ###",
 	"#  c# c  X  #",
 	"#   #XbX  bc#",
 	"#c  #c c c  #",
@@ -120,25 +120,22 @@ int KeyCount = 0;
 int Localization = 1;
 
 #include "Warnings.h"
-Warning warning = None;
 
-bool warning1 = false;
-bool warning2 = false;
-bool bombSelector = false;
+//bool warning1 = false;
+//bool warning2 = false;
+//bool bombSelector = false;
 bool bonusWallSelector = false;
-bool bonusWallWarning = false;
+//bool bonusWallWarning = false;
 bool secretDoorSelector = false;
-bool secretDoorWarning = false;
-bool secretBombsWarning = false;
-bool bonusLevelWarning = false;
+//bool secretDoorWarning = false;
+//bool secretBombsWarning = false;
+//bool bonusLevelWarning = false;
 
 bool futureSelector = false;
 
 
 
 // Functions
-void Warnings();
-
 void SetupSystem()
 {
 	//srand(time(0));
@@ -266,15 +263,6 @@ void UpdateLanguage()
 			break;
 		}
 	}
-}
-
-void LevelClear()
-{
-	CrystalCount = 0;
-	KeyCount = 0;
-	bonusWallSelector = false;
-	secretDoorSelector = false;
-	futureSelector = false;
 }
 
 void Initialise(int rows, int columns)
@@ -440,13 +428,31 @@ void Initialise2(int rows, int columns)
 	}
 }
 
+void LevelClear()
+{
+	CrystalCount = 0;
+	KeyCount = 0;
+	bonusWallSelector = false;
+	secretDoorSelector = false;
+	futureSelector = false;
+
+	if (levelSelector == 1)
+		Initialise2(rowsCount, columnsCount);
+	else if (levelSelector == 2)
+		Initialise2(rowsCount2, columnsCount2);
+	else if (levelSelector == 3)
+		Initialise2(rowsCount3, columnsCount3);
+	else if (levelSelector == 4)
+	{
+		levelSelector = 3;
+		Initialise2(rowsCount3, columnsCount3);
+	}
+}
+
 void Render()
 {
 	// Move console cursor to (0,0)
-	COORD cursorCoord;
-	cursorCoord.X = 0;
-	cursorCoord.Y = 0;
-	SetConsoleCursorPosition(consoleHandle, cursorCoord);
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
 
 	setlocale(LC_ALL, "C");
 
@@ -585,7 +591,6 @@ void Render2(int rows, int columns)
 	cursorCoord.X = 0;
 	cursorCoord.Y = 0;*/
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
-	//warning = None;
 
 	setlocale(LC_ALL, "C");
 
@@ -608,14 +613,13 @@ void Render2(int rows, int columns)
 			// Hero - green
 			case symbolHero:
 			{
-				if (bombSelector == false)
+				/*if (bombSelector)
 				{
-					SetConsoleTextAttribute(consoleHandle, 10);
+					SetConsoleTextAttribute(consoleHandle, Red);
 				}
-				else
-				{
-					SetConsoleTextAttribute(consoleHandle, 12);
-				}
+				else */
+				SetConsoleTextAttribute(consoleHandle, LightGreen);
+				
 				break;
 			}
 			// Boxes - yellow
@@ -627,7 +631,7 @@ void Render2(int rows, int columns)
 			// Exit - red
 			case symbolExit:
 			{
-				SetConsoleTextAttribute(consoleHandle, LightRed);
+				SetConsoleTextAttribute(consoleHandle, Red);
 				break;
 			}
 			// Crystal - fioletovi
@@ -708,434 +712,440 @@ void Render2(int rows, int columns)
 
 	// Warnings
 	//Warnings();
-	Warnings1(warning);
+	Warnings(warning); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
 }
 
-void Warnings() {
-	if (warning1 == true)
-	{
-		switch (Localization)
-		{
-		case 1:
-		{
-			setlocale(LC_ALL, "Russian");
-			SetConsoleTextAttribute(consoleHandle, 14);
-			printf("\n\t\t\t    I куди ти без ");
-			SetConsoleTextAttribute(consoleHandle, 13);
-			printf("Ключа");
-			SetConsoleTextAttribute(consoleHandle, 14);
-			printf(" лiзеш?     ");
-			warning1 = false;
-			break;
-		}
-		case 2:
-		{
-			setlocale(LC_ALL, "Russian");
-			SetConsoleTextAttribute(consoleHandle, 14);
-			printf("\n\t\t\t\t    ");
-			if (levelSelector == 3 || levelSelector == 4)
-				printf(" ");
-			printf("Нужен ");
-			SetConsoleTextAttribute(consoleHandle, 13);
-			printf("Ключ     ");
-			warning1 = false;
-			break;
-		}
-		case 3:
-		{
-			setlocale(LC_ALL, "C");
-			SetConsoleTextAttribute(consoleHandle, 14);
-			printf("\n\t\t\t\t  Need some ");
-			SetConsoleTextAttribute(consoleHandle, 13);
-			printf("Key     ");
-			warning1 = false;
-			break;
-		}
-		}
-	}
-	else
-	{
-		if (warning2 == true)
-		{
-			switch (Localization)
-			{
-			case 1:
-			{
-				setlocale(LC_ALL, "Russian");
-				SetConsoleTextAttribute(consoleHandle, 14);
-				printf("\n\t\t\t   Куди зiбрався? А ну ");
-				SetConsoleTextAttribute(consoleHandle, 5);
-				printf("%c", symbolCrystal);
-				SetConsoleTextAttribute(consoleHandle, 14);
-				printf(" збирай!");
-				warning2 = false;
-				break;
-			}
-			case 2:
-			{
-				setlocale(LC_ALL, "Russian");
-				SetConsoleTextAttribute(consoleHandle, 14);
-				printf("\n\t\t\t\t  Нужно больше ");
-				SetConsoleTextAttribute(consoleHandle, 5);
-				printf("%c", symbolCrystal);
-				warning2 = false;
-				break;
-			}
-			case 3:
-			{
-				setlocale(LC_ALL, "C");
-				SetConsoleTextAttribute(consoleHandle, 14);
-				printf("\n\t\t\t\t  Collect more ");
-				SetConsoleTextAttribute(consoleHandle, 5);
-				printf("%c", symbolCrystal);
-				warning2 = false;
-				break;
-			}
-			}
-		}
-		else
-		{
-			if (bombSelector == true)
-			{
-				switch (Localization)
-				{
-				case 1:
-				{
-					setlocale(LC_ALL, "Russian");
-					SetConsoleTextAttribute(consoleHandle, 14);
-					printf("\n\t\t\t     Я ж казав не лiзти в ");
-					SetConsoleTextAttribute(consoleHandle, 12);
-					printf("Яму");
-					SetConsoleTextAttribute(consoleHandle, 14);
-					printf("!");
-					break;
-				}
-				case 2:
-				{
-					setlocale(LC_ALL, "Russian");
-					SetConsoleTextAttribute(consoleHandle, 14);
-					printf("\n\t\t\t\t");
-					if (levelSelector == 4)
-						printf(" ");
-					printf("    ПОТРАЧЕНО");
-					break;
-				}
-				case 3:
-				{
-					setlocale(LC_ALL, "C");
-					SetConsoleTextAttribute(consoleHandle, 14);
-					printf("\n\t\t\t       Oops! You just died");
-					break;
-				}
-				}
-
-				_getch();
-				LevelClear();
-				if (levelSelector == 2)
-					Initialise2(rowsCount2, columnsCount2);
-				if (levelSelector == 3)
-					Initialise2(rowsCount3, columnsCount3);
-				if (levelSelector == 4)
-				{
-					levelSelector = 3;
-					Initialise2(rowsCount3, columnsCount3);
-				}
-			}
-			else
-				if (bonusWallWarning == true)
-				{
-					switch (Localization)
-					{
-					case 1:
-					{
-						setlocale(LC_ALL, "Russian");
-						SetConsoleTextAttribute(consoleHandle, 14);
-						printf("\n\t\t\t\tСтiна в подарунок");
-						break;
-					}
-					case 2:
-					{
-						setlocale(LC_ALL, "Russian");
-						SetConsoleTextAttribute(consoleHandle, 14);
-						printf("\n\t\t\t\t     Сюрприз");
-						break;
-					}
-					case 3:
-					{
-						setlocale(LC_ALL, "C");
-						SetConsoleTextAttribute(consoleHandle, 14);
-						printf("\n\t\t\t\t     Surprise");
-						break;
-					}
-					}
-
-					if (levelData[16][6] == symbolKey)
-					{
-						bonusWallWarning = false;
-					}
-				}
-				else
-					if (bonusLevelWarning == true)
-					{
-						switch (Localization)
-						{
-						case 1:
-						{
-							setlocale(LC_ALL, "Russian");
-							SetConsoleTextAttribute(consoleHandle, 14);
-							printf("\n\t\t\t       Оце так несподiванка!");
-							break;
-						}
-						case 2:
-						{
-							setlocale(LC_ALL, "Russian");
-							SetConsoleTextAttribute(consoleHandle, 14);
-							printf("\n\t\t\t\t  Вот это поворот!");
-							break;
-						}
-						case 3:
-						{
-							setlocale(LC_ALL, "С");
-							SetConsoleTextAttribute(consoleHandle, 14);
-							printf("\n\t\t\t      Surprise, motherfucker!");
-							break;
-						}
-						}
-						bonusLevelWarning = false;
-					}
-					else
-						if (secretDoorWarning == true)
-						{
-							switch (Localization)
-							{
-							case 1:
-							{
-								setlocale(LC_ALL, "Russian");
-								SetConsoleTextAttribute(consoleHandle, 14);
-								printf("\n\t\t     Ти знайшов таємний лаз. Нiчого особливого"); //41+21=62
-								break;
-							}
-							case 2:
-							{
-								setlocale(LC_ALL, "Russian");
-								SetConsoleTextAttribute(consoleHandle, 14);
-								printf("\n\t\t\t  Эй! Кто открыл тайную комнату?!"); //57
-								break;
-							}
-							case 3:
-							{
-								setlocale(LC_ALL, "C");
-								SetConsoleTextAttribute(consoleHandle, 14);
-								printf("\n\t\t\t  Hey! You found the secret door!"); //57
-								break;
-							}
-							}
-
-							secretDoorWarning = false;
-						}
-						else
-							if (secretBombsWarning == true)
-							{
-								switch (Localization)
-								{
-								case 1:
-								{
-									setlocale(LC_ALL, "Russian");
-									SetConsoleTextAttribute(consoleHandle, 14);
-									printf("\n\t\t\t  Обережно! Тут прихованi ");  // 25+33=58
-									SetConsoleTextAttribute(consoleHandle, 12);
-									printf("пастки");
-									SetConsoleTextAttribute(consoleHandle, 14);
-									printf("!");
-									break;
-								}
-								case 2:
-								{
-									setlocale(LC_ALL, "Russian");
-									SetConsoleTextAttribute(consoleHandle, 14);
-									printf("\n\t\t\t Осторожно! Здесь припрятаны ");  // 24+33=57
-									SetConsoleTextAttribute(consoleHandle, 12);
-									printf("мины");
-									SetConsoleTextAttribute(consoleHandle, 14);
-									printf("!");
-									break;
-								}
-								case 3:
-								{
-									setlocale(LC_ALL, "C");
-									SetConsoleTextAttribute(consoleHandle, 14);
-									printf("\n\t\t\t Carreful! There are hidden ");  // 25+33=58
-									SetConsoleTextAttribute(consoleHandle, 12);
-									printf("mines");
-									SetConsoleTextAttribute(consoleHandle, 14);
-									printf("!");
-									break;
-								}
-								}
-
-								secretBombsWarning = false;
-							}
-							else
-								printf("\n\t\t\t\t\t\t\t\t"); // 64
-		}
-	}
-	if (bombSelector == false)
-	{
-		switch (Localization)
-		{
-		case 1:
-		{
-			setlocale(LC_ALL, "Russian");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("\n   Керуй ");
-			SetConsoleTextAttribute(consoleHandle, 10);
-			printf("Козаком");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(". Збирай ");
-			SetConsoleTextAttribute(consoleHandle, 5);
-			printf("%c", symbolCrystal);
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(" i ");
-			SetConsoleTextAttribute(consoleHandle, 13);
-			printf("Ключi");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
-			SetConsoleTextAttribute(consoleHandle, 13);
-			printf("%c", symbolKey);
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") щоб виграти. R - розпочати спочатку.");
-			printf("\n   Використовуй ");
-			SetConsoleTextAttribute(consoleHandle, 11);
-			printf("Таємнi тунелi");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
-			SetConsoleTextAttribute(consoleHandle, 11);
-			printf("O");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") i Пункти пропуску (");
-			setlocale(LC_ALL, "C");
-			printf("%c, %c", symbolDoorG, symbolDoorV);
-			setlocale(LC_ALL, "Russian");
-			printf("). Не втрапляй у ");
-			SetConsoleTextAttribute(consoleHandle, 12);
-			printf("Ями");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
-			SetConsoleTextAttribute(consoleHandle, 12);
-			printf("%c", symbolBomb);
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(").");
-			break;
-		}
-		case 2:
-		{
-			setlocale(LC_ALL, "Russian");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("\n   Управляйте ");
-			SetConsoleTextAttribute(consoleHandle, 10);
-			printf("Героем");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(". Собирайте ");
-			SetConsoleTextAttribute(consoleHandle, 5);
-			printf("%c", symbolCrystal);
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(" и ");
-			SetConsoleTextAttribute(consoleHandle, 13);
-			printf("Ключи");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
-			SetConsoleTextAttribute(consoleHandle, 13);
-			printf("%c", symbolKey);
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") чтобы выиграть. R - Перезапуск.");
-			printf("\n   Используйте ");
-			SetConsoleTextAttribute(consoleHandle, 11);
-			printf("Порталы");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
-			SetConsoleTextAttribute(consoleHandle, 11);
-			printf("O");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") и Двери (");
-			setlocale(LC_ALL, "C");
-			printf("%c, %c", symbolDoorG, symbolDoorV);
-			setlocale(LC_ALL, "Russian");
-			printf("). Будьте осторожны с ");
-			SetConsoleTextAttribute(consoleHandle, 12);
-			printf("Минами");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
-			SetConsoleTextAttribute(consoleHandle, 12);
-			printf("%c", symbolBomb);
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("). Удачи");
-			break;
-		}
-		case 3:
-		{
-			setlocale(LC_ALL, "C");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("\n\tMove your ");
-			SetConsoleTextAttribute(consoleHandle, 10);
-			printf("Hero");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(". Collect ");
-			SetConsoleTextAttribute(consoleHandle, 5);
-			printf("%c", symbolCrystal);
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(" and ");
-			SetConsoleTextAttribute(consoleHandle, 13);
-			printf("Keys");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
-			SetConsoleTextAttribute(consoleHandle, 13);
-			printf("%c", symbolKey);
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") to win. R - Restart level.");
-			printf("\n\tUse the ");
-			SetConsoleTextAttribute(consoleHandle, 11);
-			printf("Portals");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
-			SetConsoleTextAttribute(consoleHandle, 11);
-			printf("O");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") and the Doors (%c, %c). Carreful with ", symbolDoorG, symbolDoorV);
-			SetConsoleTextAttribute(consoleHandle, 12);
-			printf("Mines");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
-			SetConsoleTextAttribute(consoleHandle, 12);
-			printf("%c", symbolBomb);
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("). Gl hf");
-			break;
-		}
-		}
-
-	}
-	else
-	{
-		bombSelector = false;
-		if (levelSelector == 2)
-			Render2(rowsCount2, columnsCount2);
-		if (levelSelector == 3)
-			Render2(rowsCount3, columnsCount);
-	}
-}
+//void Warnings() {
+//	if (warning1 == true)
+//	{
+//		switch (Localization)
+//		{
+//		case 1:
+//		{
+//			setlocale(LC_ALL, "Russian");
+//			SetConsoleTextAttribute(consoleHandle, 14);
+//			printf("\n\t\t\t    I куди ти без ");
+//			SetConsoleTextAttribute(consoleHandle, 13);
+//			printf("Ключа");
+//			SetConsoleTextAttribute(consoleHandle, 14);
+//			printf(" лiзеш?     ");
+//			warning1 = false;
+//			break;
+//		}
+//		case 2:
+//		{
+//			setlocale(LC_ALL, "Russian");
+//			SetConsoleTextAttribute(consoleHandle, 14);
+//			printf("\n\t\t\t\t    ");
+//			if (levelSelector == 3 || levelSelector == 4)
+//				printf(" ");
+//			printf("Нужен ");
+//			SetConsoleTextAttribute(consoleHandle, 13);
+//			printf("Ключ     ");
+//			warning1 = false;
+//			break;
+//		}
+//		case 3:
+//		{
+//			setlocale(LC_ALL, "C");
+//			SetConsoleTextAttribute(consoleHandle, 14);
+//			printf("\n\t\t\t\t  Need some ");
+//			SetConsoleTextAttribute(consoleHandle, 13);
+//			printf("Key     ");
+//			warning1 = false;
+//			break;
+//		}
+//		}
+//	}
+//	else
+//	{
+//		if (warning2 == true)
+//		{
+//			switch (Localization)
+//			{
+//			case 1:
+//			{
+//				setlocale(LC_ALL, "Russian");
+//				SetConsoleTextAttribute(consoleHandle, 14);
+//				printf("\n\t\t\t   Куди зiбрався? А ну ");
+//				SetConsoleTextAttribute(consoleHandle, 5);
+//				printf("%c", symbolCrystal);
+//				SetConsoleTextAttribute(consoleHandle, 14);
+//				printf(" збирай!");
+//				warning2 = false;
+//				break;
+//			}
+//			case 2:
+//			{
+//				setlocale(LC_ALL, "Russian");
+//				SetConsoleTextAttribute(consoleHandle, 14);
+//				printf("\n\t\t\t\t  Нужно больше ");
+//				SetConsoleTextAttribute(consoleHandle, 5);
+//				printf("%c", symbolCrystal);
+//				warning2 = false;
+//				break;
+//			}
+//			case 3:
+//			{
+//				setlocale(LC_ALL, "C");
+//				SetConsoleTextAttribute(consoleHandle, 14);
+//				printf("\n\t\t\t\t  Collect more ");
+//				SetConsoleTextAttribute(consoleHandle, 5);
+//				printf("%c", symbolCrystal);
+//				warning2 = false;
+//				break;
+//			}
+//			}
+//		}
+//		else
+//		{
+//			if (bombSelector == true)
+//			{
+//				switch (Localization)
+//				{
+//				case 1:
+//				{
+//					setlocale(LC_ALL, "Russian");
+//					SetConsoleTextAttribute(consoleHandle, 14);
+//					printf("\n\t\t\t     Я ж казав не лiзти в ");
+//					SetConsoleTextAttribute(consoleHandle, 12);
+//					printf("Яму");
+//					SetConsoleTextAttribute(consoleHandle, 14);
+//					printf("!");
+//					break;
+//				}
+//				case 2:
+//				{
+//					setlocale(LC_ALL, "Russian");
+//					SetConsoleTextAttribute(consoleHandle, 14);
+//					printf("\n\t\t\t\t");
+//					if (levelSelector == 4)
+//						printf(" ");
+//					printf("    ПОТРАЧЕНО");
+//					break;
+//				}
+//				case 3:
+//				{
+//					setlocale(LC_ALL, "C");
+//					SetConsoleTextAttribute(consoleHandle, 14);
+//					printf("\n\t\t\t       Oops! You just died");
+//					break;
+//				}
+//				}
+//
+//				_getch();
+//				LevelClear();
+//				if (levelSelector == 2)
+//					Initialise2(rowsCount2, columnsCount2);
+//				if (levelSelector == 3)
+//					Initialise2(rowsCount3, columnsCount3);
+//				if (levelSelector == 4)
+//				{
+//					levelSelector = 3;
+//					Initialise2(rowsCount3, columnsCount3);
+//				}
+//			}
+//			else
+//				if (bonusWallWarning == true)
+//				{
+//					switch (Localization)
+//					{
+//					case 1:
+//					{
+//						setlocale(LC_ALL, "Russian");
+//						SetConsoleTextAttribute(consoleHandle, 14);
+//						printf("\n\t\t\t\tСтiна в подарунок");
+//						break;
+//					}
+//					case 2:
+//					{
+//						setlocale(LC_ALL, "Russian");
+//						SetConsoleTextAttribute(consoleHandle, 14);
+//						printf("\n\t\t\t\t     Сюрприз");
+//						break;
+//					}
+//					case 3:
+//					{
+//						setlocale(LC_ALL, "C");
+//						SetConsoleTextAttribute(consoleHandle, 14);
+//						printf("\n\t\t\t\t     Surprise");
+//						break;
+//					}
+//					}
+//
+//					if (levelData[16][6] == symbolKey)
+//					{
+//						bonusWallWarning = false;
+//					}
+//				}
+//				else
+//					if (bonusLevelWarning == true)
+//					{
+//						switch (Localization)
+//						{
+//						case 1:
+//						{
+//							setlocale(LC_ALL, "Russian");
+//							SetConsoleTextAttribute(consoleHandle, 14);
+//							printf("\n\t\t\t       Оце так несподiванка!");
+//							break;
+//						}
+//						case 2:
+//						{
+//							setlocale(LC_ALL, "Russian");
+//							SetConsoleTextAttribute(consoleHandle, 14);
+//							printf("\n\t\t\t\t  Вот это поворот!");
+//							break;
+//						}
+//						case 3:
+//						{
+//							setlocale(LC_ALL, "С");
+//							SetConsoleTextAttribute(consoleHandle, 14);
+//							printf("\n\t\t\t      Surprise, motherfucker!");
+//							break;
+//						}
+//						}
+//						bonusLevelWarning = false;
+//					}
+//					else
+//						if (secretDoorWarning == true)
+//						{
+//							switch (Localization)
+//							{
+//							case 1:
+//							{
+//								setlocale(LC_ALL, "Russian");
+//								SetConsoleTextAttribute(consoleHandle, 14);
+//								printf("\n\t\t     Ти знайшов таємний лаз. Нiчого особливого"); //41+21=62
+//								break;
+//							}
+//							case 2:
+//							{
+//								setlocale(LC_ALL, "Russian");
+//								SetConsoleTextAttribute(consoleHandle, 14);
+//								printf("\n\t\t\t  Эй! Кто открыл тайную комнату?!"); //57
+//								break;
+//							}
+//							case 3:
+//							{
+//								setlocale(LC_ALL, "C");
+//								SetConsoleTextAttribute(consoleHandle, 14);
+//								printf("\n\t\t\t  Hey! You found the secret door!"); //57
+//								break;
+//							}
+//							}
+//
+//							secretDoorWarning = false;
+//						}
+//						else
+//							if (secretBombsWarning == true)
+//							{
+//								switch (Localization)
+//								{
+//								case 1:
+//								{
+//									setlocale(LC_ALL, "Russian");
+//									SetConsoleTextAttribute(consoleHandle, 14);
+//									printf("\n\t\t\t  Обережно! Тут прихованi ");  // 25+33=58
+//									SetConsoleTextAttribute(consoleHandle, 12);
+//									printf("пастки");
+//									SetConsoleTextAttribute(consoleHandle, 14);
+//									printf("!");
+//									break;
+//								}
+//								case 2:
+//								{
+//									setlocale(LC_ALL, "Russian");
+//									SetConsoleTextAttribute(consoleHandle, 14);
+//									printf("\n\t\t\t Осторожно! Здесь припрятаны ");  // 24+33=57
+//									SetConsoleTextAttribute(consoleHandle, 12);
+//									printf("мины");
+//									SetConsoleTextAttribute(consoleHandle, 14);
+//									printf("!");
+//									break;
+//								}
+//								case 3:
+//								{
+//									setlocale(LC_ALL, "C");
+//									SetConsoleTextAttribute(consoleHandle, 14);
+//									printf("\n\t\t\t Carreful! There are hidden ");  // 25+33=58
+//									SetConsoleTextAttribute(consoleHandle, 12);
+//									printf("mines");
+//									SetConsoleTextAttribute(consoleHandle, 14);
+//									printf("!");
+//									break;
+//								}
+//								}
+//
+//								secretBombsWarning = false;
+//							}
+//							else
+//								printf("\n\t\t\t\t\t\t\t\t"); // 64
+//		}
+//	}
+//	if (bombSelector == false)
+//	{
+//		switch (Localization)
+//		{
+//		case 1:
+//		{
+//			setlocale(LC_ALL, "Russian");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf("\n   Керуй ");
+//			SetConsoleTextAttribute(consoleHandle, 10);
+//			printf("Козаком");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf(". Збирай ");
+//			SetConsoleTextAttribute(consoleHandle, 5);
+//			printf("%c", symbolCrystal);
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf(" i ");
+//			SetConsoleTextAttribute(consoleHandle, 13);
+//			printf("Ключi");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf("(");
+//			SetConsoleTextAttribute(consoleHandle, 13);
+//			printf("%c", symbolKey);
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf(") щоб виграти. R - розпочати спочатку.");
+//			printf("\n   Використовуй ");
+//			SetConsoleTextAttribute(consoleHandle, 11);
+//			printf("Таємнi тунелi");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf("(");
+//			SetConsoleTextAttribute(consoleHandle, 11);
+//			printf("O");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf(") i Пункти пропуску (");
+//			setlocale(LC_ALL, "C");
+//			printf("%c, %c", symbolDoorG, symbolDoorV);
+//			setlocale(LC_ALL, "Russian");
+//			printf("). Не втрапляй у ");
+//			SetConsoleTextAttribute(consoleHandle, 12);
+//			printf("Ями");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf("(");
+//			SetConsoleTextAttribute(consoleHandle, 12);
+//			printf("%c", symbolBomb);
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf(").");
+//			break;
+//		}
+//		case 2:
+//		{
+//			setlocale(LC_ALL, "Russian");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf("\n   Управляйте ");
+//			SetConsoleTextAttribute(consoleHandle, 10);
+//			printf("Героем");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf(". Собирайте ");
+//			SetConsoleTextAttribute(consoleHandle, 5);
+//			printf("%c", symbolCrystal);
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf(" и ");
+//			SetConsoleTextAttribute(consoleHandle, 13);
+//			printf("Ключи");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf("(");
+//			SetConsoleTextAttribute(consoleHandle, 13);
+//			printf("%c", symbolKey);
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf(") чтобы выиграть. R - Перезапуск.");
+//			printf("\n   Используйте ");
+//			SetConsoleTextAttribute(consoleHandle, 11);
+//			printf("Порталы");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf("(");
+//			SetConsoleTextAttribute(consoleHandle, 11);
+//			printf("O");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf(") и Двери (");
+//			setlocale(LC_ALL, "C");
+//			printf("%c, %c", symbolDoorG, symbolDoorV);
+//			setlocale(LC_ALL, "Russian");
+//			printf("). Будьте осторожны с ");
+//			SetConsoleTextAttribute(consoleHandle, 12);
+//			printf("Минами");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf("(");
+//			SetConsoleTextAttribute(consoleHandle, 12);
+//			printf("%c", symbolBomb);
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf("). Удачи");
+//			break;
+//		}
+//		case 3:
+//		{
+//			setlocale(LC_ALL, "C");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf("\n\tMove your ");
+//			SetConsoleTextAttribute(consoleHandle, 10);
+//			printf("Hero");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf(". Collect ");
+//			SetConsoleTextAttribute(consoleHandle, 5);
+//			printf("%c", symbolCrystal);
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf(" and ");
+//			SetConsoleTextAttribute(consoleHandle, 13);
+//			printf("Keys");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf("(");
+//			SetConsoleTextAttribute(consoleHandle, 13);
+//			printf("%c", symbolKey);
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf(") to win. R - Restart level.");
+//			printf("\n\tUse the ");
+//			SetConsoleTextAttribute(consoleHandle, 11);
+//			printf("Portals");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf("(");
+//			SetConsoleTextAttribute(consoleHandle, 11);
+//			printf("O");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf(") and the Doors (%c, %c). Carreful with ", symbolDoorG, symbolDoorV);
+//			SetConsoleTextAttribute(consoleHandle, 12);
+//			printf("Mines");
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf("(");
+//			SetConsoleTextAttribute(consoleHandle, 12);
+//			printf("%c", symbolBomb);
+//			SetConsoleTextAttribute(consoleHandle, 7);
+//			printf("). Gl hf");
+//			break;
+//		}
+//		}
+//
+//	}
+//	else
+//	{
+//		bombSelector = false;
+//		if (levelSelector == 2)
+//			Render2(rowsCount2, columnsCount2);
+//		if (levelSelector == 3)
+//			Render2(rowsCount3, columnsCount);
+//	}
+//}
 
 void BonusWall()
 {
-	bonusWallWarning = true;
+	warning = bonusWallWarning;
 	levelData[14][8] = symbolWall;
 	Render2(rowsCount2, columnsCount2);
 	Sleep(275);
+
+	warning = bonusWallWarning;
 	levelData[15][8] = symbolWall;
 	Render2(rowsCount2, columnsCount2);
 	Sleep(275);
+
+	warning = bonusWallWarning;
 	levelData[16][8] = symbolWall;
 	Render2(rowsCount2, columnsCount2);
 	Sleep(275);
+
+	warning = bonusWallWarning;
 	levelData[16][6] = symbolKey;
 	bonusWallSelector = true;
 }
@@ -1144,7 +1154,7 @@ void MoveHeroTo(int row, int column)
 {
 	unsigned char destinationCell = levelData[row][column];
 	bool canMoveToCell = false;
-	warning = None;
+	//warning = None; //warning reset
 
 
 	switch (destinationCell)
@@ -1160,7 +1170,8 @@ void MoveHeroTo(int row, int column)
 		{
 			if ((levelSelector == 2) && (CrystalCount < 13))
 			{
-				warning2 = true;
+				warning = crystalWarning;
+				//warning2 = true;
 				canMoveToCell = false;
 			}
 			else
@@ -1217,7 +1228,7 @@ void MoveHeroTo(int row, int column)
 						levelSelector = 4;
 						Initialise2(rowsCount3, columnsCount3);
 
-						bonusLevelWarning = true;
+						warning = bonusLevelWarning;
 						futureSelector = true;
 					}
 					else
@@ -1282,7 +1293,7 @@ void MoveHeroTo(int row, int column)
 					heroColumn = 7;
 					levelData[5][7] = symbolHero;
 
-					bonusLevelWarning = true;
+					warning = bonusLevelWarning;
 					futureSelector = true;
 				}
 				else
@@ -1378,15 +1389,7 @@ void MoveHeroTo(int row, int column)
 			//bombSelector = true;
 			//_getch();
 			LevelClear();
-			if (levelSelector == 2)
-				Initialise2(rowsCount2, columnsCount2);
-			if (levelSelector == 3)
-				Initialise2(rowsCount3, columnsCount3);
-			if (levelSelector == 4)
-			{
-				levelSelector = 3;
-				Initialise2(rowsCount3, columnsCount3);
-			}
+			
 			break;
 		}
 		// Box
@@ -1429,7 +1432,7 @@ void MoveHeroTo(int row, int column)
 		if (levelSelector == 4 && (heroRow == 10 && heroColumn == 7) )
 		{
 			if (levelData[11][7] != ' ')
-			secretDoorWarning = true;
+			warning = secretDoorWarning;
 
 			levelData[11][7] = ' ';
 			levelData[11][12] = ' ';
@@ -1460,7 +1463,7 @@ void MoveHeroTo(int row, int column)
 
 void Update()
 {
-	unsigned char inputChar = _getch();
+	int inputChar = _getch();
 	//inputChar = tolower(inputChar);
 
 	switch (inputChar)
@@ -1605,11 +1608,11 @@ int main()
 	} 
 	while (isGameActive == true);
 	
-	// Level 1
+	//// Level 1
 	//system("cls");
 	//isGameActive = true;
 	//levelSelector = 1;
-	//Initialise(rowsCount, columnsCount);
+	//Initialise2(rowsCount, columnsCount);
 	//do
 	//{
 	//	Render();
