@@ -128,7 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Sokoban3.cpp" />
+    <ClCompile Include="Sokoban.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleColor.h" />
