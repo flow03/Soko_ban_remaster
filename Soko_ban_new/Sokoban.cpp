@@ -111,7 +111,7 @@ const unsigned char levelData4[rowsCount3][columnsCount3 + 1] = {
 // Logic variables
 HANDLE consoleHandle = 0;
 bool isGameActive = true;
-unsigned char levelData[rowsCount+10][columnsCount]; // Change for need
+unsigned char levelData[rowsCount+8][columnsCount]; // Change for need
 unsigned char Past[rowsCount3][columnsCount3];
 unsigned char Future[rowsCount3][columnsCount3];
 int heroRow = 0;
@@ -592,10 +592,6 @@ void Render()
 void Render2(int rows, int columns)
 {
 	// Move console cursor to (0,0)
-	
-	/*COORD cursorCoord;
-	cursorCoord.X = 0;
-	cursorCoord.Y = 0;*/
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
 
 	setlocale(LC_ALL, "C");
@@ -610,28 +606,22 @@ void Render2(int rows, int columns)
 
 			switch (symbol)
 			{
-				// Walls - grey
+			// Walls - grey
 			case symbolWall:
 			{
-				SetConsoleTextAttribute(consoleHandle, 7);
+				SetConsoleTextAttribute(consoleHandle, LightGray);
 				break;
 			}
 			// Hero - green
 			case symbolHero:
 			{
-				/*if (bombSelector)
-				{
-					SetConsoleTextAttribute(consoleHandle, Red);
-				}
-				else */
 				SetConsoleTextAttribute(consoleHandle, LightGreen);
-				
 				break;
 			}
 			// Boxes - yellow
 			case symbolBox:
 			{
-				SetConsoleTextAttribute(consoleHandle, 14);
+				SetConsoleTextAttribute(consoleHandle, Yellow);
 				break;
 			}
 			// Exit - red
@@ -640,52 +630,46 @@ void Render2(int rows, int columns)
 				SetConsoleTextAttribute(consoleHandle, Red);
 				break;
 			}
-			// Crystal - fioletovi
+			// Crystal - Magenta
 			case symbolCrystal:
 			{
-				SetConsoleTextAttribute(consoleHandle, 5);
+				SetConsoleTextAttribute(consoleHandle, Magenta);
 				break;
 			}
-			// Portal - biruza
+			// Portal - LightCyan
 			case symbolPortal:
 			{
 				if ((levelSelector == 3) && (r == 6) && (c == 5))
-				{
-					SetConsoleTextAttribute(consoleHandle, 5);
-				}
-				else
-					if ((levelSelector == 3) && (r == 6) && (c == 9))
-					{
-						SetConsoleTextAttribute(consoleHandle, 13);
-					}
-					else
-				SetConsoleTextAttribute(consoleHandle, 11);
+					SetConsoleTextAttribute(consoleHandle, Magenta);
+				else if ((levelSelector == 3) && (r == 6) && (c == 9))
+					SetConsoleTextAttribute(consoleHandle, LightMagenta);
+				else SetConsoleTextAttribute(consoleHandle, LightCyan);
 				break;
 			}
-			// Point - biruza
+			// Point - LightCyan
 			case symbolPoint:
 			{
-				SetConsoleTextAttribute(consoleHandle, 11);
+				SetConsoleTextAttribute(consoleHandle, LightCyan);
 				break;
 			}
 			// Gorisontal door - grey
 			case symbolDoorG:
 			{
-				SetConsoleTextAttribute(consoleHandle, 7);
+				SetConsoleTextAttribute(consoleHandle, LightGray);
 				break;
 			}
 			case symbolDoorV:
 			{
-				SetConsoleTextAttribute(consoleHandle, 7);
+				SetConsoleTextAttribute(consoleHandle, LightGray);
 				break;
 			}
-			// Key - pink
+			// Key - LightMagenta
 			case symbolKey:
 			{
-				SetConsoleTextAttribute(consoleHandle, 13);
+				SetConsoleTextAttribute(consoleHandle, LightMagenta);
 				break;
 			}
-			// Bomb - red
+			// Bomb - Red
 			case symbolBomb:
 			{
 				SetConsoleTextAttribute(consoleHandle, Red);
@@ -695,6 +679,13 @@ void Render2(int rows, int columns)
 			case 116ui8: //t
 			{
 				symbol = ' ';
+				break;
+			}
+			//SymbolHeroDie
+			case 'd': 
+			{
+				symbol = symbolHero;
+				SetConsoleTextAttribute(consoleHandle, Red);
 				break;
 			}
 	 		}
@@ -725,7 +716,7 @@ void Render2(int rows, int columns)
 	Description();
 
 	//SetConsoleTitle
-	StringCchPrintf(szbuff, 255, TEXT("row: %d column %d"), heroRow, heroColumn);
+	StringCchPrintf(szbuff, 255, TEXT("row %d column %d"), heroRow, heroColumn);
 	SetConsoleTitle(szbuff);
 }
 
@@ -748,6 +739,40 @@ void BonusWall()
 
 	warning = bonusWallWarning;
 	levelData[16][6] = symbolKey;
+}
+
+void DieAnimation(int row, int column) {
+
+	int renderR = 0;
+	int renderC = 0;
+
+	if (levelSelector == 2)
+	{
+		renderR = rowsCount2;
+		renderC = columnsCount2;
+	}
+	else
+	{
+		renderR = rowsCount3;
+		renderC = columnsCount3;
+	}
+
+	for (int i = 0; i < 3; ++i)
+	{
+		warning = bombWarning;
+		levelData[row][column] = 'd';
+		Render2(renderR, renderC);
+		Sleep(225);
+
+		warning = bombWarning;
+		levelData[row][column] = ' ';
+		Render2(renderR, renderC);
+		Sleep(225);
+	}
+	
+	//_getch();
+	//_getch();
+	//system("cls");
 }
 
 void MoveHeroTo(int row, int column)
@@ -796,7 +821,7 @@ void MoveHeroTo(int row, int column)
 		// Crystal
 		case symbolCrystal:
 		{
-			CrystalCount = CrystalCount + 1;
+			++CrystalCount;
 			canMoveToCell = true;
 			if ((levelSelector == 3) && (CrystalCount == 5))
 			{
@@ -939,7 +964,7 @@ void MoveHeroTo(int row, int column)
 		// Key
 		case symbolKey:
 		{
-			KeyCount++;
+			++KeyCount;
 			canMoveToCell = true;
 			break;
 		}
@@ -968,26 +993,18 @@ void MoveHeroTo(int row, int column)
 		{
 			if (KeyCount > 0)
 			{
-				KeyCount = KeyCount - 1;
+				--KeyCount;
 				canMoveToCell = true;
 			}
-			else
-			{
-				//warning1 = true;
-				warning = keyWarning;
-			}
+			else warning = keyWarning;
 			break;
 		}
 		// Bomb
 		case symbolBomb:
 		{
-			//levelData[heroRow][heroColumn] = ' ';
-			//Set hero symbol on new position
-			//levelData[row][column] = symbolHero;
-			canMoveToCell = true;
-			warning = bombWarning;
-			//bombSelector = true;
-			//_getch();
+			levelData[heroRow][heroColumn] = ' ';
+			
+			DieAnimation(row, column);
 			LevelClear();
 			
 			break;
@@ -1271,15 +1288,16 @@ int main()
 	//while ( isGameActive );
 
 	// Level 2
-	/*system("cls");
+	system("cls");
 	isGameActive = true;
 	levelSelector = 2;
 	Initialise2(rowsCount2, columnsCount2);
 	do
 	{
 		Render2(rowsCount2, columnsCount2);
+		//Description();
 		Update();
-	} while (isGameActive);*/
+	} while (isGameActive);
 	
 	// Level 3
 	system("cls");
@@ -1290,6 +1308,7 @@ int main()
 	do
 	{
 		Render2(rowsCount3, columnsCount3);
+		//Description();
 		Update();
 	} while (isGameActive);
 	

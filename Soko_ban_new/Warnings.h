@@ -5,9 +5,9 @@
 enum Warning
 {
 	None,
-	keyWarning,		//warning1
-	crystalWarning,	//warning2
-	bombWarning,    //bombSelector
+	keyWarning,		
+	crystalWarning,	
+	bombWarning,    
 	bonusWallWarning,
 	bonusLevelWarning,
 	secretDoorWarning,
@@ -15,8 +15,6 @@ enum Warning
 	secretBombLeft, 
 	secretBombRight,
 	secretBombDamn
-	/*bonusWallSelector,
-	secretDoorSelector,*/
 };
 
 Warning warning = None; //None test
