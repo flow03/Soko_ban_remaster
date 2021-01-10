@@ -7,6 +7,8 @@
 #include <conio.h>
 #include <ctype.h>
 #include <locale.h>
+//#include <assert.h>
+#include <strsafe.h> //StringCchPrintf
 #include <iostream>
 
 #include "ConsoleColor.h"
@@ -95,14 +97,14 @@ const unsigned char levelData4[rowsCount3][columnsCount3 + 1] = {
 	"#  #######    #",
 	"#  # v        #",
 	"#XX# #   # #  #",
-	"#  # ##### #  #",
+	"#  # # ### #tt#",
 	"#  #       #  #",
 	"#XX### #####  #",
-	"#  b   bXXXX  #",
-	"#    b  XXXX  #",
+	"#  b   bXXXXtt#",
+	"#    b tXXXX  #",
 	"###############",
 	"               ",
-																};
+};
 
 
 
@@ -118,15 +120,16 @@ int levelSelector = 1;
 int CrystalCount = 0;
 int KeyCount = 0;
 int Localization = 1;
+TCHAR szbuff[255]; //StringCchPrintf
 
 #include "Warnings.h"
 
 //bool warning1 = false;
 //bool warning2 = false;
 //bool bombSelector = false;
-bool bonusWallSelector = false;
+//bool bonusWallSelector = false;
 //bool bonusWallWarning = false;
-bool secretDoorSelector = false;
+//bool secretDoorSelector = false;
 //bool secretDoorWarning = false;
 //bool secretBombsWarning = false;
 //bool bonusLevelWarning = false;
@@ -437,8 +440,6 @@ void LevelClear()
 {
 	CrystalCount = 0;
 	KeyCount = 0;
-	bonusWallSelector = false;
-	secretDoorSelector = false;
 	futureSelector = false;
 
 	if (levelSelector == 1)
@@ -701,7 +702,6 @@ void Render2(int rows, int columns)
 			//printf("%c", symbol);
 			std::cout << symbol;
 		}
-		//printf("\n\t\t\t\t  ");
 	}
 
 	// Crystal/Key counters
@@ -716,15 +716,17 @@ void Render2(int rows, int columns)
 		printColorText(consoleHandle, symbolKey, LightMagenta);
 		std::cout << KeyCount;
 	}
-	else
-	{
-		std::cout << "  ";
-	}
+	//else std::cout << "  ";
+	
 
 	// Warnings
 	//Warnings();
 	Warnings(warning); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
 	Description();
+
+	//SetConsoleTitle
+	StringCchPrintf(szbuff, 255, TEXT("row: %d column %d"), heroRow, heroColumn);
+	SetConsoleTitle(szbuff);
 }
 
 void BonusWall()
@@ -746,7 +748,6 @@ void BonusWall()
 
 	warning = bonusWallWarning;
 	levelData[16][6] = symbolKey;
-	bonusWallSelector = true;
 }
 
 void MoveHeroTo(int row, int column)
@@ -1014,6 +1015,7 @@ void MoveHeroTo(int row, int column)
 		// Trap lvl2
 		case 116ui8: //116ui8 /t
 		{
+			// Bonus wall
 			if (levelSelector == 2) // && row == 16 && column == 11) // && (bonusWallSelector == false))
 			{
 				//canMoveToCell = true;
@@ -1021,8 +1023,68 @@ void MoveHeroTo(int row, int column)
 				heroRow = row;
 				heroColumn = column;
 				levelData[heroRow][heroColumn] = symbolHero;
-				//bonusWallSelector = true;
+
 				BonusWall();
+			}
+			
+			else if (levelSelector == 4)
+			{
+				// Secret door
+				if (row == 10 && column == 7)
+				{
+					warning = secretDoorWarning;
+
+					levelData[11][7] = ' ';
+					levelData[11][12] = 't';
+					levelData[11][13] = 't';
+				}
+				// Secret bombs warning
+				else if ((row == 11 && column == 12) || (row == 11 && column == 13))
+					warning = secretBombsWarning;
+				// Secret bombs
+				else if (column == 12)
+				{
+					if (row == 9) {
+						levelData[7][12] = symbolBomb;
+						if (levelData[7][13] != symbolBomb) warning = secretBombRight;
+						else warning = secretBombDamn;
+					}
+					else if (row == 6) {
+						levelData[4][12] = symbolBomb;
+						if (levelData[4][13] != symbolBomb) warning = secretBombRight;
+						else warning = secretBombDamn;
+					}
+				}
+				else if (column == 13)
+				{
+					if (row == 9) {
+						levelData[7][13] = symbolBomb;
+						if (levelData[7][12] != symbolBomb) warning = secretBombLeft;
+						else warning = secretBombDamn;
+					}
+					else if (row == 6) {
+						levelData[4][13] = symbolBomb;
+						if (levelData[4][12] != symbolBomb) warning = secretBombLeft;
+						else warning = secretBombDamn;
+					}
+				}
+				/*else if (row == 9 && column == 12)
+					levelData[7][12] = symbolBomb;
+				else if (row == 9 && column == 13)
+				{
+					levelData[7][13] = symbolBomb;
+					if(levelData[7][12] != symbolBomb) warning = secretBombLeft;
+					else warning = secretBombDamn;
+				}
+				else if (row == 6 && column == 12)
+					levelData[4][12] = symbolBomb;
+				else if (row == 6 && column == 13)
+				{
+					levelData[4][13] = symbolBomb;
+					warning = secretBombLeft;
+				}*/
+
+				canMoveToCell = true;
 			}
 		}
 	}
@@ -1037,39 +1099,13 @@ void MoveHeroTo(int row, int column)
 
 		// Set hero symbol on new position
 		levelData[heroRow][heroColumn] = symbolHero;
-		// Bonus wall
-		if ((heroRow == 15) && (heroColumn == 11) && (levelSelector == 2) && (bonusWallSelector == false))
-		{
-			BonusWall();
-		}
-		// Secret door
-		if (levelSelector == 4 && (heroRow == 10 && heroColumn == 7) )
-		{
-			if (levelData[11][7] != ' ')
-			warning = secretDoorWarning;
-
-			levelData[11][7] = ' ';
-			levelData[11][12] = ' ';
-			levelData[11][13] = ' ';
-		}
-		// Secret bombs
-		if (levelSelector == 4 && ((heroRow == 10 && heroColumn == 12) || (heroRow == 10 && heroColumn == 13)) && ((levelData[7][12] != symbolBomb) && (levelData[7][13] != symbolBomb)) )
-			warning = secretBombsWarning;
-		if (levelSelector == 4 && (heroRow == 9 && heroColumn == 12))
-			levelData[7][12] = symbolBomb;
-		if (levelSelector == 4 && (heroRow == 9 && heroColumn == 13))
-			levelData[7][13] = symbolBomb;
-		if (levelSelector == 4 && (heroRow == 6 && heroColumn == 12))
-			levelData[4][12] = symbolBomb;
-		if (levelSelector == 4 && (heroRow == 6 && heroColumn == 13))
-			levelData[4][13] = symbolBomb;
 		// Final Door
-		if (levelSelector == 4 && secretDoorSelector == false && ((heroRow == 2 && heroColumn == 12) || (heroRow == 2 && heroColumn == 13)))
+		if (levelSelector == 4 &&  ((heroRow == 2 && heroColumn == 12) || (heroRow == 2 && heroColumn == 13)))
 		{
 			levelData[1][12] = symbolDoorG;
 			levelData[1][13] = symbolDoorG;
 			levelData[10][13] = symbolKey;
-			secretDoorSelector = true;
+			//secretDoorSelector = true; //secretDoorSelector == false &&
 		}
 
 	}
@@ -1235,7 +1271,7 @@ int main()
 	//while ( isGameActive );
 
 	// Level 2
-	system("cls");
+	/*system("cls");
 	isGameActive = true;
 	levelSelector = 2;
 	Initialise2(rowsCount2, columnsCount2);
@@ -1243,7 +1279,7 @@ int main()
 	{
 		Render2(rowsCount2, columnsCount2);
 		Update();
-	} while (isGameActive);
+	} while (isGameActive);*/
 	
 	// Level 3
 	system("cls");

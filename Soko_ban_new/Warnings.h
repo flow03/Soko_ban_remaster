@@ -12,11 +12,14 @@ enum Warning
 	bonusLevelWarning,
 	secretDoorWarning,
 	secretBombsWarning,
+	secretBombLeft, 
+	secretBombRight,
+	secretBombDamn
 	/*bonusWallSelector,
 	secretDoorSelector,*/
 };
 
-Warning warning = None;
+Warning warning = None; //None test
 
 void Warnings(Warning warn) {
 
@@ -198,6 +201,66 @@ void Warnings(Warning warn) {
 				printColorText(consoleHandle, '!', Yellow);
 				break;
 			}
+		}
+		break;
+	case secretBombLeft:
+	case secretBombRight:
+		switch (Localization)
+		{
+			case 1:
+			{
+				setlocale(LC_ALL, "Russian");
+				printColorText(consoleHandle, "\n\t\t\t  Попереду ", Yellow); 
+				printColorText(consoleHandle, "пастка", Red);
+				printColorText(consoleHandle, '!', Yellow);
+				printColorText(consoleHandle, " Не раджу йти ", Yellow);
+				if (warn == secretBombLeft) printColorText(consoleHandle, "влiво", Yellow);
+				if (warn == secretBombRight) printColorText(consoleHandle, "вправо", Yellow);
+				break;
+			}
+			case 2:
+			{
+				setlocale(LC_ALL, "Russian");
+				printColorText(consoleHandle, "\n\t\t\tВпереди ", Yellow); 
+				printColorText(consoleHandle, "мина", Red);
+				printColorText(consoleHandle, '!', Yellow);
+				printColorText(consoleHandle, " Не советую ступать ", Yellow);
+				if (warn == secretBombLeft) printColorText(consoleHandle, "влево", Yellow);
+				if (warn == secretBombRight) printColorText(consoleHandle, "вправо", Yellow);
+				break;
+			}
+			case 3:
+			{
+				setlocale(LC_ALL, "C");
+				printColorText(consoleHandle, "\n\t\t\t     Bomb", Red);
+				printColorText(consoleHandle, " ahead! Don't go ", Yellow);
+				if (warn == secretBombLeft) printColorText(consoleHandle, "left", Yellow);
+				if (warn == secretBombRight) printColorText(consoleHandle, "right", Yellow);
+				break;
+			}
+		}
+		break;
+	case secretBombDamn:
+		switch (Localization)
+		{
+		case 1:
+		{
+			setlocale(LC_ALL, "Russian");
+			printColorText(consoleHandle, "\n\t\t\t\tТа нехай йому грець!", Yellow);
+			break;
+		}
+		case 2:
+		{
+			setlocale(LC_ALL, "Russian");
+			printColorText(consoleHandle, "\n\t\t\t\t    Чёрт побери!", Yellow);
+			break;
+		}
+		case 3:
+		{
+			setlocale(LC_ALL, "C");
+			printColorText(consoleHandle, "\n\t\t\t\t Damn! I warned you", Yellow);
+			break;
+		}
 		}
 		break;
 	}
