@@ -141,9 +141,33 @@ bool futureSelector = false;
 // Functions
 void SetupSystem()
 {
-	//srand(time(0));
-
 	consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	/*CONSOLE_FONT_INFOEX fontInfo;
+	fontInfo.cbSize = sizeof(fontInfo);*/
+
+	CONSOLE_SCREEN_BUFFER_INFOEX scrBuffer;
+	scrBuffer.cbSize = sizeof(scrBuffer);
+
+	_CONSOLE_CURSOR_INFO cursorInfo;
+
+	//GetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // Получить текущий шрифт
+	GetConsoleScreenBufferInfoEx(consoleHandle, &scrBuffer);
+	GetConsoleCursorInfo(consoleHandle, &cursorInfo);
+
+	//Размер буфера консоли
+	scrBuffer.dwSize = COORD{ 80,25 };
+	//Размер окна консоли
+	scrBuffer.srWindow = SMALL_RECT{ 0,0,80,25 };
+	//Максимальный(растягиваемый) размер окна консоли
+	scrBuffer.dwMaximumWindowSize = COORD{ 80,25 };
+	//Полноэкранный режим
+	scrBuffer.bFullscreenSupported = false;
+	//Делаем курсор невидимым
+	cursorInfo.bVisible = false;
+
+	SetConsoleScreenBufferInfoEx(consoleHandle, &scrBuffer);
+	SetConsoleCursorInfo(consoleHandle, &cursorInfo);
 }
 
 void RenderLanguage()
@@ -228,7 +252,6 @@ void RenderLanguage()
 		break;
 	}
 	}
-	//std::cout << std::endl;
 }
 
 void UpdateLanguage()
@@ -266,6 +289,67 @@ void UpdateLanguage()
 			break;
 		}
 	}
+}
+
+void RenderFont()
+{
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
+	//setlocale(LC_ALL, "Russian");
+	setlocale(0, "");
+	std::cout << std::endl;
+
+	switch (Localization)
+	{
+	case 1:
+	{
+		std::cout << "\n\t\t\t\tРозмiр шрифту"; //54
+		break;
+	}
+	case 2:
+	{
+		std::cout << "\n\t\t\t\t Выберите шрифт\t\t\t"; //46
+		break;
+	}
+	case 3:
+	{
+		std::cout << "\n\t\t\t      Select your font size"; //50
+		break;
+	}
+	}
+
+	std::cout << "\n\n";
+
+	int font = 0;
+
+	if (font == 0)
+	{
+		std::cout << "\n\t\t\t\t ";
+		printColorText(consoleHandle, symbolHero, LightGreen);
+		printColorText(consoleHandle, " 8x12\n", Yellow);
+	}
+	else
+	{
+		std::cout << "\n\t\t\t\t 8x12\n";
+	}
+
+	if (font == 1)
+	{
+		std::cout << "\n\t\t\t\t ";
+		printColorText(consoleHandle, symbolHero, LightGreen);
+		printColorText(consoleHandle, "  12x16\n", Yellow);
+	}
+	else
+	{
+		std::cout << "\n\t\t\t\t   12x16\n";
+	}
+
+	//std::cout << "\n";
+
+}
+
+void UpdateFont()
+{
+	_getch();
 }
 
 void Initialise(int rows, int columns)
@@ -702,12 +786,13 @@ void Render2(int rows, int columns)
 		printColorText(consoleHandle, symbolCrystal, Magenta);
 		std::cout << CrystalCount << ' ';
 	}
+	else std::cout << "   ";
 	if (KeyCount != 0)
 	{
 		printColorText(consoleHandle, symbolKey, LightMagenta);
 		std::cout << KeyCount;
 	}
-	//else std::cout << "  ";
+	else std::cout << "   ";
 	
 
 	// Warnings
@@ -1268,12 +1353,19 @@ int main()
 	SetupSystem();
 
 	// Select Language
-	do
+	/*do
 	{
 		RenderLanguage();
 		UpdateLanguage();
 	} 
-	while (isGameActive == true);
+	while (isGameActive == true);*/
+
+	// Select Font Size
+	do
+	{
+		RenderFont();
+		UpdateFont();
+	} while (isGameActive == true);
 	
 	//// Level 1
 	//system("cls");

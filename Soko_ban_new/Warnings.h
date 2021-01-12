@@ -262,30 +262,6 @@ void Warnings(Warning warn) {
 		}
 		break;
 	}
-	
-		/*_getch();
-		LevelClear();
-		if (levelSelector == 2)
-			Initialise2(rowsCount2, columnsCount2);
-		if (levelSelector == 3)
-			Initialise2(rowsCount3, columnsCount3);
-		if (levelSelector == 4)
-		{
-			levelSelector = 3;
-			Initialise2(rowsCount3, columnsCount3);
-
-			break;
-		}*/
-
-		//}
-		//else
-		//{
-		//	bombSelector = false;
-		//	if (levelSelector == 2)
-		//		Render2(rowsCount2, columnsCount2);
-		//	if (levelSelector == 3)
-		//		Render2(rowsCount3, columnsCount);
-		//}
 
 	warning = None; //Warnings reset
 	setlocale(LC_ALL, "C");
