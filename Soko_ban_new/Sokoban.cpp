@@ -119,7 +119,8 @@ int heroColumn = 0;
 int levelSelector = 1;
 int CrystalCount = 0;
 int KeyCount = 0;
-int Localization = 1;
+int Localization = 1; //Language
+int font = 0; // Font
 TCHAR szbuff[255]; //StringCchPrintf
 
 #include "Warnings.h"
@@ -139,6 +140,18 @@ bool futureSelector = false;
 
 
 // Functions
+void CenterWindow()
+{
+	HWND consoleWindow = GetConsoleWindow();
+
+	RECT r;
+	GetWindowRect(consoleWindow, &r);
+	int x = GetSystemMetrics(SM_CXSCREEN) / 2 - (r.right - r.left) / 2;
+	int y = GetSystemMetrics(SM_CYSCREEN) / 2 - (r.bottom - r.top) / 2;
+
+	SetWindowPos(consoleWindow, NULL, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+}
+
 void SetupSystem()
 {
 	consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -168,6 +181,27 @@ void SetupSystem()
 
 	SetConsoleScreenBufferInfoEx(consoleHandle, &scrBuffer);
 	SetConsoleCursorInfo(consoleHandle, &cursorInfo);
+	//SetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // Установить измененный шрифт
+
+	CenterWindow();
+}
+
+void SetupFont(short x, short y) 
+{
+	consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	CONSOLE_FONT_INFOEX fontInfo;
+	fontInfo.cbSize = sizeof(fontInfo);
+
+	GetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // Получить текущий шрифт
+
+	fontInfo.nFont = 6;
+	fontInfo.dwFontSize.X = x;
+	fontInfo.dwFontSize.Y = y;
+
+	SetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // Установить измененный шрифт
+
+	CenterWindow();
 }
 
 void RenderLanguage()
@@ -192,7 +226,7 @@ void RenderLanguage()
 		}
 		case 3:
 		{
-			std::cout << "\n\t\t\t      Select your language"; //50
+			std::cout << "\n\t\t\t      Select your language    "; 
 			break;
 		}
 	}
@@ -293,63 +327,95 @@ void UpdateLanguage()
 
 void RenderFont()
 {
-	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0, 13 }); //(y, x)
+	//system("cls");
 	//setlocale(LC_ALL, "Russian");
 	setlocale(0, "");
-	std::cout << std::endl;
+	std::cout << std::endl << std::endl;
 
-	switch (Localization)
-	{
-	case 1:
-	{
-		std::cout << "\n\t\t\t\tРозмiр шрифту"; //54
-		break;
-	}
-	case 2:
-	{
-		std::cout << "\n\t\t\t\t Выберите шрифт\t\t\t"; //46
-		break;
-	}
-	case 3:
-	{
-		std::cout << "\n\t\t\t      Select your font size"; //50
-		break;
-	}
-	}
 
-	std::cout << "\n\n";
-
-	int font = 0;
-
+	std::cout << "\n\t\t\t\t   "; 
 	if (font == 0)
 	{
-		std::cout << "\n\t\t\t\t ";
 		printColorText(consoleHandle, symbolHero, LightGreen);
 		printColorText(consoleHandle, " 8x12\n", Yellow);
 	}
 	else
 	{
-		std::cout << "\n\t\t\t\t 8x12\n";
+		std::cout << "  8x12\n";
 	}
 
+	std::cout << "\n\t\t\t\t   ";
 	if (font == 1)
 	{
-		std::cout << "\n\t\t\t\t ";
 		printColorText(consoleHandle, symbolHero, LightGreen);
-		printColorText(consoleHandle, "  12x16\n", Yellow);
+		printColorText(consoleHandle, " 12x16\n", Yellow);
 	}
 	else
 	{
-		std::cout << "\n\t\t\t\t   12x16\n";
+		std::cout << "  12x16\n";
 	}
 
-	//std::cout << "\n";
+	std::cout << std::endl << std::endl;
 
+	switch (Localization)
+	{
+	case 1:
+	{
+		std::cout << "\t\t\t\t Розмiр шрифту";
+		break;
+	}
+	case 2:
+	{
+		std::cout << "\t\t\t\t Выберите шрифт\t\t\t";
+		break;
+	}
+	case 3:
+	{
+		std::cout << "\t\t\t     Select your font size";
+		break;
+	}
+	}
 }
 
 void UpdateFont()
 {
-	_getch();
+	char Key = _getch();
+
+	switch (Key)
+	{
+	// Arrow down
+	case 80:
+	case 's':
+	case 'S':
+	{
+		font++;
+		if (font > 1)
+			font = 0;
+
+		break;
+	}
+	// Arrow up
+	case 72:
+	case 'w':
+	case 'W':
+	{
+		font--;
+		if (font < 0)
+			font = 1;
+
+		break;
+	}
+	// Enter
+	case 13:
+	{
+		isGameActive = false;
+		break;
+	}
+	}
+
+	if (font == 0) SetupFont(8, 12);
+	else if (font == 1) SetupFont(12, 16);
 }
 
 void Initialise(int rows, int columns)
@@ -1353,14 +1419,15 @@ int main()
 	SetupSystem();
 
 	// Select Language
-	/*do
+	do
 	{
 		RenderLanguage();
 		UpdateLanguage();
 	} 
-	while (isGameActive == true);*/
+	while (isGameActive == true);
 
 	// Select Font Size
+	isGameActive = true;
 	do
 	{
 		RenderFont();
