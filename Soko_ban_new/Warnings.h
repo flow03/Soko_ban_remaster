@@ -21,6 +21,8 @@ Warning warning = None; //None test
 
 void Warnings(Warning warn) {
 
+	setlocale(LC_ALL, "Russian");
+
 	switch (warn)
 	{
 	case None:
@@ -31,7 +33,6 @@ void Warnings(Warning warn) {
 		{
 		case 1:
 		{
-			setlocale(LC_ALL, "Russian");
 			printColorText(consoleHandle, "\n\t\t\t    I куди ти без ", Yellow);
 			printColorText(consoleHandle, "Ключа", LightMagenta);
 			printColorText(consoleHandle, " лiзеш ? ", Yellow);
@@ -39,7 +40,6 @@ void Warnings(Warning warn) {
 		}
 		case 2:
 		{
-			setlocale(LC_ALL, "Russian");
 			/*if (levelSelector == 3 || levelSelector == 4)
 				printf(" ");*/
 			printColorText(consoleHandle, "\n\t\t\t\t    Нужен ", Yellow);
@@ -60,7 +60,7 @@ void Warnings(Warning warn) {
 		{
 		case 1:
 		{
-			setlocale(LC_ALL, "Russian");
+			//
 			printColorText(consoleHandle, "\n\t\t\t   Куди зiбрався? А ну ", Yellow);
 			printColorText(consoleHandle, symbolCrystal, Magenta);
 			printColorText(consoleHandle, " збирай!", Yellow);
@@ -68,14 +68,14 @@ void Warnings(Warning warn) {
 		}
 		case 2:
 		{
-			setlocale(LC_ALL, "Russian");
+			//
 			printColorText(consoleHandle, "\n\t\t\t\t  Нужно больше ", Yellow);
 			printColorText(consoleHandle, symbolCrystal, Magenta);
 			break;
 		}
 		case 3:
 		{
-			setlocale(LC_ALL, "C");
+			//setlocale(LC_ALL, "C");
 			printColorText(consoleHandle, "\n\t\t\t\t  Collect more ", Yellow);
 			printColorText(consoleHandle, symbolCrystal, Magenta);
 			break;
@@ -87,7 +87,7 @@ void Warnings(Warning warn) {
 		{
 		case 1:
 		{
-			setlocale(LC_ALL, "Russian");
+			//
 			printColorText(consoleHandle, "\n\t\t\t     Я ж казав не лiзти в ", Yellow);
 			printColorText(consoleHandle, "Яму", Red);
 			printColorText(consoleHandle, "!", Yellow);
@@ -95,13 +95,13 @@ void Warnings(Warning warn) {
 		}
 		case 2:
 		{
-			setlocale(LC_ALL, "Russian");
+			//
 			printColorText(consoleHandle, "\n\t\t\t\t    ПОТРАЧЕНО", Yellow);
 			break;
 		}
 		case 3:
 		{
-			setlocale(LC_ALL, "C");
+			//setlocale(LC_ALL, "C");
 			printColorText(consoleHandle, "\n\t\t\t       Oops! You just died", Yellow);
 			break;
 		}
@@ -112,19 +112,19 @@ void Warnings(Warning warn) {
 		{
 		case 1:
 		{
-			setlocale(LC_ALL, "Russian");
+			//
 			printColorText(consoleHandle, "\n\t\t\t\tСтiна в подарунок", Yellow);
 			break;
 		}
 		case 2:
 		{
-			setlocale(LC_ALL, "Russian");
+			//
 			printColorText(consoleHandle, "\n\t\t\t\t     Сюрприз", Yellow);
 			break;
 		}
 		case 3:
 		{
-			setlocale(LC_ALL, "C");
+			//setlocale(LC_ALL, "C");
 			printColorText(consoleHandle, "\n\t\t\t\t     Surprise", Yellow);
 			break;
 		}
@@ -133,17 +133,17 @@ void Warnings(Warning warn) {
 	case bonusLevelWarning:
 		if (Localization == 1)
 		{
-			setlocale(LC_ALL, "Russian");
+			//
 			printColorText(consoleHandle, "\n\t\t\t       Оце так несподiванка!", Yellow);
 		}
 		else if (Localization == 2)
 		{
-			setlocale(LC_ALL, "Russian");
+			//
 			printColorText(consoleHandle, "\n\t\t\t\t  Вот это поворот!", Yellow);
 		}
 		else if (Localization == 3)
 		{
-			setlocale(LC_ALL, "С");
+			//setlocale(LC_ALL, "С");
 			printColorText(consoleHandle, "\n\t\t\t      Surprise, motherfucker!", Yellow);
 		}
 		warning = None;
@@ -153,20 +153,20 @@ void Warnings(Warning warn) {
 		{
 		case 1:
 		{
-			setlocale(LC_ALL, "Russian");
+			//
 			printColorText(consoleHandle,
 				"\n\t\t     Ти знайшов таємний лаз. Нiчого особливого", Yellow); //41+21=62
 			break;
 		}
 		case 2:
 		{
-			setlocale(LC_ALL, "Russian");
+			//
 			printColorText(consoleHandle, "\n\t\t\t  Эй! Кто открыл тайную комнату?!", Yellow); //57
 			break;
 		}
 		case 3:
 		{
-			setlocale(LC_ALL, "C");
+			//setlocale(LC_ALL, "C");
 			printColorText(consoleHandle, "\n\t\t\t  Hey! You found the secret door!", Yellow); //57
 			break;
 		}
@@ -177,7 +177,7 @@ void Warnings(Warning warn) {
 		{
 			case 1:
 			{
-				setlocale(LC_ALL, "Russian");
+				//
 				printColorText(consoleHandle, "\n\t\t\t  Обережно! Тут прихованi ", Yellow);  // 25+33=58
 				printColorText(consoleHandle, "пастки", Red);
 				printColorText(consoleHandle, '!', Yellow);
@@ -185,7 +185,7 @@ void Warnings(Warning warn) {
 			}
 			case 2:
 			{
-				setlocale(LC_ALL, "Russian");
+				//
 				printColorText(consoleHandle, "\n\t\t\t Осторожно! Здесь припрятаны ", Yellow); // 24+33=57
 				printColorText(consoleHandle, "мины", Red);
 				printColorText(consoleHandle, '!', Yellow);
@@ -193,7 +193,7 @@ void Warnings(Warning warn) {
 			}
 			case 3:
 			{
-				setlocale(LC_ALL, "C");
+				//setlocale(LC_ALL, "C");
 				printColorText(consoleHandle, "\n\t\t\t Carreful! There are hidden ", Yellow); // 25+33=58
 				printColorText(consoleHandle, "bombs", Red);
 				printColorText(consoleHandle, '!', Yellow);
@@ -207,7 +207,7 @@ void Warnings(Warning warn) {
 		{
 			case 1:
 			{
-				setlocale(LC_ALL, "Russian");
+				//
 				printColorText(consoleHandle, "\n\t\t\t  Попереду ", Yellow); 
 				printColorText(consoleHandle, "пастка", Red);
 				printColorText(consoleHandle, '!', Yellow);
@@ -218,7 +218,7 @@ void Warnings(Warning warn) {
 			}
 			case 2:
 			{
-				setlocale(LC_ALL, "Russian");
+				//
 				printColorText(consoleHandle, "\n\t\t\tВпереди ", Yellow); 
 				printColorText(consoleHandle, "мина", Red);
 				printColorText(consoleHandle, '!', Yellow);
@@ -229,7 +229,7 @@ void Warnings(Warning warn) {
 			}
 			case 3:
 			{
-				setlocale(LC_ALL, "C");
+				//setlocale(LC_ALL, "C");
 				printColorText(consoleHandle, "\n\t\t\t     Bomb", Red);
 				printColorText(consoleHandle, " ahead! Don't go ", Yellow);
 				if (warn == secretBombLeft) printColorText(consoleHandle, "left", Yellow);
@@ -243,19 +243,19 @@ void Warnings(Warning warn) {
 		{
 		case 1:
 		{
-			setlocale(LC_ALL, "Russian");
+			//
 			printColorText(consoleHandle, "\n\t\t\t\tТа нехай йому грець!", Yellow);
 			break;
 		}
 		case 2:
 		{
-			setlocale(LC_ALL, "Russian");
+			//
 			printColorText(consoleHandle, "\n\t\t\t\t    Чёрт побери!", Yellow);
 			break;
 		}
 		case 3:
 		{
-			setlocale(LC_ALL, "C");
+			//setlocale(LC_ALL, "C");
 			printColorText(consoleHandle, "\n\t\t\t\t Damn! I warned you", Yellow);
 			break;
 		}

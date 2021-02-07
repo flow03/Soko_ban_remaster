@@ -43,7 +43,7 @@ const unsigned char levelData0[rowsCount][columnsCount + 1] =  {
 	"#   X   XX #X #",
 	"#XXX # # X   ##",
 	"#1 X #   X X  #",
-	"###############",
+	"##2############",
                                                                 };
 
 const int rowsCount2 = 18;
@@ -109,7 +109,7 @@ const unsigned char levelData4[rowsCount3][columnsCount3 + 1] = {
 
 
 // Logic variables
-HANDLE consoleHandle = 0;
+HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 bool isGameActive = true;
 unsigned char levelData[rowsCount+8][columnsCount]; // Change for need
 unsigned char Past[rowsCount3][columnsCount3];
@@ -122,6 +122,7 @@ int KeyCount = 0;
 int Localization = 1; //Language
 int font = 0; // Font
 TCHAR szbuff[255]; //StringCchPrintf
+CONSOLE_FONT_INFOEX defaultFont;
 
 #include "Warnings.h"
 
@@ -154,17 +155,14 @@ void CenterWindow()
 
 void SetupSystem()
 {
-	consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	/*CONSOLE_FONT_INFOEX fontInfo;
-	fontInfo.cbSize = sizeof(fontInfo);*/
+	//consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	CONSOLE_SCREEN_BUFFER_INFOEX scrBuffer;
 	scrBuffer.cbSize = sizeof(scrBuffer);
 
 	_CONSOLE_CURSOR_INFO cursorInfo;
 
-	//GetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // Получить текущий шрифт
+	GetCurrentConsoleFontEx(consoleHandle, TRUE, &defaultFont); // Запомнить текущий шрифт
 	GetConsoleScreenBufferInfoEx(consoleHandle, &scrBuffer);
 	GetConsoleCursorInfo(consoleHandle, &cursorInfo);
 
@@ -184,20 +182,31 @@ void SetupSystem()
 	//SetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // Установить измененный шрифт
 
 	CenterWindow();
+
+	setlocale(LC_ALL, "Russian");
 }
 
-void SetupFont(short x, short y) 
+void SetupFont() 
 {
-	consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-
 	CONSOLE_FONT_INFOEX fontInfo;
 	fontInfo.cbSize = sizeof(fontInfo);
 
 	GetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // Получить текущий шрифт
+	
+	if (font == 0)
+	{
+		fontInfo.dwFontSize.X = 8;
+		fontInfo.dwFontSize.Y = 12;
+	}
+	else if (font == 1)
+	{
+		fontInfo.dwFontSize.X = 12;
+		fontInfo.dwFontSize.Y = 16;
+	}
 
+	fontInfo.FontFamily = FF_MODERN;
+	wcscpy_s(fontInfo.FaceName, L"Terminal");
 	fontInfo.nFont = 6;
-	fontInfo.dwFontSize.X = x;
-	fontInfo.dwFontSize.Y = y;
 
 	SetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // Установить измененный шрифт
 
@@ -206,7 +215,6 @@ void SetupFont(short x, short y)
 
 void RenderLanguage()
 {
-	//system("cls");
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
 	//setlocale(LC_ALL, "Russian");
 	setlocale(0, "");
@@ -414,11 +422,13 @@ void UpdateFont()
 	}
 	}
 
-	if (font == 0) SetupFont(8, 12);
-	else if (font == 1) SetupFont(12, 16);
+	/*if (font == 0) SetupFont(8, 12);
+	else if (font == 1) SetupFont(12, 16);*/
+	SetupFont();
+	CenterWindow();
 }
 
-void Initialise(int rows, int columns)
+void InitialiseOld(int rows, int columns)
 {
 	// Load level
 	for (int r = 0; r < rows; r++)
@@ -570,11 +580,15 @@ void Initialise2(int rows, int columns)
 				levelData[r][c] = symbolBomb;
 				break;
 			}
-			case 't':
-			{
-				levelData[r][c] = 116ui8; //U, 116ui8, ui8
-				break;
-			}
+			// Окончание строки
+			/*case '\0':
+				break;*/
+			// Trap
+			//case 't':
+			//{
+			//	levelData[r][c] = 't'; //U, 116ui8, ui8
+			//	break;
+			//}
 			// Other symbols (like spaces)
 			default:
 			{
@@ -656,7 +670,7 @@ void Render()
 	{
 		case 3:
 		{
-			setlocale(LC_ALL, "C");
+			setlocale(LC_ALL, "Russian");
 			SetConsoleTextAttribute(consoleHandle, 7);
 			printf("\n\n\tUse AWSD to move your ");
 			SetConsoleTextAttribute(consoleHandle, 10);
@@ -747,9 +761,14 @@ void Render2(int rows, int columns)
 	setlocale(LC_ALL, "C");
 
 	std::cout<<'\n';
-	for (int r = 0; r < rows; r++)
+	/*for (int r = 0; r < rows; r++)
 	{
 		std::cout<< "\n\t\t\t\t  ";
+		for (int c = 0; c < columns; c++)
+		{*/
+	for (int r = 0; r < rows; r++)
+	{
+		std::cout << "\n\t\t\t\t  ";
 		for (int c = 0; c < columns; c++)
 		{
 			unsigned char symbol = levelData[r][c];
@@ -826,7 +845,7 @@ void Render2(int rows, int columns)
 				break;
 			}
 			// Trap
-			case 116ui8: //t
+			case 't': //t
 			{
 				symbol = ' ';
 				break;
@@ -838,6 +857,8 @@ void Render2(int rows, int columns)
 				SetConsoleTextAttribute(consoleHandle, Red);
 				break;
 			}
+			//case 0: // нулевой символ
+			//	break;
 	 		}
     	
 			//printf("%c", symbol);
@@ -862,7 +883,6 @@ void Render2(int rows, int columns)
 	
 
 	// Warnings
-	//Warnings();
 	Warnings(warning); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
 	Description();
 
@@ -944,7 +964,7 @@ void MoveHeroTo(int row, int column)
 		// Exit cell
 		case symbolExit:
 		{
-			if ((levelSelector == 2) && (CrystalCount < 13))
+			if ((levelSelector == 2) && (CrystalCount < 1)) //13
 			{
 				warning = crystalWarning;
 				//warning2 = true;
@@ -1359,7 +1379,7 @@ void Update()
 		{
 			if (levelSelector == 1)
 			{
-				Initialise(rowsCount, columnsCount);
+				Initialise2(rowsCount, columnsCount);
 			}
 			if (levelSelector == 2)
 			{
@@ -1410,6 +1430,8 @@ void Shutdown()
 	}
 	
 	_getch();
+
+	SetCurrentConsoleFontEx(consoleHandle, TRUE, &defaultFont); // Установить прежний шрифт
 }
 
 
@@ -1434,17 +1456,17 @@ int main()
 		UpdateFont();
 	} while (isGameActive == true);
 	
-	//// Level 1
-	//system("cls");
-	//isGameActive = true;
-	//levelSelector = 1;
-	//Initialise2(rowsCount, columnsCount);
-	//do
-	//{
-	//	Render();
-	//	Update();
-	//} 
-	//while ( isGameActive );
+	// Level 1
+	system("cls");
+	isGameActive = true;
+	levelSelector = 1;
+	Initialise2(rowsCount, columnsCount);
+	do
+	{
+		Render();
+		Update();
+	} 
+	while ( isGameActive );
 
 	// Level 2
 	system("cls");
@@ -1454,22 +1476,21 @@ int main()
 	do
 	{
 		Render2(rowsCount2, columnsCount2);
-		//Description();
 		Update();
 	} while (isGameActive);
 	
-	// Level 3
-	system("cls");
-	isGameActive = true;
-	LevelClear();
-	levelSelector = 3;
-	Initialise2(rowsCount3, columnsCount3);
-	do
-	{
-		Render2(rowsCount3, columnsCount3);
-		//Description();
-		Update();
-	} while (isGameActive);
+	//// Level 3
+	//system("cls");
+	//isGameActive = true;
+	//LevelClear();
+	//levelSelector = 3;
+	//Initialise2(rowsCount3, columnsCount3);
+	//do
+	//{
+	//	Render2(rowsCount3, columnsCount3);
+	//	//Description();
+	//	Update();
+	//} while (isGameActive);
 	
 
 	Shutdown();
