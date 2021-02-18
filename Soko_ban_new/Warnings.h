@@ -33,17 +33,17 @@ void Warnings(Warning warn) {
 		{
 		case 1:
 		{
-			printColorText(consoleHandle, "\n\t\t\t    I РєСѓРґРё С‚Рё Р±РµР· ", Yellow);
-			printColorText(consoleHandle, "РљР»СЋС‡Р°", LightMagenta);
-			printColorText(consoleHandle, " Р»iР·РµС€ ? ", Yellow);
+			printColorText(consoleHandle, "\n\t\t\t    I куди ти без ", Yellow);
+			printColorText(consoleHandle, "Ключа", LightMagenta);
+			printColorText(consoleHandle, " лiзеш ? ", Yellow);
 			break;
 		}
 		case 2:
 		{
 			/*if (levelSelector == 3 || levelSelector == 4)
 				printf(" ");*/
-			printColorText(consoleHandle, "\n\t\t\t\t    РќСѓР¶РµРЅ ", Yellow);
-			printColorText(consoleHandle, "РљР»СЋС‡     ", LightMagenta);
+			printColorText(consoleHandle, "\n\t\t\t\t    Нужен ", Yellow);
+			printColorText(consoleHandle, "Ключ     ", LightMagenta);
 			break;
 		}
 		case 3:
@@ -61,15 +61,15 @@ void Warnings(Warning warn) {
 		case 1:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t   РљСѓРґРё Р·iР±СЂР°РІСЃСЏ? Рђ РЅСѓ ", Yellow);
+			printColorText(consoleHandle, "\n\t\t\t   Куди зiбрався? А ну ", Yellow);
 			printColorText(consoleHandle, symbolCrystal, Magenta);
-			printColorText(consoleHandle, " Р·Р±РёСЂР°Р№!", Yellow);
+			printColorText(consoleHandle, " збирай!", Yellow);
 			break;
 		}
 		case 2:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t\t  РќСѓР¶РЅРѕ Р±РѕР»СЊС€Рµ ", Yellow);
+			printColorText(consoleHandle, "\n\t\t\t\t  Нужно больше ", Yellow);
 			printColorText(consoleHandle, symbolCrystal, Magenta);
 			break;
 		}
@@ -88,15 +88,15 @@ void Warnings(Warning warn) {
 		case 1:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t     РЇ Р¶ РєР°Р·Р°РІ РЅРµ Р»iР·С‚Рё РІ ", Yellow);
-			printColorText(consoleHandle, "РЇРјСѓ", Red);
+			printColorText(consoleHandle, "\n\t\t\t     Я ж казав не лiзти в ", Yellow);
+			printColorText(consoleHandle, "Яму", Red);
 			printColorText(consoleHandle, "!", Yellow);
 			break;
 		}
 		case 2:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t\t    РџРћРўР РђР§Р•РќРћ", Yellow);
+			printColorText(consoleHandle, "\n\t\t\t\t    ПОТРАЧЕНО", Yellow);
 			break;
 		}
 		case 3:
@@ -113,13 +113,13 @@ void Warnings(Warning warn) {
 		case 1:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t\tРЎС‚iРЅР° РІ РїРѕРґР°СЂСѓРЅРѕРє", Yellow);
+			printColorText(consoleHandle, "\n\t\t\t\tСтiна в подарунок", Yellow);
 			break;
 		}
 		case 2:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t\t     РЎСЋСЂРїСЂРёР·", Yellow);
+			printColorText(consoleHandle, "\n\t\t\t\t     Сюрприз", Yellow);
 			break;
 		}
 		case 3:
@@ -134,16 +134,16 @@ void Warnings(Warning warn) {
 		if (Localization == 1)
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t       РћС†Рµ С‚Р°Рє РЅРµСЃРїРѕРґiРІР°РЅРєР°!", Yellow);
+			printColorText(consoleHandle, "\n\t\t\t       Оце так несподiванка!", Yellow);
 		}
 		else if (Localization == 2)
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t\t  Р’РѕС‚ СЌС‚Рѕ РїРѕРІРѕСЂРѕС‚!", Yellow);
+			printColorText(consoleHandle, "\n\t\t\t\t  Вот это поворот!", Yellow);
 		}
 		else if (Localization == 3)
 		{
-			//setlocale(LC_ALL, "РЎ");
+			//setlocale(LC_ALL, "С");
 			printColorText(consoleHandle, "\n\t\t\t      Surprise, motherfucker!", Yellow);
 		}
 		warning = None;
@@ -155,13 +155,13 @@ void Warnings(Warning warn) {
 		{
 			//
 			printColorText(consoleHandle,
-				"\n\t\t     РўРё Р·РЅР°Р№С€РѕРІ С‚Р°С”РјРЅРёР№ Р»Р°Р·. РќiС‡РѕРіРѕ РѕСЃРѕР±Р»РёРІРѕРіРѕ", Yellow); //41+21=62
+				"\n\t\t     Ти знайшов таємний лаз. Нiчого особливого", Yellow); //41+21=62
 			break;
 		}
 		case 2:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t  Р­Р№! РљС‚Рѕ РѕС‚РєСЂС‹Р» С‚Р°Р№РЅСѓСЋ РєРѕРјРЅР°С‚Сѓ?!", Yellow); //57
+			printColorText(consoleHandle, "\n\t\t\t  Эй! Кто открыл тайную комнату?!", Yellow); //57
 			break;
 		}
 		case 3:
@@ -178,16 +178,16 @@ void Warnings(Warning warn) {
 			case 1:
 			{
 				//
-				printColorText(consoleHandle, "\n\t\t\t  РћР±РµСЂРµР¶РЅРѕ! РўСѓС‚ РїСЂРёС…РѕРІР°РЅi ", Yellow);  // 25+33=58
-				printColorText(consoleHandle, "РїР°СЃС‚РєРё", Red);
+				printColorText(consoleHandle, "\n\t\t\t  Обережно! Тут прихованi ", Yellow);  // 25+33=58
+				printColorText(consoleHandle, "пастки", Red);
 				printColorText(consoleHandle, '!', Yellow);
 				break;
 			}
 			case 2:
 			{
 				//
-				printColorText(consoleHandle, "\n\t\t\t РћСЃС‚РѕСЂРѕР¶РЅРѕ! Р—РґРµСЃСЊ РїСЂРёРїСЂСЏС‚Р°РЅС‹ ", Yellow); // 24+33=57
-				printColorText(consoleHandle, "РјРёРЅС‹", Red);
+				printColorText(consoleHandle, "\n\t\t\t Осторожно! Здесь припрятаны ", Yellow); // 24+33=57
+				printColorText(consoleHandle, "мины", Red);
 				printColorText(consoleHandle, '!', Yellow);
 				break;
 			}
@@ -208,23 +208,23 @@ void Warnings(Warning warn) {
 			case 1:
 			{
 				//
-				printColorText(consoleHandle, "\n\t\t\t  РџРѕРїРµСЂРµРґСѓ ", Yellow); 
-				printColorText(consoleHandle, "РїР°СЃС‚РєР°", Red);
+				printColorText(consoleHandle, "\n\t\t\t  Попереду ", Yellow); 
+				printColorText(consoleHandle, "пастка", Red);
 				printColorText(consoleHandle, '!', Yellow);
-				printColorText(consoleHandle, " РќРµ СЂР°РґР¶Сѓ Р№С‚Рё ", Yellow);
-				if (warn == secretBombLeft) printColorText(consoleHandle, "РІР»iРІРѕ", Yellow);
-				if (warn == secretBombRight) printColorText(consoleHandle, "РІРїСЂР°РІРѕ", Yellow);
+				printColorText(consoleHandle, " Не раджу йти ", Yellow);
+				if (warn == secretBombLeft) printColorText(consoleHandle, "влiво", Yellow);
+				if (warn == secretBombRight) printColorText(consoleHandle, "вправо", Yellow);
 				break;
 			}
 			case 2:
 			{
 				//
-				printColorText(consoleHandle, "\n\t\t\tР’РїРµСЂРµРґРё ", Yellow); 
-				printColorText(consoleHandle, "РјРёРЅР°", Red);
+				printColorText(consoleHandle, "\n\t\t\tВпереди ", Yellow); 
+				printColorText(consoleHandle, "мина", Red);
 				printColorText(consoleHandle, '!', Yellow);
-				printColorText(consoleHandle, " РќРµ СЃРѕРІРµС‚СѓСЋ СЃС‚СѓРїР°С‚СЊ ", Yellow);
-				if (warn == secretBombLeft) printColorText(consoleHandle, "РІР»РµРІРѕ", Yellow);
-				if (warn == secretBombRight) printColorText(consoleHandle, "РІРїСЂР°РІРѕ", Yellow);
+				printColorText(consoleHandle, " Не советую ступать ", Yellow);
+				if (warn == secretBombLeft) printColorText(consoleHandle, "влево", Yellow);
+				if (warn == secretBombRight) printColorText(consoleHandle, "вправо", Yellow);
 				break;
 			}
 			case 3:
@@ -244,13 +244,13 @@ void Warnings(Warning warn) {
 		case 1:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t\tРўР° РЅРµС…Р°Р№ Р№РѕРјСѓ РіСЂРµС†СЊ!", Yellow);
+			printColorText(consoleHandle, "\n\t\t\t\tТа нехай йому грець!", Yellow);
 			break;
 		}
 		case 2:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t\t    Р§С‘СЂС‚ РїРѕР±РµСЂРё!", Yellow);
+			printColorText(consoleHandle, "\n\t\t\t\t    Чёрт побери!", Yellow);
 			break;
 		}
 		case 3:
@@ -274,24 +274,24 @@ void Description()
 		case 1: //UA
 		{
 			setlocale(LC_ALL, "Russian");
-			std::cout << "\n   РљРµСЂСѓР№ ";
-			printColorText(consoleHandle, "РљРѕР·Р°РєРѕРј", LightGreen);
-			std::cout << ". Р—Р±РёСЂР°Р№ ";
+			std::cout << "\n   Керуй ";
+			printColorText(consoleHandle, "Козаком", LightGreen);
+			std::cout << ". Збирай ";
 			printColorText(consoleHandle, symbolCrystal, Magenta);
 			std::cout << " i ";
-			printColorText(consoleHandle, "РљР»СЋС‡i", LightMagenta);
+			printColorText(consoleHandle, "Ключi", LightMagenta);
 			std::cout << '(';
 			printColorText(consoleHandle, symbolKey, LightMagenta);
-			std::cout << ") С‰РѕР± РІРёРіСЂР°С‚Рё. R - СЂРѕР·РїРѕС‡Р°С‚Рё СЃРїРѕС‡Р°С‚РєСѓ.\n   Р’РёРєРѕСЂРёСЃС‚РѕРІСѓР№ ";
-			printColorText(consoleHandle, "РўР°С”РјРЅi С‚СѓРЅРµР»i", LightCyan);
+			std::cout << ") щоб виграти. R - розпочати спочатку.\n   Використовуй ";
+			printColorText(consoleHandle, "Таємнi тунелi", LightCyan);
 			std::cout << '(';
 			printColorText(consoleHandle, 'O', LightCyan);
-			std::cout << ") i РџСѓРЅРєС‚Рё РїСЂРѕРїСѓСЃРєСѓ (";
+			std::cout << ") i Пункти пропуску (";
 			setlocale(LC_ALL, "C");
 			std::cout << symbolDoorG << ", " << symbolDoorV;
 			setlocale(LC_ALL, "Russian");
-			std::cout << "). РќРµ РІС‚СЂР°РїР»СЏР№ Сѓ ";
-			printColorText(consoleHandle, "РЇРјРё", Red);
+			std::cout << "). Не втрапляй у ";
+			printColorText(consoleHandle, "Ями", Red);
 			std::cout << '(';
 			printColorText(consoleHandle, symbolBomb, Red);
 			std::cout << ").";
@@ -301,44 +301,44 @@ void Description()
 		{
 			setlocale(LC_ALL, "Russian");
 			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("\n   РЈРїСЂР°РІР»СЏР№С‚Рµ ");
+			printf("\n   Управляйте ");
 			SetConsoleTextAttribute(consoleHandle, 10);
-			printf("Р“РµСЂРѕРµРј");
+			printf("Героем");
 			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(". РЎРѕР±РёСЂР°Р№С‚Рµ ");
+			printf(". Собирайте ");
 			SetConsoleTextAttribute(consoleHandle, 5);
 			printf("%c", symbolCrystal);
 			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(" Рё ");
+			printf(" и ");
 			SetConsoleTextAttribute(consoleHandle, 13);
-			printf("РљР»СЋС‡Рё");
+			printf("Ключи");
 			SetConsoleTextAttribute(consoleHandle, 7);
 			printf("(");
 			SetConsoleTextAttribute(consoleHandle, 13);
 			printf("%c", symbolKey);
 			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") С‡С‚РѕР±С‹ РІС‹РёРіСЂР°С‚СЊ. R - РџРµСЂРµР·Р°РїСѓСЃРє.");
-			printf("\n   РСЃРїРѕР»СЊР·СѓР№С‚Рµ ");
+			printf(") чтобы выиграть. R - Перезапуск.");
+			printf("\n   Используйте ");
 			SetConsoleTextAttribute(consoleHandle, 11);
-			printf("РџРѕСЂС‚Р°Р»С‹");
+			printf("Порталы");
 			SetConsoleTextAttribute(consoleHandle, 7);
 			printf("(");
 			SetConsoleTextAttribute(consoleHandle, 11);
 			printf("O");
 			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") Рё Р”РІРµСЂРё (");
+			printf(") и Двери (");
 			setlocale(LC_ALL, "C");
 			printf("%c, %c", symbolDoorG, symbolDoorV);
 			setlocale(LC_ALL, "Russian");
-			printf("). Р‘СѓРґСЊС‚Рµ РѕСЃС‚РѕСЂРѕР¶РЅС‹ СЃ ");
+			printf("). Будьте осторожны с ");
 			SetConsoleTextAttribute(consoleHandle, Red);
-			printf("РњРёРЅР°РјРё");
+			printf("Минами");
 			SetConsoleTextAttribute(consoleHandle, 7);
 			printf("(");
 			SetConsoleTextAttribute(consoleHandle, Red);
 			printf("%c", symbolBomb);
 			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("). РЈРґР°С‡Рё");
+			printf("). Удачи");
 			break;
 		}
 		case 3: //ENG

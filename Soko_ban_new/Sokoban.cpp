@@ -153,46 +153,13 @@ void CenterWindow()
 	SetWindowPos(consoleWindow, NULL, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 }
 
-void SetupSystem()
-{
-	//consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	CONSOLE_SCREEN_BUFFER_INFOEX scrBuffer;
-	scrBuffer.cbSize = sizeof(scrBuffer);
-
-	_CONSOLE_CURSOR_INFO cursorInfo;
-
-	GetCurrentConsoleFontEx(consoleHandle, TRUE, &defaultFont); // Р—Р°РїРѕРјРЅРёС‚СЊ С‚РµРєСѓС‰РёР№ С€СЂРёС„С‚
-	GetConsoleScreenBufferInfoEx(consoleHandle, &scrBuffer);
-	GetConsoleCursorInfo(consoleHandle, &cursorInfo);
-
-	//Р Р°Р·РјРµСЂ Р±СѓС„РµСЂР° РєРѕРЅСЃРѕР»Рё
-	scrBuffer.dwSize = COORD{ 80,25 };
-	//Р Р°Р·РјРµСЂ РѕРєРЅР° РєРѕРЅСЃРѕР»Рё
-	scrBuffer.srWindow = SMALL_RECT{ 0,0,80,25 };
-	//РњР°РєСЃРёРјР°Р»СЊРЅС‹Р№(СЂР°СЃС‚СЏРіРёРІР°РµРјС‹Р№) СЂР°Р·РјРµСЂ РѕРєРЅР° РєРѕРЅСЃРѕР»Рё
-	scrBuffer.dwMaximumWindowSize = COORD{ 80,25 };
-	//РџРѕР»РЅРѕСЌРєСЂР°РЅРЅС‹Р№ СЂРµР¶РёРј
-	scrBuffer.bFullscreenSupported = false;
-	//Р”РµР»Р°РµРј РєСѓСЂСЃРѕСЂ РЅРµРІРёРґРёРјС‹Рј
-	cursorInfo.bVisible = false;
-
-	SetConsoleScreenBufferInfoEx(consoleHandle, &scrBuffer);
-	SetConsoleCursorInfo(consoleHandle, &cursorInfo);
-	//SetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РёР·РјРµРЅРµРЅРЅС‹Р№ С€СЂРёС„С‚
-
-	CenterWindow();
-
-	setlocale(LC_ALL, "Russian");
-}
-
-void SetupFont() 
+void SetupFont()
 {
 	CONSOLE_FONT_INFOEX fontInfo;
 	fontInfo.cbSize = sizeof(fontInfo);
 
-	GetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // РџРѕР»СѓС‡РёС‚СЊ С‚РµРєСѓС‰РёР№ С€СЂРёС„С‚
-	
+	GetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // Получить текущий шрифт
+
 	if (font == 0)
 	{
 		fontInfo.dwFontSize.X = 8;
@@ -208,16 +175,51 @@ void SetupFont()
 	wcscpy_s(fontInfo.FaceName, L"Terminal");
 	fontInfo.nFont = 6;
 
-	SetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РёР·РјРµРЅРµРЅРЅС‹Р№ С€СЂРёС„С‚
+	SetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // Установить измененный шрифт
 
 	CenterWindow();
+}
+
+void SetupSystem()
+{
+	//consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	CONSOLE_SCREEN_BUFFER_INFOEX scrBuffer;
+	scrBuffer.cbSize = sizeof(scrBuffer);
+
+	_CONSOLE_CURSOR_INFO cursorInfo;
+
+	GetCurrentConsoleFontEx(consoleHandle, TRUE, &defaultFont); // Запомнить текущий шрифт
+	GetConsoleScreenBufferInfoEx(consoleHandle, &scrBuffer);
+	GetConsoleCursorInfo(consoleHandle, &cursorInfo);
+
+	//Размер буфера консоли
+	scrBuffer.dwSize = COORD{ 80,25 };
+	//Размер окна консоли
+	scrBuffer.srWindow = SMALL_RECT{ 0,0,80,25 };
+	//Максимальный(растягиваемый) размер окна консоли
+	scrBuffer.dwMaximumWindowSize = COORD{ 80,25 };
+	//Полноэкранный режим
+	scrBuffer.bFullscreenSupported = false;
+	//Делаем курсор невидимым
+	cursorInfo.bVisible = false;
+
+	SetConsoleScreenBufferInfoEx(consoleHandle, &scrBuffer);
+	SetConsoleCursorInfo(consoleHandle, &cursorInfo);
+	//SetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // Установить измененный шрифт
+
+	SetupFont();
+	CenterWindow();
+
+	setlocale(LC_ALL, "RUS");
 }
 
 void RenderLanguage()
 {
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
-	//setlocale(LC_ALL, "Russian");
-	setlocale(LC_ALL, ".UTF-8");
+	setlocale(LC_ALL, "Russian");
+	//setlocale(LC_ALL, ".UTF-8");
+	//setlocale(LC_CTYPE, ".866");
 	//setlocale(0, "");
 	std::cout << std::endl;
 
@@ -225,17 +227,17 @@ void RenderLanguage()
 	{
 		case 1:
 		{
-			std::cout << "\n\t\t\t Р‘СѓРґСЊ Р»Р°СЃРєР°, РѕР±РµСЂiС‚СЊ РІР°С€Сѓ РјРѕРІСѓ"; //54
+			std::wcout << L"\n\t\t\t Будь ласка, оберiть вашу мову"; //54
 			break;
 		}
 		case 2:
 		{
-			std::cout << "\n\t\t\t\t Р’С‹Р±РµСЂРёС‚Рµ СЏР·С‹Рє\t\t\t"; //46
+			std::wcout << L"\n\t\t\t\t Выберите язык\t\t\t"; //46
 			break;
 		}
 		case 3:
 		{
-			std::cout << "\n\t\t\t      Select your language    "; 
+			std::wcout << L"\n\t\t\t      Select your language    "; 
 			break;
 		}
 	}
@@ -246,22 +248,22 @@ void RenderLanguage()
 	{
 		std::cout << "\n\t\t\t\t ";
 		printColorText(consoleHandle, symbolHero, LightGreen);
-		printColorText(consoleHandle, " РЈРєСЂР°С—РЅСЃСЊРєР°\n", Yellow);
+		printColorText(consoleHandle, " Українська\n", Yellow);
 	}
 	else
 	{
-		std::cout << "\n\t\t\t\t   РЈРєСЂР°С—РЅСЃСЊРєР°\n";
+		std::cout << "\n\t\t\t\t   Українська\n";
 	}
 
 	if (Localization == 2)
 	{
 		std::cout << "\n\t\t\t\t ";
 		printColorText(consoleHandle, symbolHero, LightGreen);
-		printColorText(consoleHandle, "  Р СѓСЃСЃРєРёР№\n", Yellow);
+		printColorText(consoleHandle, "  Русский\n", Yellow);
 	}
 	else
 	{
-		std::cout << "\n\t\t\t\t    Р СѓСЃСЃРєРёР№\n";
+		std::cout << "\n\t\t\t\t    Русский\n";
 	}
 
 	if (Localization == 3)
@@ -281,12 +283,12 @@ void RenderLanguage()
 	{
 	case 1:
 	{
-		std::cout << "\n\t\t\t\tРќР°С‚РёСЃРЅiС‚СЊ Enter"; //32+15
+		std::cout << "\n\t\t\t\tНатиснiть Enter"; //32+15
 		break;
 	}
 	case 2:
 	{
-		std::cout << "\n\t\t\t\t РќР°Р¶РјРёС‚Рµ Enter\t"; //33+13
+		std::cout << "\n\t\t\t\t Нажмите Enter\t"; //33+13
 		break;
 	}
 	case 3:
@@ -371,12 +373,12 @@ void RenderFont()
 	{
 	case 1:
 	{
-		std::cout << "\t\t\t\t Р РѕР·РјiСЂ С€СЂРёС„С‚Сѓ";
+		std::cout << "\t\t\t\t Розмiр шрифту";
 		break;
 	}
 	case 2:
 	{
-		std::cout << "\t\t\t\t Р’С‹Р±РµСЂРёС‚Рµ С€СЂРёС„С‚\t\t\t";
+		std::cout << "\t\t\t\t Выберите шрифт\t\t\t";
 		break;
 	}
 	case 3:
@@ -581,7 +583,7 @@ void Initialise2(int rows, int columns)
 				levelData[r][c] = symbolBomb;
 				break;
 			}
-			// РћРєРѕРЅС‡Р°РЅРёРµ СЃС‚СЂРѕРєРё
+			// Окончание строки
 			/*case '\0':
 				break;*/
 			// Trap
@@ -618,6 +620,9 @@ void LevelClear()
 		levelSelector = 3;
 		Initialise2(rowsCount3, columnsCount3);
 	}
+
+	/*std::cin.clear();
+	fflush(stdin);*/
 }
 
 void Render()
@@ -698,13 +703,13 @@ void Render()
 		{
 			setlocale(LC_ALL, "Russian");
 			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("\n\n\tРСЃРїРѕР»СЊР·СѓР№С‚Рµ РєР»Р°РІРёС€Рё AWSD С‡С‚РѕР±С‹ СѓРїСЂР°РІР»СЏС‚СЊ ");
+			printf("\n\n\tИспользуйте клавиши AWSD чтобы управлять ");
 			SetConsoleTextAttribute(consoleHandle, 10);
-			printf("Р“РµСЂРѕРµРј");
+			printf("Героем");
 			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(".\n\tР”РІРёРіР°Р№С‚Рµ ");
+			printf(".\n\tДвигайте ");
 			SetConsoleTextAttribute(consoleHandle, 14);
-			printf("РЇС‰РёРєРё");
+			printf("Ящики");
 			SetConsoleTextAttribute(consoleHandle, 7);
 			printf("(");
 			setlocale(LC_ALL, "C");
@@ -712,7 +717,7 @@ void Render()
 			printf("%c", symbolBox);
 			setlocale(LC_ALL, "Russian");
 			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") С‡С‚РѕР±С‹ РґРѕР±СЂР°С‚СЊСЃСЏ РґРѕ Р’С‹С…РѕРґР°(");
+			printf(") чтобы добраться до Выхода(");
 			setlocale(LC_ALL, "C");
 			SetConsoleTextAttribute(consoleHandle, 12);
 			printf("%c", symbolExit);
@@ -720,21 +725,21 @@ void Render()
 			SetConsoleTextAttribute(consoleHandle, 7);
 			printf(").");
 			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("\n\tR - РїРµСЂРµР·Р°РїСѓСЃС‚РёС‚СЊ СѓСЂРѕРІРµРЅСЊ.");
+			printf("\n\tR - перезапустить уровень.");
 			break;
 		}
 		case 1:
 		{
 			setlocale(LC_ALL, "Russian");
 			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("\n\n\tРљРѕСЂРёСЃС‚СѓР№СЃСЏ AWSD С‰РѕР± РєРµСЂСѓРІР°С‚Рё ");
+			printf("\n\n\tКористуйся AWSD щоб керувати ");
 			SetConsoleTextAttribute(consoleHandle, 10);
-			printf("РљРѕР·Р°РєРѕРј");
+			printf("Козаком");
 			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(". R - СЂРѕР·РїРѕС‡Р°С‚Рё СЃРїРѕС‡Р°С‚РєСѓ.");
-			printf("\n\tР СѓС…Р°Р№ ");
+			printf(". R - розпочати спочатку.");
+			printf("\n\tРухай ");
 			SetConsoleTextAttribute(consoleHandle, 14);
-			printf("РЎРЅРѕРїРё");
+			printf("Снопи");
 			SetConsoleTextAttribute(consoleHandle, 7);
 			printf("(");
 			setlocale(LC_ALL, "C");
@@ -742,7 +747,7 @@ void Render()
 			printf("%c", symbolBox);
 			setlocale(LC_ALL, "Russian");
 			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") С‰РѕР± РґiСЃС‚Р°С‚РёСЃСЊ Р’РёС…РѕРґСѓ(");
+			printf(") щоб дiстатись Виходу(");
 			setlocale(LC_ALL, "C");
 			SetConsoleTextAttribute(consoleHandle, 12);
 			printf("%c", symbolExit);
@@ -858,7 +863,7 @@ void Render2(int rows, int columns)
 				SetConsoleTextAttribute(consoleHandle, Red);
 				break;
 			}
-			//case 0: // РЅСѓР»РµРІРѕР№ СЃРёРјРІРѕР»
+			//case 0: // нулевой символ
 			//	break;
 	 		}
     	
@@ -941,7 +946,10 @@ void DieAnimation(int row, int column) {
 		Render2(renderR, renderC);
 		Sleep(225);
 	}
-	
+
+	//using namespace std;
+	/*std::cin.clear();
+	fflush(stdin);*/
 	//_getch();
 	//_getch();
 	//system("cls");
@@ -1419,20 +1427,20 @@ void Shutdown()
 		case 2:
 		{
 			setlocale(LC_ALL, "Russian");
-			printf("\n\t РќРµРїР»РѕС…Рѕ СЃС‹РіСЂР°РЅРѕ. РќР°Р¶РјРёС‚Рµ Р»СЋР±СѓСЋ РєР»Р°РІРёС€Сѓ РґР»СЏ С‚РѕРіРѕ С‡С‚РѕР±С‹ РІС‹Р№С‚Рё...");
+			printf("\n\t Неплохо сыграно. Нажмите любую клавишу для того чтобы выйти...");
 			break;
 		}
 		case 1:
 		{
 			setlocale(LC_ALL, "Russian");
-			printf("\n\t Р§СѓРґРѕРІРѕ Р·iРіСЂР°РЅРѕ, РїСЂРёС…РѕРґСЊС‚Рµ С‰Рµ...");
+			printf("\n\t Чудово зiграно, приходьте ще...");
 			break;
 		}
 	}
 	
 	_getch();
 
-	SetCurrentConsoleFontEx(consoleHandle, TRUE, &defaultFont); // РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РїСЂРµР¶РЅРёР№ С€СЂРёС„С‚
+	SetCurrentConsoleFontEx(consoleHandle, TRUE, &defaultFont); // Установить прежний шрифт
 }
 
 
@@ -1450,12 +1458,12 @@ int main()
 	while (isGameActive == true);
 
 	// Select Font Size
-	isGameActive = true;
+	/*isGameActive = true;
 	do
 	{
 		RenderFont();
 		UpdateFont();
-	} while (isGameActive == true);
+	} while (isGameActive == true);*/
 	
 	// Level 1
 	system("cls");
@@ -1464,7 +1472,7 @@ int main()
 	Initialise2(rowsCount, columnsCount);
 	do
 	{
-		Render();
+		Render2(rowsCount, columnsCount);
 		Update();
 	} 
 	while ( isGameActive );
