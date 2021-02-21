@@ -93,13 +93,13 @@ const unsigned char levelData3[rowsCount3][columnsCount3 + 1] = {
 const unsigned char levelData4[rowsCount3][columnsCount3 + 1] = {
 	"############22#",
 	"#   X   X  #  #",
-	"#X  X  X XX   #",
-	"#  #######    #",
-	"#  # v         ",
-	"#XX# #   # #  #",
-	"#  # # ### #tt#",
+	"#X  X  X XX#tt#",
+	"#  ####### #  #",
+	"#  # v   # #  #",
+	"#XX# # 1 # #  #",
+	"#  # ##### #tt#",
 	"#  #       #  #",
-	"#XX### #####  #",
+	"#XX#########  #",
 	"#  b   bXXXXtt#",
 	"#    b tXXXX  #",
 	"###############",
@@ -768,7 +768,7 @@ void RenderOld()
 	}
 }
 
-void Render2(int rows, int columns)
+void Render()
 {
 	// Move console cursor to (0,0)
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
@@ -901,23 +901,11 @@ void Render2(int rows, int columns)
 			//std::cout << symbol;
 		}
 		}
+		else break; // delete if /0 row is not in the end of lvl array
 	}
 
 	// Crystal/Key counters
 	Counters();
-	//std::cout<< "\n\t\t\t\t      "; // 34 to level render +4 = 38 spases
-	//if (CrystalCount != 0)
-	//{
-	//	printColorText(consoleHandle, symbolCrystal, Magenta);
-	//	std::cout << CrystalCount << ' ';
-	//}
-	//else std::cout << "   ";
-	//if (KeyCount != 0)
-	//{
-	//	printColorText(consoleHandle, symbolKey, LightMagenta);
-	//	std::cout << KeyCount;
-	//}
-	//else std::cout << "   ";
 
 	// Warnings
 	Warnings(warning); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
@@ -932,17 +920,17 @@ void BonusWall()
 {
 	warning = bonusWallWarning;
 	levelData[14][8] = symbolWall;
-	Render2(rowsCount2, columnsCount2);
+	Render();
 	Sleep(275);
 
 	warning = bonusWallWarning;
 	levelData[15][8] = symbolWall;
-	Render2(rowsCount2, columnsCount2);
+	Render();
 	Sleep(275);
 
 	warning = bonusWallWarning;
 	levelData[16][8] = symbolWall;
-	Render2(rowsCount2, columnsCount2);
+	Render();
 	Sleep(275);
 
 	warning = bonusWallWarning;
@@ -951,7 +939,7 @@ void BonusWall()
 
 void DieAnimation(int row, int column) {
 
-	int renderR = 0;
+	/*int renderR = 0;
 	int renderC = 0;
 
 	if (levelSelector == 2)
@@ -963,18 +951,18 @@ void DieAnimation(int row, int column) {
 	{
 		renderR = rowsCount3;
 		renderC = columnsCount3;
-	}
+	}*/
 
 	for (int i = 0; i < 3; ++i)
 	{
 		warning = bombWarning;
 		levelData[row][column] = 'd';
-		Render2(renderR, renderC);
+		Render();
 		Sleep(225);
 
 		warning = bombWarning;
 		levelData[row][column] = ' ';
-		Render2(renderR, renderC);
+		Render();
 		Sleep(225);
 	}
 
@@ -1017,12 +1005,12 @@ void MoveHeroTo(int row, int column)
 				canMoveToCell = false;
 			}
 			else
-			if ((levelSelector == 4) && (CrystalCount < 13))
+			if ((levelSelector == 4) && (CrystalCount < 14)) //13
 			{
 				//warning2 = true;
 				warning = crystalWarning;
 				canMoveToCell = false;
-				levelData[4][8] = symbolPortal;
+				levelData[4][7] = symbolPortal;
 			}
 			else
 			isGameActive = false;
@@ -1033,23 +1021,27 @@ void MoveHeroTo(int row, int column)
 		case symbolCrystal:
 		{
 			++CrystalCount;
-			canMoveToCell = true;
-			if ((levelSelector == 3) && (CrystalCount == 5))
+			//canMoveToCell = true; // error purpose
+			if (levelSelector == 3)
 			{
-				levelData[6][5] = symbolPortal;
-				levelData[6][9] = symbolPortal;
-			}
-			if ((levelSelector == 3) && (CrystalCount == 7))
-			{
-				levelData[5][6] = symbolCrystal;
-				levelData[5][7] = symbolCrystal;
-				levelData[5][8] = symbolCrystal;
-				levelData[4][6] = symbolCrystal;
-				levelData[4][7] = symbolCrystal;
-				levelData[4][8] = symbolCrystal;
-			}
-			if ((levelSelector == 3) && (CrystalCount == 13))
-			{
+				if (CrystalCount == 1) //5
+				{
+					levelData[6][5] = symbolPortal;
+					levelData[6][9] = symbolPortal;
+					canMoveToCell = true;
+				}
+				else if (CrystalCount == 7)
+				{
+					levelData[5][6] = symbolCrystal;
+					levelData[5][7] = symbolCrystal;
+					levelData[5][8] = symbolCrystal;
+					levelData[4][6] = symbolCrystal;
+					levelData[4][7] = symbolCrystal;
+					levelData[4][8] = symbolCrystal;
+					canMoveToCell = true;
+				}
+				else if (CrystalCount == 13) 
+				{
 					levelData[heroRow][heroColumn] = ' ';
 					levelData[row][column] = ' ';
 					// Save Past array
@@ -1063,7 +1055,7 @@ void MoveHeroTo(int row, int column)
 					{
 						levelSelector = 4;
 						Initialise2(rowsCount3, columnsCount3);
-
+						
 						warning = bonusLevelWarning;
 						futureSelector = true;
 					}
@@ -1081,34 +1073,93 @@ void MoveHeroTo(int row, int column)
 						heroColumn = 7;
 						levelData[5][7] = symbolHero;
 					}
+				}
+				else canMoveToCell = true;
 			}
+			else canMoveToCell = true;
+
+			//canMoveToCell = true; // error purpose
+			//if ((levelSelector == 3) && (CrystalCount == 1)) //5
+			//{
+			//	levelData[6][5] = symbolPortal;
+			//	levelData[6][9] = symbolPortal;
+			//}
+			//if ((levelSelector == 3) && (CrystalCount == 7))
+			//{
+			//	levelData[5][6] = symbolCrystal;
+			//	levelData[5][7] = symbolCrystal;
+			//	levelData[5][8] = symbolCrystal;
+			//	levelData[4][6] = symbolCrystal;
+			//	levelData[4][7] = symbolCrystal;
+			//	levelData[4][8] = symbolCrystal;
+			//}
+			//if ((levelSelector == 3) && (CrystalCount == 13))
+			//{
+			//		levelData[heroRow][heroColumn] = ' ';
+			//		levelData[row][column] = ' ';
+			//		// Save Past array
+			//		for (int r = 0; r < rowsCount3; r++)
+			//			for (int c = 0; c < columnsCount3; c++)
+			//			{
+			//				Past[r][c] = levelData[r][c];
+			//			}
+
+			//		if (futureSelector == false)
+			//		{
+			//			levelSelector = 4;
+			//			Initialise2(rowsCount3, columnsCount3);
+
+			//			warning = bonusLevelWarning;
+			//			futureSelector = true;
+			//		}
+			//		else
+			//		{
+			//			levelSelector = 4;
+			//			// Load future array
+			//			for (int r = 0; r < rowsCount3; r++)
+			//				for (int c = 0; c < columnsCount3; c++)
+			//				{
+			//					levelData[r][c] = Future[r][c];
+			//				}
+
+			//			heroRow = 5;
+			//			heroColumn = 7;
+			//			levelData[5][7] = symbolHero;
+			//		}
+			//}
 			break;
 		}
 		// Portal
 		case symbolPortal:
 		{
-			if ( levelSelector == 2 && row==1 && column==11)
+			if (levelSelector == 2 && row == 1 && column == 11)
 			{
 				levelData[heroRow][heroColumn] = ' ';
 				heroRow = 1;
 				heroColumn = 7;
 				levelData[1][7] = symbolHero;
 			}
-			else
-			if (levelSelector == 2 && row == 12 && column == 1)
+			else if (levelSelector == 2 && row == 12 && column == 1)
 			{
 				levelData[heroRow][heroColumn] = ' ';
 				heroRow = 15;
 				heroColumn = 2;
 				levelData[15][2] = symbolHero;
 			}
-			else
-			if (levelSelector == 3 && row == 6 && column == 9)
+			else if (levelSelector == 3 && row == 6 && column == 9) // Key Portal
 			{
 				levelData[heroRow][heroColumn] = ' ';
-				heroRow = 1;
-				heroColumn = 13;
-				levelData[1][13] = symbolHero;
+				if (levelData[1][12] == symbolKey)
+				{
+					heroRow = 1;
+					heroColumn = 13;
+				}
+				else
+				{
+					heroRow = 10;
+					heroColumn = 1;
+				}
+				levelData[heroRow][heroColumn] = symbolHero;
 			}
 			else
 			if (levelSelector == 3 && row == 6 && column == 5) // Old Portal
@@ -1125,9 +1176,9 @@ void MoveHeroTo(int row, int column)
 				{
 					levelSelector = 4;
 					Initialise2(rowsCount3, columnsCount3);
-					heroRow = 5;
-					heroColumn = 7;
-					levelData[5][7] = symbolHero;
+					heroRow = 10;
+					heroColumn = 6;
+					levelData[heroRow][heroColumn] = symbolHero;
 
 					warning = bonusLevelWarning;
 					futureSelector = true;
@@ -1144,11 +1195,11 @@ void MoveHeroTo(int row, int column)
 					levelSelector = 4;
 					heroRow = 5;
 					heroColumn = 7;
-					levelData[5][7] = symbolHero;
+					levelData[heroRow][heroColumn] = symbolHero;
 				}
 			}
 			else
-			if (levelSelector == 4 && row == 4 && column == 8) // New Portal
+			if (levelSelector == 4 && row == 4 && column == 7) // New Portal
 			{
 				levelData[heroRow][heroColumn] = ' ';
 				// Save Future array
@@ -1177,20 +1228,29 @@ void MoveHeroTo(int row, int column)
 		{
 			++KeyCount;
 			canMoveToCell = true;
+
+			if (levelSelector == 4)
+				if((levelData[8][6] != ' ') && row == 10 && column == 13)
+					levelData[8][6] = symbolDoorG;
 			break;
 		}
 		// Gorisontal door
 		case symbolDoorG:
 		{
-			if ( KeyCount > 0 )
+			if (KeyCount > 0)
 			{
-			KeyCount = KeyCount - 1;
-			canMoveToCell = true;
+				KeyCount = KeyCount - 1;
+				canMoveToCell = true;
 
-			if (row == 1 && column == 12)
-				levelData[1][13] = ' ';
-			if (row == 1 && column == 13)
-				levelData[1][12] = ' ';
+				if (levelSelector == 4)
+				{
+					if (row == 1 && column == 12)
+						levelData[1][13] = ' ';
+					else if (row == 1 && column == 13)
+						levelData[1][12] = ' ';
+					else if (row == 8 && column == 6)
+						levelData[10][13] = symbolKey;
+				}
 			}
 			else
 			{
@@ -1240,8 +1300,8 @@ void MoveHeroTo(int row, int column)
 			}
 			break;
 		}
-		// Trap lvl2
-		case 116ui8: //116ui8 /t
+		// Trap
+		case 't': //116ui8 /t
 		{
 			// Bonus wall
 			if (levelSelector == 2) // && row == 16 && column == 11) // && (bonusWallSelector == false))
@@ -1267,50 +1327,72 @@ void MoveHeroTo(int row, int column)
 					levelData[11][13] = 't';
 				}
 				// Secret bombs warning
-				else if ((row == 11 && column == 12) || (row == 11 && column == 13))
+				else if ((row == 11 && column == 12))
+				{
 					warning = secretBombsWarning;
+					levelData[11][13] = ' ';
+				}
+				else if ((row == 11 && column == 13))
+				{
+					warning = secretBombsWarning;
+					levelData[11][12] = ' ';
+				}
 				// Secret bombs
-				else if (column == 12)
+				else if (row == 9 && column == 12)
 				{
-					if (row == 9) {
-						levelData[7][12] = symbolBomb;
-						if (levelData[7][13] != symbolBomb) warning = secretBombRight;
-						else warning = secretBombDamn;
-					}
-					else if (row == 6) {
-						levelData[4][12] = symbolBomb;
-						if (levelData[4][13] != symbolBomb) warning = secretBombRight;
-						else warning = secretBombDamn;
-					}
-				}
-				else if (column == 13)
-				{
-					if (row == 9) {
-						levelData[7][13] = symbolBomb;
-						if (levelData[7][12] != symbolBomb) warning = secretBombLeft;
-						else warning = secretBombDamn;
-					}
-					else if (row == 6) {
-						levelData[4][13] = symbolBomb;
-						if (levelData[4][12] != symbolBomb) warning = secretBombLeft;
-						else warning = secretBombDamn;
-					}
-				}
-				/*else if (row == 9 && column == 12)
 					levelData[7][12] = symbolBomb;
+					if (levelData[7][13] != symbolBomb) warning = secretBombRight;
+					else 
+					{ 
+						warning = secretBombDamn; 
+						levelData[6][11] = ' ';
+					}
+				}
 				else if (row == 9 && column == 13)
 				{
 					levelData[7][13] = symbolBomb;
 					if(levelData[7][12] != symbolBomb) warning = secretBombLeft;
-					else warning = secretBombDamn;
+					else
+					{
+						warning = secretBombDamn;
+						levelData[6][11] = ' ';
+					}
 				}
 				else if (row == 6 && column == 12)
+				{
 					levelData[4][12] = symbolBomb;
+					if (levelData[4][13] != symbolBomb) warning = secretBombRight;
+					else 
+					{
+						warning = secretBombDamn;
+						levelData[3][11] = ' ';
+						levelData[5][10] = symbolWall;
+						levelData[4][9] = ' ';
+					}
+				}
 				else if (row == 6 && column == 13)
 				{
 					levelData[4][13] = symbolBomb;
-					warning = secretBombLeft;
-				}*/
+					if (levelData[4][12] != symbolBomb) warning = secretBombLeft;
+					else 
+					{
+						warning = secretBombDamn;
+						levelData[3][11] = ' ';
+						levelData[5][10] = symbolWall;
+						levelData[4][9] = ' ';
+					}
+				}
+				// Final Door
+				else if ((row == 2) && (column == 12 || column == 13))
+				{
+					levelData[1][12] = symbolDoorG;
+					levelData[1][13] = symbolDoorG;
+					levelData[10][13] = symbolKey;
+					levelData[4][9] = ' '; // shortcut
+
+					if (column == 12) levelData[2][13] = ' ';
+					else if (column == 13) levelData[2][12] = ' ';
+				}
 
 				canMoveToCell = true;
 			}
@@ -1327,14 +1409,6 @@ void MoveHeroTo(int row, int column)
 
 		// Set hero symbol on new position
 		levelData[heroRow][heroColumn] = symbolHero;
-		// Final Door
-		if (levelSelector == 4 &&  ((heroRow == 2 && heroColumn == 12) || (heroRow == 2 && heroColumn == 13)))
-		{
-			levelData[1][12] = symbolDoorG;
-			levelData[1][13] = symbolDoorG;
-			levelData[10][13] = symbolKey;
-			//secretDoorSelector = true; //secretDoorSelector == false &&
-		}
 
 	}
 }
@@ -1497,27 +1571,27 @@ int main()
 	} while (isGameActive == true);*/
 	
 	// Level 1
-	system("cls");
-	isGameActive = true;
-	levelSelector = 1;
-	Initialise2(rowsCount, columnsCount);
-	do
-	{
-		Render2(rowsCount, columnsCount);
-		Update();
-	} 
-	while ( isGameActive );
+	//system("cls");
+	//isGameActive = true;
+	//levelSelector = 1;
+	//Initialise2(rowsCount, columnsCount);
+	//do
+	//{
+	//	Render();
+	//	Update();
+	//} 
+	//while ( isGameActive );
 
-	// Level 2
-	system("cls");
-	isGameActive = true;
-	levelSelector = 2;
-	Initialise2(rowsCount2, columnsCount2);
-	do
-	{
-		Render2(rowsCount2, columnsCount2);
-		Update();
-	} while (isGameActive);
+	//// Level 2
+	//system("cls");
+	//isGameActive = true;
+	//levelSelector = 2;
+	//Initialise2(rowsCount2, columnsCount2);
+	//do
+	//{
+	//	Render();
+	//	Update();
+	//} while (isGameActive);
 	
 	// Level 3
 	system("cls");
@@ -1527,8 +1601,7 @@ int main()
 	Initialise2(rowsCount3, columnsCount3);
 	do
 	{
-		Render2(rowsCount3, columnsCount3);
-		//Description();
+		Render();
 		Update();
 	} while (isGameActive);
 	
