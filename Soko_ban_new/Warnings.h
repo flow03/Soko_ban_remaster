@@ -269,6 +269,9 @@ void Warnings(Warning warn) {
 
 void Description() 
 {
+	std::cout << std::endl;
+
+	if (levelSelector != 1)
 	switch (Localization)
 	{
 		case 1: //UA
@@ -382,4 +385,106 @@ void Description()
 			break;
 		}
 	}
+	else
+	switch (Localization)
+	{
+		case 3:
+		{
+			//setlocale(LC_ALL, "Russian");
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf("\n\n\tUse AWSD to move your ");
+			SetConsoleTextAttribute(consoleHandle, 10);
+			printf("Hero");
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf(". Move ");
+			SetConsoleTextAttribute(consoleHandle, 14);
+			printf("Boxes");
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf("(");
+			SetConsoleTextAttribute(consoleHandle, 14);
+			printf("%c", symbolBox);
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf(") to get to the Exit(");
+			SetConsoleTextAttribute(consoleHandle, 12);
+			printf("%c", symbolExit);
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf(").");
+			printf("\n\tR - Restart level.");
+			break;
+		}
+		case 2:
+		{
+			setlocale(LC_ALL, "Russian");
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf("\n\n\tИспользуйте клавиши AWSD чтобы управлять ");
+			SetConsoleTextAttribute(consoleHandle, 10);
+			printf("Героем");
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf(".\n\tДвигайте ");
+			SetConsoleTextAttribute(consoleHandle, 14);
+			printf("Ящики");
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf("(");
+			setlocale(LC_ALL, "C");
+			SetConsoleTextAttribute(consoleHandle, 14);
+			printf("%c", symbolBox);
+			setlocale(LC_ALL, "Russian");
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf(") чтобы добраться до Выхода(");
+			setlocale(LC_ALL, "C");
+			SetConsoleTextAttribute(consoleHandle, 12);
+			printf("%c", symbolExit);
+			setlocale(LC_ALL, "Russian");
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf(").");
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf("\n\tR - перезапустить уровень.");
+			break;
+		}
+		case 1:
+		{
+			setlocale(LC_ALL, "Russian");
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf("\n\n\tКористуйся AWSD щоб керувати ");
+			SetConsoleTextAttribute(consoleHandle, 10);
+			printf("Козаком");
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf(". R - розпочати спочатку.");
+			printf("\n\tРухай ");
+			SetConsoleTextAttribute(consoleHandle, 14);
+			printf("Снопи");
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf("(");
+			setlocale(LC_ALL, "C");
+			SetConsoleTextAttribute(consoleHandle, 14);
+			printf("%c", symbolBox);
+			setlocale(LC_ALL, "Russian");
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf(") щоб дiстатись Виходу(");
+			setlocale(LC_ALL, "C");
+			SetConsoleTextAttribute(consoleHandle, 12);
+			printf("%c", symbolExit);
+			setlocale(LC_ALL, "Russian");
+			SetConsoleTextAttribute(consoleHandle, 7);
+			printf(").");
+			break;
+		}
+	}
+}
+
+void Counters()
+{
+	std::cout << "\n\t\t\t\t      "; // 34 to level render +4 = 38 spases
+	if (CrystalCount != 0)
+	{
+		printColorText(consoleHandle, symbolCrystal, Magenta);
+		std::cout << CrystalCount << ' ';
+	}
+	else std::cout << "   ";
+	if (KeyCount != 0)
+	{
+		printColorText(consoleHandle, symbolKey, LightMagenta);
+		std::cout << KeyCount;
+	}
+	else std::cout << "   ";
 }

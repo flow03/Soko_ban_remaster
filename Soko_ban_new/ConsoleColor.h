@@ -1,7 +1,6 @@
 #pragma once
 //#include <Windows.h>
 
-
 enum ConsoleColor
 {
 	Black = 0,

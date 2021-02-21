@@ -50,9 +50,9 @@ const int rowsCount2 = 18;
 const int columnsCount2 = 15;
 
 const unsigned char levelData2[rowsCount2][columnsCount2 + 1] = {
-	"#############",
+	"###2#########",
 	"#cb   # k# p#",
-	"#  c#g## X  #",
+	"2  c#g## X   ",
 	"# t #   ## ##",
 	"#     1     2",
 	"#g# #b  ## X#",
@@ -80,13 +80,13 @@ const unsigned char levelData3[rowsCount3][columnsCount3 + 1] = {
 	"#       c   XX#",
 	"#     c       #",
 	"#         c   #",
-	"2  c   1      2",
+	"2  c   1       ",
 	"#          c  #",
-	"#      c      #",
+	"#      c       ",
 	"#        c    #",
 	"#XX           #",
 	"#XcX          #",
-	"#######2#######",
+	"##### #2#######",
 	"               "
                                                                };
 
@@ -95,7 +95,7 @@ const unsigned char levelData4[rowsCount3][columnsCount3 + 1] = {
 	"#   X   X  #  #",
 	"#X  X  X XX   #",
 	"#  #######    #",
-	"#  # v        #",
+	"#  # v         ",
 	"#XX# #   # #  #",
 	"#  # # ### #tt#",
 	"#  #       #  #",
@@ -111,7 +111,7 @@ const unsigned char levelData4[rowsCount3][columnsCount3 + 1] = {
 // Logic variables
 HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 bool isGameActive = true;
-unsigned char levelData[rowsCount+8][columnsCount]; // Change for need
+unsigned char levelData[rowsCount+8][columnsCount+1]; // Change for need
 unsigned char Past[rowsCount3][columnsCount3];
 unsigned char Future[rowsCount3][columnsCount3];
 int heroRow = 0;
@@ -120,7 +120,7 @@ int levelSelector = 1;
 int CrystalCount = 0;
 int KeyCount = 0;
 int Localization = 1; //Language
-int font = 0; // Font
+int font = 1; // Font
 TCHAR szbuff[255]; //StringCchPrintf
 CONSOLE_FONT_INFOEX defaultFont;
 
@@ -194,11 +194,11 @@ void SetupSystem()
 	GetConsoleCursorInfo(consoleHandle, &cursorInfo);
 
 	//Размер буфера консоли
-	scrBuffer.dwSize = COORD{ 80,25 };
+	scrBuffer.dwSize = COORD{ 80,26 };
 	//Размер окна консоли
-	scrBuffer.srWindow = SMALL_RECT{ 0,0,80,25 };
+	scrBuffer.srWindow = SMALL_RECT{ 0,0,80,26 };
 	//Максимальный(растягиваемый) размер окна консоли
-	scrBuffer.dwMaximumWindowSize = COORD{ 80,25 };
+	scrBuffer.dwMaximumWindowSize = COORD{ 80,26 };
 	//Полноэкранный режим
 	scrBuffer.bFullscreenSupported = false;
 	//Делаем курсор невидимым
@@ -507,6 +507,15 @@ void Initialise2(int rows, int columns)
 		symbol = levelData4;
 	}
 
+	// Clear levelData from previos level
+	for (int r = 0; r < rowsCount + 8; r++)
+	{
+		for (int c = 0; c < columnsCount + 1; ++c)
+		{
+			levelData[r][c] = '\0';
+		}
+	}
+
 	for (int r = 0; r < rows; r++)
 	{
 		for (int c = 0; c < columns; c++)
@@ -625,7 +634,7 @@ void LevelClear()
 	fflush(stdin);*/
 }
 
-void Render()
+void RenderOld()
 {
 	// Move console cursor to (0,0)
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
@@ -674,88 +683,88 @@ void Render()
 
 	switch (Localization)
 	{
-		case 3:
-		{
-			setlocale(LC_ALL, "Russian");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("\n\n\tUse AWSD to move your ");
-			SetConsoleTextAttribute(consoleHandle, 10);
-			printf("Hero");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			
-			printf(". Move ");
-			SetConsoleTextAttribute(consoleHandle, 14);
-			printf("Boxes");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
-			SetConsoleTextAttribute(consoleHandle, 14);
-			printf("%c", symbolBox);
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") to get to the Exit(");
-			SetConsoleTextAttribute(consoleHandle, 12);
-			printf("%c", symbolExit);
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(").");
-			printf("\n\tR - Restart level.");
-			break;
-		}
-		case 2:
-		{
-			setlocale(LC_ALL, "Russian");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("\n\n\tИспользуйте клавиши AWSD чтобы управлять ");
-			SetConsoleTextAttribute(consoleHandle, 10);
-			printf("Героем");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(".\n\tДвигайте ");
-			SetConsoleTextAttribute(consoleHandle, 14);
-			printf("Ящики");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
-			setlocale(LC_ALL, "C");
-			SetConsoleTextAttribute(consoleHandle, 14);
-			printf("%c", symbolBox);
-			setlocale(LC_ALL, "Russian");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") чтобы добраться до Выхода(");
-			setlocale(LC_ALL, "C");
-			SetConsoleTextAttribute(consoleHandle, 12);
-			printf("%c", symbolExit);
-			setlocale(LC_ALL, "Russian");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(").");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("\n\tR - перезапустить уровень.");
-			break;
-		}
-		case 1:
-		{
-			setlocale(LC_ALL, "Russian");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("\n\n\tКористуйся AWSD щоб керувати ");
-			SetConsoleTextAttribute(consoleHandle, 10);
-			printf("Козаком");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(". R - розпочати спочатку.");
-			printf("\n\tРухай ");
-			SetConsoleTextAttribute(consoleHandle, 14);
-			printf("Снопи");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
-			setlocale(LC_ALL, "C");
-			SetConsoleTextAttribute(consoleHandle, 14);
-			printf("%c", symbolBox);
-			setlocale(LC_ALL, "Russian");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") щоб дiстатись Виходу(");
-			setlocale(LC_ALL, "C");
-			SetConsoleTextAttribute(consoleHandle, 12);
-			printf("%c", symbolExit);
-			setlocale(LC_ALL, "Russian");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(").");
-			break;
-		}
+	case 3:
+	{
+		setlocale(LC_ALL, "Russian");
+		SetConsoleTextAttribute(consoleHandle, 7);
+		printf("\n\n\tUse AWSD to move your ");
+		SetConsoleTextAttribute(consoleHandle, 10);
+		printf("Hero");
+		SetConsoleTextAttribute(consoleHandle, 7);
+
+		printf(". Move ");
+		SetConsoleTextAttribute(consoleHandle, 14);
+		printf("Boxes");
+		SetConsoleTextAttribute(consoleHandle, 7);
+		printf("(");
+		SetConsoleTextAttribute(consoleHandle, 14);
+		printf("%c", symbolBox);
+		SetConsoleTextAttribute(consoleHandle, 7);
+		printf(") to get to the Exit(");
+		SetConsoleTextAttribute(consoleHandle, 12);
+		printf("%c", symbolExit);
+		SetConsoleTextAttribute(consoleHandle, 7);
+		printf(").");
+		printf("\n\tR - Restart level.");
+		break;
+	}
+	case 2:
+	{
+		setlocale(LC_ALL, "Russian");
+		SetConsoleTextAttribute(consoleHandle, 7);
+		printf("\n\n\tИспользуйте клавиши AWSD чтобы управлять ");
+		SetConsoleTextAttribute(consoleHandle, 10);
+		printf("Героем");
+		SetConsoleTextAttribute(consoleHandle, 7);
+		printf(".\n\tДвигайте ");
+		SetConsoleTextAttribute(consoleHandle, 14);
+		printf("Ящики");
+		SetConsoleTextAttribute(consoleHandle, 7);
+		printf("(");
+		setlocale(LC_ALL, "C");
+		SetConsoleTextAttribute(consoleHandle, 14);
+		printf("%c", symbolBox);
+		setlocale(LC_ALL, "Russian");
+		SetConsoleTextAttribute(consoleHandle, 7);
+		printf(") чтобы добраться до Выхода(");
+		setlocale(LC_ALL, "C");
+		SetConsoleTextAttribute(consoleHandle, 12);
+		printf("%c", symbolExit);
+		setlocale(LC_ALL, "Russian");
+		SetConsoleTextAttribute(consoleHandle, 7);
+		printf(").");
+		SetConsoleTextAttribute(consoleHandle, 7);
+		printf("\n\tR - перезапустить уровень.");
+		break;
+	}
+	case 1:
+	{
+		setlocale(LC_ALL, "Russian");
+		SetConsoleTextAttribute(consoleHandle, 7);
+		printf("\n\n\tКористуйся AWSD щоб керувати ");
+		SetConsoleTextAttribute(consoleHandle, 10);
+		printf("Козаком");
+		SetConsoleTextAttribute(consoleHandle, 7);
+		printf(". R - розпочати спочатку.");
+		printf("\n\tРухай ");
+		SetConsoleTextAttribute(consoleHandle, 14);
+		printf("Снопи");
+		SetConsoleTextAttribute(consoleHandle, 7);
+		printf("(");
+		setlocale(LC_ALL, "C");
+		SetConsoleTextAttribute(consoleHandle, 14);
+		printf("%c", symbolBox);
+		setlocale(LC_ALL, "Russian");
+		SetConsoleTextAttribute(consoleHandle, 7);
+		printf(") щоб дiстатись Виходу(");
+		setlocale(LC_ALL, "C");
+		SetConsoleTextAttribute(consoleHandle, 12);
+		printf("%c", symbolExit);
+		setlocale(LC_ALL, "Russian");
+		SetConsoleTextAttribute(consoleHandle, 7);
+		printf(").");
+		break;
+	}
 	}
 }
 
@@ -763,130 +772,152 @@ void Render2(int rows, int columns)
 {
 	// Move console cursor to (0,0)
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
+	//system("cls");
 
 	setlocale(LC_ALL, "C");
 
 	std::cout<<'\n';
-	/*for (int r = 0; r < rows; r++)
+	/*for (int r = 0; r < rowsCount + 8; ++r)
 	{
-		std::cout<< "\n\t\t\t\t  ";
-		for (int c = 0; c < columns; c++)
-		{*/
-	for (int r = 0; r < rows; r++)
+		if (levelData[r][0] != '\0')
+			std::cout << "\n\t\t\t\t  " << levelData[r];
+	}*/
+	for (int r = 0; r < rowsCount + 8; ++r)
 	{
+		if (levelData[r][0] != '\0')
+		{
 		std::cout << "\n\t\t\t\t  ";
-		for (int c = 0; c < columns; c++)
+		for (int c = 0; c < columnsCount + 1; ++c)
 		{
 			unsigned char symbol = levelData[r][c];
 
 			switch (symbol)
 			{
-			// Walls - grey
+				// Walls - grey
 			case symbolWall:
 			{
-				SetConsoleTextAttribute(consoleHandle, LightGray);
+				std::cout << symbolWall;
+				break;
+			}
+			// Empty cells
+			case ' ':
+			{
+				std::cout << ' ';
 				break;
 			}
 			// Hero - green
 			case symbolHero:
 			{
-				SetConsoleTextAttribute(consoleHandle, LightGreen);
+				printColorText(consoleHandle, symbolHero, LightGreen);
 				break;
 			}
 			// Boxes - yellow
 			case symbolBox:
 			{
-				SetConsoleTextAttribute(consoleHandle, Yellow);
+				printColorText(consoleHandle, symbolBox, Yellow);
 				break;
 			}
 			// Exit - red
 			case symbolExit:
 			{
-				SetConsoleTextAttribute(consoleHandle, Red);
+				printColorText(consoleHandle, symbolExit, Red);
 				break;
 			}
 			// Crystal - Magenta
 			case symbolCrystal:
 			{
-				SetConsoleTextAttribute(consoleHandle, Magenta);
+				printColorText(consoleHandle, symbolCrystal, Magenta);
 				break;
 			}
 			// Portal - LightCyan
 			case symbolPortal:
 			{
-				if ((levelSelector == 3) && (r == 6) && (c == 5))
-					SetConsoleTextAttribute(consoleHandle, Magenta);
+				if (levelSelector != 3)
+					printColorText(consoleHandle, symbolPortal, LightCyan);
+				else
+				{
+					if ((r == 6) && (c == 5))
+						printColorText(consoleHandle, symbolPortal, Magenta);
+					else if ((r == 6) && (c == 9))
+						printColorText(consoleHandle, symbolPortal, LightMagenta);
+					else
+						printColorText(consoleHandle, symbolPortal, LightCyan);
+				}
+
+				/*if ((levelSelector == 3) && (r == 6) && (c == 5))
+					printColorText(consoleHandle, symbolPortal, Magenta);
 				else if ((levelSelector == 3) && (r == 6) && (c == 9))
-					SetConsoleTextAttribute(consoleHandle, LightMagenta);
-				else SetConsoleTextAttribute(consoleHandle, LightCyan);
+					printColorText(consoleHandle, symbolPortal, LightMagenta);
+				else printColorText(consoleHandle, symbolPortal, LightCyan);*/
 				break;
 			}
 			// Point - LightCyan
 			case symbolPoint:
 			{
-				SetConsoleTextAttribute(consoleHandle, LightCyan);
+				printColorText(consoleHandle, symbolPoint, LightCyan);
 				break;
 			}
 			// Gorisontal door - grey
 			case symbolDoorG:
 			{
-				SetConsoleTextAttribute(consoleHandle, LightGray);
+				std::cout << symbolDoorG;
 				break;
 			}
 			case symbolDoorV:
 			{
-				SetConsoleTextAttribute(consoleHandle, LightGray);
+				std::cout << symbolDoorV;
 				break;
 			}
 			// Key - LightMagenta
 			case symbolKey:
 			{
-				SetConsoleTextAttribute(consoleHandle, LightMagenta);
+				printColorText(consoleHandle, symbolKey, LightMagenta);
 				break;
 			}
 			// Bomb - Red
 			case symbolBomb:
 			{
-				SetConsoleTextAttribute(consoleHandle, Red);
+				printColorText(consoleHandle, symbolBomb, Red);
 				break;
 			}
 			// Trap
 			case 't': //t
 			{
-				symbol = ' ';
+				std::cout << ' ';
 				break;
 			}
-			//SymbolHeroDie
-			case 'd': 
+			// SymbolHeroDie
+			case 'd':
 			{
-				symbol = symbolHero;
-				SetConsoleTextAttribute(consoleHandle, Red);
+				//symbol = symbolHero;
+				printColorText(consoleHandle, symbolHero, Red);
 				break;
 			}
-			//case 0: // нулевой символ
-			//	break;
-	 		}
-    	
+			case '\0': // нулевой символ
+				break;
+			}
+
 			//printf("%c", symbol);
-			std::cout << symbol;
+			//std::cout << symbol;
+		}
 		}
 	}
 
 	// Crystal/Key counters
-	std::cout<< "\n\t\t\t\t      "; // 34 to level render +4 = 38 spases
-	if (CrystalCount != 0)
-	{
-		printColorText(consoleHandle, symbolCrystal, Magenta);
-		std::cout << CrystalCount << ' ';
-	}
-	else std::cout << "   ";
-	if (KeyCount != 0)
-	{
-		printColorText(consoleHandle, symbolKey, LightMagenta);
-		std::cout << KeyCount;
-	}
-	else std::cout << "   ";
-	
+	Counters();
+	//std::cout<< "\n\t\t\t\t      "; // 34 to level render +4 = 38 spases
+	//if (CrystalCount != 0)
+	//{
+	//	printColorText(consoleHandle, symbolCrystal, Magenta);
+	//	std::cout << CrystalCount << ' ';
+	//}
+	//else std::cout << "   ";
+	//if (KeyCount != 0)
+	//{
+	//	printColorText(consoleHandle, symbolKey, LightMagenta);
+	//	std::cout << KeyCount;
+	//}
+	//else std::cout << "   ";
 
 	// Warnings
 	Warnings(warning); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
@@ -1488,18 +1519,18 @@ int main()
 		Update();
 	} while (isGameActive);
 	
-	//// Level 3
-	//system("cls");
-	//isGameActive = true;
-	//LevelClear();
-	//levelSelector = 3;
-	//Initialise2(rowsCount3, columnsCount3);
-	//do
-	//{
-	//	Render2(rowsCount3, columnsCount3);
-	//	//Description();
-	//	Update();
-	//} while (isGameActive);
+	// Level 3
+	system("cls");
+	isGameActive = true;
+	LevelClear();
+	levelSelector = 3;
+	Initialise2(rowsCount3, columnsCount3);
+	do
+	{
+		Render2(rowsCount3, columnsCount3);
+		//Description();
+		Update();
+	} while (isGameActive);
 	
 
 	Shutdown();
