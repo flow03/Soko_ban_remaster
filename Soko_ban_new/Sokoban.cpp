@@ -96,7 +96,7 @@ const unsigned char levelData4[rowsCount3][columnsCount3 + 1] = {
 	"#X  X  X XX#tt#",
 	"#  ####### #  #",
 	"#  # v   # #  #",
-	"#XX# # 1 # #  #",
+	"#XX# #   # #  #",
 	"#  # ##### #tt#",
 	"#  #       #  #",
 	"#XX#########  #",
@@ -1055,9 +1055,12 @@ void MoveHeroTo(int row, int column)
 					{
 						levelSelector = 4;
 						Initialise2(rowsCount3, columnsCount3);
-						
 						warning = bonusLevelWarning;
 						futureSelector = true;
+
+						heroRow = 5;
+						heroColumn = 7;
+						levelData[heroRow][heroColumn] = symbolHero;
 					}
 					else
 					{
@@ -1071,7 +1074,7 @@ void MoveHeroTo(int row, int column)
 
 						heroRow = 5;
 						heroColumn = 7;
-						levelData[5][7] = symbolHero;
+						levelData[heroRow][heroColumn] = symbolHero;
 					}
 				}
 				else canMoveToCell = true;
@@ -1161,8 +1164,7 @@ void MoveHeroTo(int row, int column)
 				}
 				levelData[heroRow][heroColumn] = symbolHero;
 			}
-			else
-			if (levelSelector == 3 && row == 6 && column == 5) // Old Portal
+			else if (levelSelector == 3 && row == 6 && column == 5) // Old Portal
 			{
 				levelData[heroRow][heroColumn] = ' ';
 				// Save Past array
