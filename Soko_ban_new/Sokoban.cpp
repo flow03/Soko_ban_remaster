@@ -28,12 +28,12 @@ const unsigned char symbolCrystal = 3;
 const unsigned char symbolDoorV = 186;
 const unsigned char symbolDoorG = 205;
 const unsigned char symbolPortal = 79;
-const unsigned char symbolPoint = 46;
+//const unsigned char symbolPoint = 46;
 const unsigned char symbolKey = 21;
 const unsigned char symbolBomb = 15;
 
 
-const unsigned char levelData1[10][16] =  {
+const unsigned char levelData1[10][columnsCount] =  {
 	"#####2#########",
 	"#  X   #   X ##",
 	"# X ### X  #  #",
@@ -46,15 +46,15 @@ const unsigned char levelData1[10][16] =  {
 	"##2############",
                                                                 };
 
-const int rowsCount2 = 18;
-const int columnsCount2 = 15;
+//const int rowsCount2 = 18;
+//const int columnsCount2 = 16;
 
-const unsigned char levelData2[rowsCount2][columnsCount2 + 1] = {
+const unsigned char levelData2[18][columnsCount] = {
 	"###2#########",
 	"#cb   # k# p#",
 	"2  c#g## X   ",
 	"# t #   ## ##",
-	"#     1     2",
+	"# k   1     2",
 	"#g# #b  ## X#",
 	"# # c# #  X #",
 	"#  # #   # ##",
@@ -84,7 +84,7 @@ const unsigned char levelData3[rowsCount3][columnsCount] = {
 	"#          c  #",
 	"#      c       ",
 	"#        c    #",
-	"#XX           #",
+	"#XX    .      #",
 	"#XcX          #",
 	"##### #2#######",
 	"               "
@@ -557,12 +557,6 @@ void Initialise(const unsigned char(*lvl_begin)[N], const unsigned char(*lvl_end
 				levelData[currentRow][c] = symbolPortal;
 				break;
 			}
-			// Point
-			case '.':
-			{
-				levelData[currentRow][c] = symbolPoint;
-				break;
-			}
 			// Key
 			case 'k':
 			{
@@ -575,6 +569,12 @@ void Initialise(const unsigned char(*lvl_begin)[N], const unsigned char(*lvl_end
 				levelData[currentRow][c] = symbolBomb;
 				break;
 			}
+			// Point
+			/*case '.':
+			{
+				levelData[currentRow][c] = '.';
+				break;
+			}*/
 			// Other symbols (like spaces)
 			default:
 			{
@@ -618,11 +618,6 @@ void Render()
 	setlocale(LC_ALL, "C");
 
 	std::cout<<'\n';
-	/*for (int r = 0; r < rowsCount; ++r)
-	{
-		if (levelData[r][0] != '\0')
-			std::cout << "\n\t\t\t\t  " << levelData[r];
-	}*/
 	for (int r = 0; r < rowsCount; ++r)
 	{
 		if (levelData[r][0] != '\0')
@@ -685,17 +680,12 @@ void Render()
 						printColorText(consoleHandle, symbolPortal, LightCyan);
 				}
 
-				/*if ((levelSelector == 3) && (r == 6) && (c == 5))
-					printColorText(consoleHandle, symbolPortal, Magenta);
-				else if ((levelSelector == 3) && (r == 6) && (c == 9))
-					printColorText(consoleHandle, symbolPortal, LightMagenta);
-				else printColorText(consoleHandle, symbolPortal, LightCyan);*/
 				break;
 			}
 			// Point - LightCyan
-			case symbolPoint:
+			case '.':
 			{
-				printColorText(consoleHandle, symbolPoint, LightCyan);
+				printColorText(consoleHandle, '.', LightCyan);
 				break;
 			}
 			// Gorisontal door - grey
@@ -735,6 +725,10 @@ void Render()
 				break;
 			}
 			case '\0': // нулевой символ
+				break;
+			// Other
+			default:
+				std::cout << symbol;
 				break;
 			}
 
@@ -866,10 +860,11 @@ void MoveHeroTo(int row, int column)
 					levelData[4][8] = symbolCrystal;
 					canMoveToCell = true;
 				}
-				else if (CrystalCount == 13) 
+				else if (CrystalCount == 14) //13
 				{
-					levelData[heroRow][heroColumn] = ' ';
-					levelData[row][column] = ' ';
+					levelData[heroRow][heroColumn] = ' ';	// replace hero
+					levelData[row][column] = ' ';			// replace crystal
+					//levelData[6][5] = '.';					// потом нельзя будет вернуться
 					// Save Past array
 					for (int r = 0; r < rowsCount3; r++)
 						for (int c = 0; c < columnsCount; c++)
@@ -944,6 +939,7 @@ void MoveHeroTo(int row, int column)
 			else if (levelSelector == 3 && row == 6 && column == 5) // Old Portal
 			{
 				levelData[heroRow][heroColumn] = ' ';
+				//levelData[6][5] = '.'; // потом нельзя будет вернуться
 				// Save Past array
 				for (int r = 0; r < rowsCount3; r++)
 				for (int c = 0; c < columnsCount; c++)
@@ -1350,27 +1346,27 @@ int main()
 	} while (isGameActive == true);*/
 	
 	//Level 1
-	system("cls");
-	isGameActive = true;
-	levelSelector = 1;
-	Initialise(std::begin(levelData1), std::end(levelData1));
-	do
-	{
-		Render();
-		Update();
-	} 
-	while ( isGameActive );
+	//system("cls");
+	//isGameActive = true;
+	//levelSelector = 1;
+	//Initialise(std::begin(levelData1), std::end(levelData1));
+	//do
+	//{
+	//	Render();
+	//	Update();
+	//} 
+	//while ( isGameActive );
 
-	// Level 2
-	system("cls");
-	isGameActive = true;
-	levelSelector = 2;
-	Initialise(std::begin(levelData2), std::end(levelData2));
-	do
-	{
-		Render();
-		Update();
-	} while (isGameActive);
+	//// Level 2
+	//system("cls");
+	//isGameActive = true;
+	//levelSelector = 2;
+	//Initialise(std::begin(levelData2), std::end(levelData2));
+	//do
+	//{
+	//	Render();
+	//	Update();
+	//} while (isGameActive);
 	
 	// Level 3
 	system("cls");
