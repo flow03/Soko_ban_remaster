@@ -480,11 +480,11 @@ void Counters()
 		printColorText(consoleHandle, symbolCrystal, Magenta);
 		std::cout << CrystalCount << ' ';
 	}
-	else std::cout << "   ";
+	//else std::cout << "   "; //3
 	if (KeyCount != 0)
 	{
 		printColorText(consoleHandle, symbolKey, LightMagenta);
 		std::cout << KeyCount;
 	}
-	else std::cout << "   ";
+	else std::cout << "       "; //7
 }

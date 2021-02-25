@@ -17,8 +17,8 @@
 
 
 // Game settings
-const int rowsCount = 10;
-const int columnsCount = 15;
+const int rowsCount = 18;
+const int columnsCount = 16;
 
 const unsigned char symbolHero = 2;
 const unsigned char symbolWall = 219;
@@ -33,7 +33,7 @@ const unsigned char symbolKey = 21;
 const unsigned char symbolBomb = 15;
 
 
-const unsigned char levelData0[rowsCount][columnsCount + 1] =  {
+const unsigned char levelData1[10][16] =  {
 	"#####2#########",
 	"#  X   #   X ##",
 	"# X ### X  #  #",
@@ -72,9 +72,9 @@ const unsigned char levelData2[rowsCount2][columnsCount2 + 1] = {
                                                                   };
 
 const int rowsCount3 = 13;
-const int columnsCount3 = 15;
+//const int columnsCount3 = 16;
 
-const unsigned char levelData3[rowsCount3][columnsCount3 + 1] = {
+const unsigned char levelData3[rowsCount3][columnsCount] = {
 	"#######2#######",
 	"#          XkX#",
 	"#       c   XX#",
@@ -90,7 +90,7 @@ const unsigned char levelData3[rowsCount3][columnsCount3 + 1] = {
 	"               "
                                                                };
 
-const unsigned char levelData4[rowsCount3][columnsCount3 + 1] = {
+const unsigned char levelData4[rowsCount3][columnsCount] = {
 	"############22#",
 	"#   X   X  #  #",
 	"#X  X  X XX#tt#",
@@ -111,15 +111,15 @@ const unsigned char levelData4[rowsCount3][columnsCount3 + 1] = {
 // Logic variables
 HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 bool isGameActive = true;
-unsigned char levelData[rowsCount+8][columnsCount+1]; // Change for need
-unsigned char Past[rowsCount3][columnsCount3];
-unsigned char Future[rowsCount3][columnsCount3];
+unsigned char levelData[rowsCount][columnsCount]; // Change for need
+unsigned char Past[rowsCount3][columnsCount];
+unsigned char Future[rowsCount3][columnsCount];
 int heroRow = 0;
 int heroColumn = 0;
 int levelSelector = 1;
 int CrystalCount = 0;
 int KeyCount = 0;
-int Localization = 1; //Language
+int Localization = 2; //Language
 int font = 1; // Font
 TCHAR szbuff[255]; //StringCchPrintf
 CONSOLE_FONT_INFOEX defaultFont;
@@ -439,7 +439,7 @@ void InitialiseOld(int rows, int columns)
 		for (int c = 0; c < columns; c++)
 		{
 			
-			unsigned char symbol = levelData0[r][c];
+			unsigned char symbol = levelData1[r][c];
 
 			switch (symbol)
 			{
@@ -482,58 +482,41 @@ void InitialiseOld(int rows, int columns)
 	}
 }
 
-void Initialise2(int rows, int columns)
+template <size_t N>
+void Initialise(const unsigned char(*lvl_begin)[N], const unsigned char(*lvl_end)[N])
 {
-	//system("cls");
 	// Load level
 
-	//auto * symbol = levelData0;
-	const unsigned char(*symbol)[16] = nullptr;
-	// Select level
-	if (levelSelector == 1)
-	{
-		symbol = levelData0;
-	}
-	else if (levelSelector == 2)
-	{
-		symbol = levelData2;
-	}
-	else if (levelSelector == 3)
-	{
-		symbol = levelData3;
-	}
-	else if (levelSelector == 4)
-	{
-		symbol = levelData4;
-	}
-
 	// Clear levelData from previos level
-	for (int r = 0; r < rowsCount + 8; r++)
+	for (int r = 0; r < rowsCount; r++)
 	{
-		for (int c = 0; c < columnsCount + 1; ++c)
+		for (int c = 0; c < columnsCount; ++c)
 		{
 			levelData[r][c] = '\0';
 		}
 	}
 
-	for (int r = 0; r < rows; r++)
+	
+	int currentRow = 0;
+	//Initialise
+	for (const unsigned char(*row)[N] = lvl_begin; row != lvl_end; ++row)
 	{
-		for (int c = 0; c < columns; c++)
+		for (int c = 0; c < N; ++c)
 		{
-			switch (symbol[r][c])
+			switch ((*row)[c])
 			{
 			// Wall
 			case '#':
 			{
-				levelData[r][c] = symbolWall;
+				levelData[currentRow][c] = symbolWall;
 				break;
 			}
 			// Hero
 			case '1':
 			{
-				levelData[r][c] = symbolHero;
+				levelData[currentRow][c] = symbolHero;
 				// Catch hero position
-				heroRow = r;
+				heroRow = currentRow;
 				heroColumn = c;
 
 				break;
@@ -541,74 +524,66 @@ void Initialise2(int rows, int columns)
 			// Exit
 			case '2':
 			{
-				levelData[r][c] = symbolExit;
+				levelData[currentRow][c] = symbolExit;
 				break;
 			}
 			// Box
 			case 'X':
 			{
-				levelData[r][c] = symbolBox;
+				levelData[currentRow][c] = symbolBox;
 				break;
 			}
 			// Crystal
 			case 'c':
 			{
-				levelData[r][c] = symbolCrystal;
+				levelData[currentRow][c] = symbolCrystal;
 				break;
 			}
 			// Vertical door
 			case 'v':
 			{
-				levelData[r][c] = symbolDoorV;
+				levelData[currentRow][c] = symbolDoorV;
 				break;
 			}
 			// Gorisontal door
 			case 'g':
 			{
-				levelData[r][c] = symbolDoorG;
+				levelData[currentRow][c] = symbolDoorG;
 				break;
 			}
 			// Portal
 			case 'p':
 			{
-				levelData[r][c] = symbolPortal;
+				levelData[currentRow][c] = symbolPortal;
 				break;
 			}
 			// Point
 			case '.':
 			{
-				levelData[r][c] = symbolPoint;
+				levelData[currentRow][c] = symbolPoint;
 				break;
 			}
 			// Key
 			case 'k':
 			{
-				levelData[r][c] = symbolKey;
+				levelData[currentRow][c] = symbolKey;
 				break;
 			}
 			// Bomb
 			case 'b':
 			{
-				levelData[r][c] = symbolBomb;
+				levelData[currentRow][c] = symbolBomb;
 				break;
 			}
-			// Окончание строки
-			/*case '\0':
-				break;*/
-			// Trap
-			//case 't':
-			//{
-			//	levelData[r][c] = 't'; //U, 116ui8, ui8
-			//	break;
-			//}
 			// Other symbols (like spaces)
 			default:
 			{
-				levelData[r][c] = symbol[r][c];
+				levelData[currentRow][c] = (*row)[c];
 				break;
 			}
 			}
 		}
+		++currentRow;
 	}
 }
 
@@ -619,153 +594,19 @@ void LevelClear()
 	futureSelector = false;
 
 	if (levelSelector == 1)
-		Initialise2(rowsCount, columnsCount);
+		Initialise(std::begin(levelData1), std::end(levelData1));
 	else if (levelSelector == 2)
-		Initialise2(rowsCount2, columnsCount2);
+		Initialise(std::begin(levelData2), std::end(levelData2));
 	else if (levelSelector == 3)
-		Initialise2(rowsCount3, columnsCount3);
+		Initialise(std::begin(levelData3), std::end(levelData3));
 	else if (levelSelector == 4)
 	{
 		levelSelector = 3;
-		Initialise2(rowsCount3, columnsCount3);
+		Initialise(std::begin(levelData3), std::end(levelData3));
 	}
 
 	/*std::cin.clear();
 	fflush(stdin);*/
-}
-
-void RenderOld()
-{
-	// Move console cursor to (0,0)
-	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
-
-	setlocale(LC_ALL, "C");
-
-	printf("\n\n\t");
-	for (int r = 0; r < rowsCount; r++)
-	{
-		for (int c = 0; c < columnsCount; c++)
-		{
-			unsigned char symbol = levelData[r][c];
-
-			switch (symbol)
-			{
-				// Walls - grey
-				case symbolWall:
-				{
-					SetConsoleTextAttribute(consoleHandle, 7);
-					break;
-				}
-				// Hero - green
-				case symbolHero:
-				{
-					SetConsoleTextAttribute(consoleHandle, 10);
-					break;
-				}
-				// Boxes - yellow
-				case symbolBox:
-				{
-					SetConsoleTextAttribute(consoleHandle, 14);
-					break;
-				}
-				// Exit - red
-				case symbolExit:
-				{
-					SetConsoleTextAttribute(consoleHandle, 12);
-					break;
-				}
-			}
-
-			printf("%c", symbol);
-		}
-		printf("\n\t");
-	}
-
-	switch (Localization)
-	{
-	case 3:
-	{
-		setlocale(LC_ALL, "Russian");
-		SetConsoleTextAttribute(consoleHandle, 7);
-		printf("\n\n\tUse AWSD to move your ");
-		SetConsoleTextAttribute(consoleHandle, 10);
-		printf("Hero");
-		SetConsoleTextAttribute(consoleHandle, 7);
-
-		printf(". Move ");
-		SetConsoleTextAttribute(consoleHandle, 14);
-		printf("Boxes");
-		SetConsoleTextAttribute(consoleHandle, 7);
-		printf("(");
-		SetConsoleTextAttribute(consoleHandle, 14);
-		printf("%c", symbolBox);
-		SetConsoleTextAttribute(consoleHandle, 7);
-		printf(") to get to the Exit(");
-		SetConsoleTextAttribute(consoleHandle, 12);
-		printf("%c", symbolExit);
-		SetConsoleTextAttribute(consoleHandle, 7);
-		printf(").");
-		printf("\n\tR - Restart level.");
-		break;
-	}
-	case 2:
-	{
-		setlocale(LC_ALL, "Russian");
-		SetConsoleTextAttribute(consoleHandle, 7);
-		printf("\n\n\tИспользуйте клавиши AWSD чтобы управлять ");
-		SetConsoleTextAttribute(consoleHandle, 10);
-		printf("Героем");
-		SetConsoleTextAttribute(consoleHandle, 7);
-		printf(".\n\tДвигайте ");
-		SetConsoleTextAttribute(consoleHandle, 14);
-		printf("Ящики");
-		SetConsoleTextAttribute(consoleHandle, 7);
-		printf("(");
-		setlocale(LC_ALL, "C");
-		SetConsoleTextAttribute(consoleHandle, 14);
-		printf("%c", symbolBox);
-		setlocale(LC_ALL, "Russian");
-		SetConsoleTextAttribute(consoleHandle, 7);
-		printf(") чтобы добраться до Выхода(");
-		setlocale(LC_ALL, "C");
-		SetConsoleTextAttribute(consoleHandle, 12);
-		printf("%c", symbolExit);
-		setlocale(LC_ALL, "Russian");
-		SetConsoleTextAttribute(consoleHandle, 7);
-		printf(").");
-		SetConsoleTextAttribute(consoleHandle, 7);
-		printf("\n\tR - перезапустить уровень.");
-		break;
-	}
-	case 1:
-	{
-		setlocale(LC_ALL, "Russian");
-		SetConsoleTextAttribute(consoleHandle, 7);
-		printf("\n\n\tКористуйся AWSD щоб керувати ");
-		SetConsoleTextAttribute(consoleHandle, 10);
-		printf("Козаком");
-		SetConsoleTextAttribute(consoleHandle, 7);
-		printf(". R - розпочати спочатку.");
-		printf("\n\tРухай ");
-		SetConsoleTextAttribute(consoleHandle, 14);
-		printf("Снопи");
-		SetConsoleTextAttribute(consoleHandle, 7);
-		printf("(");
-		setlocale(LC_ALL, "C");
-		SetConsoleTextAttribute(consoleHandle, 14);
-		printf("%c", symbolBox);
-		setlocale(LC_ALL, "Russian");
-		SetConsoleTextAttribute(consoleHandle, 7);
-		printf(") щоб дiстатись Виходу(");
-		setlocale(LC_ALL, "C");
-		SetConsoleTextAttribute(consoleHandle, 12);
-		printf("%c", symbolExit);
-		setlocale(LC_ALL, "Russian");
-		SetConsoleTextAttribute(consoleHandle, 7);
-		printf(").");
-		break;
-	}
-	}
 }
 
 void Render()
@@ -777,17 +618,17 @@ void Render()
 	setlocale(LC_ALL, "C");
 
 	std::cout<<'\n';
-	/*for (int r = 0; r < rowsCount + 8; ++r)
+	/*for (int r = 0; r < rowsCount; ++r)
 	{
 		if (levelData[r][0] != '\0')
 			std::cout << "\n\t\t\t\t  " << levelData[r];
 	}*/
-	for (int r = 0; r < rowsCount + 8; ++r)
+	for (int r = 0; r < rowsCount; ++r)
 	{
 		if (levelData[r][0] != '\0')
 		{
 		std::cout << "\n\t\t\t\t  ";
-		for (int c = 0; c < columnsCount + 1; ++c)
+		for (int c = 0; c < columnsCount; ++c)
 		{
 			unsigned char symbol = levelData[r][c];
 
@@ -939,20 +780,6 @@ void BonusWall()
 
 void DieAnimation(int row, int column) {
 
-	/*int renderR = 0;
-	int renderC = 0;
-
-	if (levelSelector == 2)
-	{
-		renderR = rowsCount2;
-		renderC = columnsCount2;
-	}
-	else
-	{
-		renderR = rowsCount3;
-		renderC = columnsCount3;
-	}*/
-
 	for (int i = 0; i < 3; ++i)
 	{
 		warning = bombWarning;
@@ -979,7 +806,6 @@ void MoveHeroTo(int row, int column)
 	unsigned char destinationCell = levelData[row][column];
 	bool canMoveToCell = false;
 	//warning = None; //warning reset
-
 
 	switch (destinationCell)
 	{
@@ -1046,7 +872,7 @@ void MoveHeroTo(int row, int column)
 					levelData[row][column] = ' ';
 					// Save Past array
 					for (int r = 0; r < rowsCount3; r++)
-						for (int c = 0; c < columnsCount3; c++)
+						for (int c = 0; c < columnsCount; c++)
 						{
 							Past[r][c] = levelData[r][c];
 						}
@@ -1054,7 +880,7 @@ void MoveHeroTo(int row, int column)
 					if (futureSelector == false)
 					{
 						levelSelector = 4;
-						Initialise2(rowsCount3, columnsCount3);
+						Initialise(std::begin(levelData4), std::end(levelData4));
 						warning = bonusLevelWarning;
 						futureSelector = true;
 
@@ -1067,7 +893,7 @@ void MoveHeroTo(int row, int column)
 						levelSelector = 4;
 						// Load future array
 						for (int r = 0; r < rowsCount3; r++)
-							for (int c = 0; c < columnsCount3; c++)
+							for (int c = 0; c < columnsCount; c++)
 							{
 								levelData[r][c] = Future[r][c];
 							}
@@ -1081,55 +907,6 @@ void MoveHeroTo(int row, int column)
 			}
 			else canMoveToCell = true;
 
-			//canMoveToCell = true; // error purpose
-			//if ((levelSelector == 3) && (CrystalCount == 1)) //5
-			//{
-			//	levelData[6][5] = symbolPortal;
-			//	levelData[6][9] = symbolPortal;
-			//}
-			//if ((levelSelector == 3) && (CrystalCount == 7))
-			//{
-			//	levelData[5][6] = symbolCrystal;
-			//	levelData[5][7] = symbolCrystal;
-			//	levelData[5][8] = symbolCrystal;
-			//	levelData[4][6] = symbolCrystal;
-			//	levelData[4][7] = symbolCrystal;
-			//	levelData[4][8] = symbolCrystal;
-			//}
-			//if ((levelSelector == 3) && (CrystalCount == 13))
-			//{
-			//		levelData[heroRow][heroColumn] = ' ';
-			//		levelData[row][column] = ' ';
-			//		// Save Past array
-			//		for (int r = 0; r < rowsCount3; r++)
-			//			for (int c = 0; c < columnsCount3; c++)
-			//			{
-			//				Past[r][c] = levelData[r][c];
-			//			}
-
-			//		if (futureSelector == false)
-			//		{
-			//			levelSelector = 4;
-			//			Initialise2(rowsCount3, columnsCount3);
-
-			//			warning = bonusLevelWarning;
-			//			futureSelector = true;
-			//		}
-			//		else
-			//		{
-			//			levelSelector = 4;
-			//			// Load future array
-			//			for (int r = 0; r < rowsCount3; r++)
-			//				for (int c = 0; c < columnsCount3; c++)
-			//				{
-			//					levelData[r][c] = Future[r][c];
-			//				}
-
-			//			heroRow = 5;
-			//			heroColumn = 7;
-			//			levelData[5][7] = symbolHero;
-			//		}
-			//}
 			break;
 		}
 		// Portal
@@ -1169,7 +946,7 @@ void MoveHeroTo(int row, int column)
 				levelData[heroRow][heroColumn] = ' ';
 				// Save Past array
 				for (int r = 0; r < rowsCount3; r++)
-				for (int c = 0; c < columnsCount3; c++)
+				for (int c = 0; c < columnsCount; c++)
 				{
 					Past[r][c] = levelData[r][c];
 				}
@@ -1177,7 +954,7 @@ void MoveHeroTo(int row, int column)
 				if (futureSelector == false)
 				{
 					levelSelector = 4;
-					Initialise2(rowsCount3, columnsCount3);
+					Initialise(std::begin(levelData4), std::end(levelData4));
 					heroRow = 10;
 					heroColumn = 6;
 					levelData[heroRow][heroColumn] = symbolHero;
@@ -1189,7 +966,7 @@ void MoveHeroTo(int row, int column)
 				{
 					// Load future array
 					for (int r = 0; r < rowsCount3; r++)
-						for (int c = 0; c < columnsCount3; c++)
+						for (int c = 0; c < columnsCount; c++)
 						{
 							levelData[r][c] = Future[r][c];
 						}
@@ -1206,13 +983,13 @@ void MoveHeroTo(int row, int column)
 				levelData[heroRow][heroColumn] = ' ';
 				// Save Future array
 				for (int r = 0; r < rowsCount3; r++)
-					for (int c = 0; c < columnsCount3; c++)
+					for (int c = 0; c < columnsCount; c++)
 					{
 						Future[r][c] = levelData[r][c];
 					}
 				// Load Past array
 				for (int r = 0; r < rowsCount3; r++)
-					for (int c = 0; c < columnsCount3; c++)
+					for (int c = 0; c < columnsCount; c++)
 					{
 						levelData[r][c] = Past[r][c];
 					}
@@ -1495,23 +1272,23 @@ void Update()
 		{
 			if (levelSelector == 1)
 			{
-				Initialise2(rowsCount, columnsCount);
+				Initialise(std::begin(levelData1), std::end(levelData1));
 			}
 			if (levelSelector == 2)
 			{
 				LevelClear();
-				Initialise2(rowsCount2, columnsCount2);
+				Initialise(std::begin(levelData2), std::end(levelData2));
 			}
 			if (levelSelector == 3)
 			{
 				LevelClear();
-				Initialise2(rowsCount3, columnsCount3);
+				Initialise(std::begin(levelData3), std::end(levelData3));
 			}
 			if (levelSelector == 4)
 			{
 				levelSelector = 3;
 				LevelClear();
-				Initialise2(rowsCount3, columnsCount3);
+				Initialise(std::begin(levelData3), std::end(levelData3));
 			}
 			break;
 		}
@@ -1557,12 +1334,12 @@ int main()
 	SetupSystem();
 
 	// Select Language
-	do
+	/*do
 	{
 		RenderLanguage();
 		UpdateLanguage();
 	} 
-	while (isGameActive == true);
+	while (isGameActive == true);*/
 
 	// Select Font Size
 	/*isGameActive = true;
@@ -1572,35 +1349,35 @@ int main()
 		UpdateFont();
 	} while (isGameActive == true);*/
 	
-	// Level 1
-	//system("cls");
-	//isGameActive = true;
-	//levelSelector = 1;
-	//Initialise2(rowsCount, columnsCount);
-	//do
-	//{
-	//	Render();
-	//	Update();
-	//} 
-	//while ( isGameActive );
+	//Level 1
+	system("cls");
+	isGameActive = true;
+	levelSelector = 1;
+	Initialise(std::begin(levelData1), std::end(levelData1));
+	do
+	{
+		Render();
+		Update();
+	} 
+	while ( isGameActive );
 
-	//// Level 2
-	//system("cls");
-	//isGameActive = true;
-	//levelSelector = 2;
-	//Initialise2(rowsCount2, columnsCount2);
-	//do
-	//{
-	//	Render();
-	//	Update();
-	//} while (isGameActive);
+	// Level 2
+	system("cls");
+	isGameActive = true;
+	levelSelector = 2;
+	Initialise(std::begin(levelData2), std::end(levelData2));
+	do
+	{
+		Render();
+		Update();
+	} while (isGameActive);
 	
 	// Level 3
 	system("cls");
 	isGameActive = true;
 	LevelClear();
 	levelSelector = 3;
-	Initialise2(rowsCount3, columnsCount3);
+	Initialise(std::begin(levelData3), std::end(levelData3));
 	do
 	{
 		Render();
