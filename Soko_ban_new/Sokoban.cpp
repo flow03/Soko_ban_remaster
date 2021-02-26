@@ -1,8 +1,9 @@
 
 // Include libraries
+#include <random> //std::default_random_engine and std::random_device
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <ctime>
 #include <Windows.h> 
 #include <conio.h>
 #include <ctype.h>
@@ -10,6 +11,7 @@
 //#include <assert.h>
 #include <strsafe.h> //StringCchPrintf
 #include <iostream>
+#include <vector>
 
 #include "ConsoleColor.h"
 
@@ -77,16 +79,16 @@ const int rowsCount3 = 13;
 const unsigned char levelData3[rowsCount3][columnsCount] = {
 	"#######2#######",
 	"#          XkX#",
-	"#       c   XX#",
-	"#     c       #",
-	"#         c   #",
-	"2  c   1       ",
-	"#          c  #",
-	"#      c       ",
-	"#        c    #",
+	"#           XX#",
+	"#             #",
+	"#             #",
+	"2      1      #",
+	"#             #",
+	"#             #",
+	"#             #",
 	"#XX    .      #",
 	"#XcX          #",
-	"##### #2#######",
+	"#######2#######",
 	"               "
                                                                };
 
@@ -123,6 +125,7 @@ int Localization = 2; //Language
 int font = 1; // Font
 TCHAR szbuff[255]; //StringCchPrintf
 CONSOLE_FONT_INFOEX defaultFont;
+int randomCrystals = 10;
 
 #include "Warnings.h"
 
@@ -141,6 +144,9 @@ bool futureSelector = false;
 
 
 // Functions
+
+void RandomizeCrystals(int);
+
 void CenterWindow()
 {
 	HWND consoleWindow = GetConsoleWindow();
@@ -425,61 +431,8 @@ void UpdateFont()
 	}
 	}
 
-	/*if (font == 0) SetupFont(8, 12);
-	else if (font == 1) SetupFont(12, 16);*/
 	SetupFont();
 	CenterWindow();
-}
-
-void InitialiseOld(int rows, int columns)
-{
-	// Load level
-	for (int r = 0; r < rows; r++)
-	{
-		for (int c = 0; c < columns; c++)
-		{
-			
-			unsigned char symbol = levelData1[r][c];
-
-			switch (symbol)
-			{
-				// Wall
-				case '#':
-				{
-					levelData[r][c] = symbolWall;
-					break;
-				}
-				// Hero
-				case '1':
-				{
-					levelData[r][c] = symbolHero;
-					// Catch hero position
-					heroRow = r;
-					heroColumn = c;
-
-					break;
-				}
-				// Exit
-				case '2':
-				{
-					levelData[r][c] = symbolExit;
-					break;
-				}
-				// Box
-				case 'X':
-				{
-					levelData[r][c] = symbolBox;
-					break;
-				}
-				// Other symbols (like spaces)
-				default:
-				{
-					levelData[r][c] = symbol;
-					break;
-				}
-			}
-		}
-	}
 }
 
 template <size_t N>
@@ -495,10 +448,9 @@ void Initialise(const unsigned char(*lvl_begin)[N], const unsigned char(*lvl_end
 			levelData[r][c] = '\0';
 		}
 	}
-
 	
-	int currentRow = 0;
 	//Initialise
+	int currentRow = 0;
 	for (const unsigned char(*row)[N] = lvl_begin; row != lvl_end; ++row)
 	{
 		for (int c = 0; c < N; ++c)
@@ -597,12 +549,11 @@ void LevelClear()
 		Initialise(std::begin(levelData1), std::end(levelData1));
 	else if (levelSelector == 2)
 		Initialise(std::begin(levelData2), std::end(levelData2));
-	else if (levelSelector == 3)
-		Initialise(std::begin(levelData3), std::end(levelData3));
-	else if (levelSelector == 4)
+	else if (levelSelector == 3 || levelSelector == 4)
 	{
 		levelSelector = 3;
 		Initialise(std::begin(levelData3), std::end(levelData3));
+		RandomizeCrystals(randomCrystals);
 	}
 
 	/*std::cin.clear();
@@ -860,11 +811,11 @@ void MoveHeroTo(int row, int column)
 					levelData[4][8] = symbolCrystal;
 					canMoveToCell = true;
 				}
-				else if (CrystalCount == 14) //13
+				else if (CrystalCount == 13) //13
 				{
 					levelData[heroRow][heroColumn] = ' ';	// replace hero
 					levelData[row][column] = ' ';			// replace crystal
-					//levelData[6][5] = '.';					// потом нельзя будет вернуться
+					//levelData[6][5] = '.';				// потом нельзя будет вернуться
 					// Save Past array
 					for (int r = 0; r < rowsCount3; r++)
 						for (int c = 0; c < columnsCount; c++)
@@ -1197,15 +1148,9 @@ void Update()
 	{
 		// Up
 		case 'w':
-		{
-			MoveHeroTo(heroRow - 1, heroColumn);
-			break;
-		}
 		case 'W':
-		{
-			MoveHeroTo(heroRow - 1, heroColumn);
-			break;
-		}
+		case 150:	//ц
+		case 230:	//Ц
 		case 72:
 		{
 			MoveHeroTo(heroRow - 1, heroColumn);
@@ -1213,15 +1158,10 @@ void Update()
 		}
 		// Down
 		case 's':
-		{
-			MoveHeroTo(heroRow + 1, heroColumn);
-			break;
-		}
 		case 'S':
-		{
-			MoveHeroTo(heroRow + 1, heroColumn);
-			break;
-		}
+		case 155:	//ы
+		case 235:	//Ы
+		case 63:	//і
 		case 80:
 		{
 			MoveHeroTo(heroRow + 1, heroColumn);
@@ -1229,15 +1169,9 @@ void Update()
 		}
 		// Left
 		case 'a':
-		{
-			MoveHeroTo(heroRow, heroColumn - 1);
-			break;
-		}
 		case 'A':
-		{
-			MoveHeroTo(heroRow, heroColumn - 1);
-			break;
-		}
+		case 148:	//ф
+		case 228:	//Ф
 		case 75:
 		{
 			MoveHeroTo(heroRow, heroColumn - 1);
@@ -1245,15 +1179,9 @@ void Update()
 		}
 		// Right
 		case 'd':
-		{
-			MoveHeroTo(heroRow, heroColumn + 1);
-			break;
-		}
 		case 'D':
-		{
-			MoveHeroTo(heroRow, heroColumn + 1);
-			break;
-		}
+		case 130:	//в
+		case 162:	//В
 		case 77:
 		{
 			MoveHeroTo(heroRow, heroColumn + 1);
@@ -1261,31 +1189,14 @@ void Update()
 		}
 
 		// Restart level
-		case 114:
-		case 82:
-		//case 'r':
-		//case 'R':
+		/*case 114:
+		case 82:*/
+		case 'r':
+		case 'R':
+		case 170:	//к
+		case 138:	//К
 		{
-			if (levelSelector == 1)
-			{
-				Initialise(std::begin(levelData1), std::end(levelData1));
-			}
-			if (levelSelector == 2)
-			{
-				LevelClear();
-				Initialise(std::begin(levelData2), std::end(levelData2));
-			}
-			if (levelSelector == 3)
-			{
-				LevelClear();
-				Initialise(std::begin(levelData3), std::end(levelData3));
-			}
-			if (levelSelector == 4)
-			{
-				levelSelector = 3;
-				LevelClear();
-				Initialise(std::begin(levelData3), std::end(levelData3));
-			}
+			LevelClear();
 			break;
 		}
 
@@ -1323,6 +1234,62 @@ void Shutdown()
 	SetCurrentConsoleFontEx(consoleHandle, TRUE, &defaultFont); // Установить прежний шрифт
 }
 
+void RandomizeCrystals(int crystalCount)
+{
+	/*unsigned char * crystals[rowsCount][columnsCount] = { nullptr };*/
+
+	/*std::vector<std::vector<unsigned char *>> crystals;
+	crystals.resize(rowsCount3);*/
+	std::vector<unsigned char *> crystals;
+	crystals.reserve((rowsCount3 - 4) * (columnsCount - 4));
+	//size_t new_cap = crystals.capacity();
+
+	//Random
+	std::default_random_engine engine; //minstd_rand, mt19937, mt19937_64, default_random_engine
+	//std::random_device device;
+	//double en = device.entropy();
+	engine.seed(static_cast<unsigned int>(time(0)));
+	//engine.seed(device());
+
+	//std::uniform_int_distribution<> uid(0, 10);
+	//int rnd = uid(engine);
+
+	for (int i = 2; i < rowsCount3 - 3; ++i)
+		for (int j = 2; j < columnsCount - 3; ++j)
+		{
+			if (levelData[i][j] == ' ')
+				//if ((i != 6 && (j != 5 || j != 9))
+				if (i == 6 && (j == 5 || j == 9)) continue;
+				else
+					crystals.push_back(&(levelData[i][j]));
+		}
+
+	int index = 0;
+	auto iter = crystals.begin();
+	while (crystalCount > 0)
+	{
+		index = engine() % crystals.size();
+		/*if(	(*(crystals.at(index)++) == ' ') &&
+			(*(crystals.at(index)--) == ' '))*/
+		{
+			*(crystals.at(index)) = symbolCrystal;
+			crystals.erase(iter + index);
+			--crystalCount;
+			iter = crystals.begin();
+		}
+		
+	}
+
+	/*for (int i = 1; i < rowsCount3 - 1; ++i)
+		for (int j = 1; j < columnsCount - 1; ++j)
+		{
+			if (levelData[i][j] == ' ')
+				if((i != 6 && (j != 5 || j != 9))
+					&&(i != heroRow && j != heroColumn))
+				crystals.at(i).push_back(&(levelData[i][j]));
+		}*/
+
+}
 
 
 int main()
@@ -1374,6 +1341,7 @@ int main()
 	LevelClear();
 	levelSelector = 3;
 	Initialise(std::begin(levelData3), std::end(levelData3));
+	RandomizeCrystals(randomCrystals);
 	do
 	{
 		Render();
