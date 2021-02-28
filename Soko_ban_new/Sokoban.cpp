@@ -1,9 +1,10 @@
 
 // Include libraries
 #include <random> //std::default_random_engine and std::random_device
+#include <algorithm> // std::remove_if
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctime>
+//#include <ctime>
 #include <Windows.h> 
 #include <conio.h>
 #include <ctype.h>
@@ -14,8 +15,6 @@
 #include <vector>
 
 #include "ConsoleColor.h"
-
-
 
 
 // Game settings
@@ -803,12 +802,13 @@ void MoveHeroTo(int row, int column)
 				}
 				else if (CrystalCount == 7)
 				{
-					levelData[5][6] = symbolCrystal;
+					RandomizeCrystals(6);
+					/*levelData[5][6] = symbolCrystal;
 					levelData[5][7] = symbolCrystal;
 					levelData[5][8] = symbolCrystal;
 					levelData[4][6] = symbolCrystal;
 					levelData[4][7] = symbolCrystal;
-					levelData[4][8] = symbolCrystal;
+					levelData[4][8] = symbolCrystal;*/
 					canMoveToCell = true;
 				}
 				else if (CrystalCount == 13) //13
@@ -1236,58 +1236,79 @@ void Shutdown()
 
 void RandomizeCrystals(int crystalCount)
 {
-	/*unsigned char * crystals[rowsCount][columnsCount] = { nullptr };*/
-
-	/*std::vector<std::vector<unsigned char *>> crystals;
-	crystals.resize(rowsCount3);*/
-	std::vector<unsigned char *> crystals;
-	crystals.reserve((rowsCount3 - 4) * (columnsCount - 4));
-	//size_t new_cap = crystals.capacity();
+	std::vector<COORD> crystals;
+	crystals.reserve((rowsCount3 - 5) * (columnsCount - 5)); // 8 * 11 = 88 - 6 = 82
+	// 5 = 2 wall rows + 2 near wall rows + 1 empty row 
+	// 5 = 2 wall cols + 2 near wall cols + 1 \0 col
 
 	//Random
-	std::default_random_engine engine; //minstd_rand, mt19937, mt19937_64, default_random_engine
-	//std::random_device device;
+	std::mt19937 engine; //minstd_rand, mt19937, mt19937_64, default_random_engine
+	std::random_device device;
 	//double en = device.entropy();
-	engine.seed(static_cast<unsigned int>(time(0)));
-	//engine.seed(device());
+	//engine.seed(static_cast<unsigned int>(time(0)));
+	engine.seed(device());
 
-	//std::uniform_int_distribution<> uid(0, 10);
-	//int rnd = uid(engine);
+	auto funcClear = [&crystals](short x, short y)
+	{
+		//std::vector<COORD>::iterator
+		auto result = std::remove_if(crystals.begin(), crystals.end(), [x, y](COORD a)
+		{
+			return	(a.X >= (x - 1) && a.X <= (x + 1) && a.Y == y) ||
+					(a.Y >= (y - 1) && a.Y <= (y + 1) && a.X == x);			// 5
+		/*	return	((a.X >= (x - 1)) && (a.X <= (x + 1))) &&
+					((a.Y >= (y - 1)) && (a.Y <= (y + 1)));*/				// 3x3
+		/*	return
+					(a.X == x - 1) && (a.Y == y) ||
+					(a.X == x + 1) && (a.Y == y) ||
+					(a.Y == y - 1) && (a.X == x) ||
+					(a.Y == y + 1) && (a.X == x) ||
+					(a.Y == y) && (a.X == x);*/
+		});
 
-	for (int i = 2; i < rowsCount3 - 3; ++i)
-		for (int j = 2; j < columnsCount - 3; ++j)
+		crystals.erase(result, crystals.end());
+	};
+
+	auto funcCheck = [&crystals](short x, short y) {
+
+		for (short i = x - 1; i <= x + 1; i++)
+		{
+			//levelData[]
+		}
+		/*return	(a.X >= (x - 1) && a.X <= (x + 1) && a.Y == y) ||
+				(a.Y >= (y - 1) && a.Y <= (y + 1) && a.X == x);*/
+	};
+
+	// initialise empty cells vector
+	for (short i = 2; i < rowsCount3 - 3; ++i)
+		for (short j = 2; j < columnsCount - 3; ++j)
 		{
 			if (levelData[i][j] == ' ')
-				//if ((i != 6 && (j != 5 || j != 9))
-				if (i == 6 && (j == 5 || j == 9)) continue;
-				else
-					crystals.push_back(&(levelData[i][j]));
+				//if (i == 6 && (j == 5 || j == 9)) continue;
+				//if ((i == 6 && j >= 4 && j <= 10) ||			//	 +   +
+				//	(j == 5 && i >= 5 && i <= 7)  ||			//	+++++++
+				//	(j == 9 && i >= 5 && i <= 7)) continue;		//	 +   +
+				//else
+					crystals.push_back(COORD{ i, j });
 		}
+
+	// remove some empty cells
+	funcClear(6, 5); 
+	funcClear(6, 9);
+	funcClear(heroRow, heroColumn);
 
 	int index = 0;
-	auto iter = crystals.begin();
-	while (crystalCount > 0)
+	short x = 0; short y = 0;
+
+	while (crystalCount > 0 && crystals.size() != 0)
 	{
 		index = engine() % crystals.size();
-		/*if(	(*(crystals.at(index)++) == ' ') &&
-			(*(crystals.at(index)--) == ' '))*/
-		{
-			*(crystals.at(index)) = symbolCrystal;
-			crystals.erase(iter + index);
-			--crystalCount;
-			iter = crystals.begin();
-		}
-		
-	}
+		x = crystals.at(index).X;
+		y = crystals.at(index).Y;
 
-	/*for (int i = 1; i < rowsCount3 - 1; ++i)
-		for (int j = 1; j < columnsCount - 1; ++j)
-		{
-			if (levelData[i][j] == ' ')
-				if((i != 6 && (j != 5 || j != 9))
-					&&(i != heroRow && j != heroColumn))
-				crystals.at(i).push_back(&(levelData[i][j]));
-		}*/
+		levelData[x][y] = symbolCrystal;
+		funcClear(x, y);
+		--crystalCount;
+	}
 
 }
 
