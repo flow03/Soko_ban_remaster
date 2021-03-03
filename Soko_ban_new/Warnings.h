@@ -207,25 +207,23 @@ void Warnings(Warning warn) {
 		{
 			case 1:
 			{
-				//
-				printColorText(consoleHandle, "\n\t\t\t  Попереду ", Yellow); 
+				printColorText(consoleHandle, "\n\t\t\t  Попереду ", Yellow);
 				printColorText(consoleHandle, "пастка", Red);
 				printColorText(consoleHandle, '!', Yellow);
 				printColorText(consoleHandle, " Не раджу йти ", Yellow);
 				if (warn == secretBombLeft) printColorText(consoleHandle, "влiво", Yellow);
-				if (warn == secretBombRight) printColorText(consoleHandle, "вправо", Yellow);
+				else if (warn == secretBombRight) printColorText(consoleHandle, "вправо", Yellow);
 				break;
 			}
 			case 2:
 			{
-				//
-				printColorText(consoleHandle, "\n\t\t\tВпереди ", Yellow); 
+				printColorText(consoleHandle, "\n\t\t\tВпереди ", Yellow);
 				printColorText(consoleHandle, "мина", Red);
 				printColorText(consoleHandle, '!', Yellow);
 				printColorText(consoleHandle, " Не советую ступать ", Yellow);
 				if (warn == secretBombLeft) printColorText(consoleHandle, "влево", Yellow);
-				if (warn == secretBombRight) printColorText(consoleHandle, "вправо", Yellow);
-				break;
+				else if (warn == secretBombRight) printColorText(consoleHandle, "вправо", Yellow);
+				break; // 32-33
 			}
 			case 3:
 			{
@@ -233,8 +231,8 @@ void Warnings(Warning warn) {
 				printColorText(consoleHandle, "\n\t\t\t     Bomb", Red);
 				printColorText(consoleHandle, " ahead! Don't go ", Yellow);
 				if (warn == secretBombLeft) printColorText(consoleHandle, "left", Yellow);
-				if (warn == secretBombRight) printColorText(consoleHandle, "right", Yellow);
-				break;
+				else if (warn == secretBombRight) printColorText(consoleHandle, "right", Yellow);
+				break; // 34-35
 			}
 		}
 		break;
@@ -243,20 +241,18 @@ void Warnings(Warning warn) {
 		{
 		case 1:
 		{
-			//
-			printColorText(consoleHandle, "\n\t\t\t\tТа нехай йому грець!", Yellow);
+			printColorText(consoleHandle, "\n\t\t\t\tТа нехай йому грець!\t\t", Yellow);
 			break;
 		}
 		case 2:
 		{
-			//
-			printColorText(consoleHandle, "\n\t\t\t\t    Чёрт побери!", Yellow);
+			printColorText(consoleHandle, "\n\t\t\t\t    Чёрт побери!\t\t", Yellow); 
 			break;
 		}
 		case 3:
 		{
 			//setlocale(LC_ALL, "C");
-			printColorText(consoleHandle, "\n\t\t\t\t Damn! I warned you", Yellow);
+			printColorText(consoleHandle, "\n\t\t\t\t Damn! I warned you\t\t", Yellow);
 			break;
 		}
 		}

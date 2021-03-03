@@ -4,7 +4,7 @@
 #include <algorithm> // std::remove_if
 #include <stdio.h>
 #include <stdlib.h>
-//#include <ctime>
+#include <ctime>
 #include <Windows.h> 
 #include <conio.h>
 #include <ctype.h>
@@ -120,7 +120,7 @@ int heroColumn = 0;
 int levelSelector = 1;
 int CrystalCount = 0;
 int KeyCount = 0;
-int Localization = 2; //Language
+int Localization = 1; //Language
 int font = 1; // Font
 TCHAR szbuff[255]; //StringCchPrintf
 CONSOLE_FONT_INFOEX defaultFont;
@@ -800,9 +800,9 @@ void MoveHeroTo(int row, int column)
 					levelData[6][9] = symbolPortal;
 					canMoveToCell = true;
 				}
-				else if (CrystalCount == 7)
+				else if (CrystalCount == 2) // 7
 				{
-					RandomizeCrystals(6);
+					RandomizeCrystals(10);
 					/*levelData[5][6] = symbolCrystal;
 					levelData[5][7] = symbolCrystal;
 					levelData[5][8] = symbolCrystal;
@@ -1268,14 +1268,14 @@ void RandomizeCrystals(int crystalCount)
 		crystals.erase(result, crystals.end());
 	};
 
-	auto funcCheck = [&crystals](short x, short y) {
-
-		for (short i = x - 1; i <= x + 1; i++)
-		{
-			//levelData[]
-		}
-		/*return	(a.X >= (x - 1) && a.X <= (x + 1) && a.Y == y) ||
-				(a.Y >= (y - 1) && a.Y <= (y + 1) && a.X == x);*/
+	auto funcCheck = [](short x, short y) -> bool
+	{
+		if (levelData[x + 1][y] != ' ' || levelData[x - 1][y] != ' ')
+			return false;
+		else if (levelData[x][y + 1] != ' ' || levelData[x][y - 1] != ' ') 
+			return false;
+		else 
+			return true;
 	};
 
 	// initialise empty cells vector
@@ -1283,12 +1283,7 @@ void RandomizeCrystals(int crystalCount)
 		for (short j = 2; j < columnsCount - 3; ++j)
 		{
 			if (levelData[i][j] == ' ')
-				//if (i == 6 && (j == 5 || j == 9)) continue;
-				//if ((i == 6 && j >= 4 && j <= 10) ||			//	 +   +
-				//	(j == 5 && i >= 5 && i <= 7)  ||			//	+++++++
-				//	(j == 9 && i >= 5 && i <= 7)) continue;		//	 +   +
-				//else
-					crystals.push_back(COORD{ i, j });
+				crystals.push_back(COORD{ i, j });
 		}
 
 	// remove some empty cells
@@ -1305,9 +1300,14 @@ void RandomizeCrystals(int crystalCount)
 		x = crystals.at(index).X;
 		y = crystals.at(index).Y;
 
-		levelData[x][y] = symbolCrystal;
-		funcClear(x, y);
-		--crystalCount;
+		if (funcCheck(x, y))
+		{
+			levelData[x][y] = symbolCrystal;
+			funcClear(x, y);
+			--crystalCount;
+		}
+		else
+			crystals.erase(crystals.begin() + index);
 	}
 
 }
