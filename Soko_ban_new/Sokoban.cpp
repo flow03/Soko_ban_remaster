@@ -1,7 +1,9 @@
+//#define _CRT_SECURE_NO_WARNINGS
+//#define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
 
 // Include libraries
-#include <random> //std::default_random_engine and std::random_device
-#include <algorithm> // std::remove_if
+#include <random>		//std::default_random_engine and std::random_device
+#include <algorithm>	// std::remove_if
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctime>
@@ -10,7 +12,7 @@
 #include <ctype.h>
 #include <locale.h>
 //#include <assert.h>
-#include <strsafe.h> //StringCchPrintf
+#include <strsafe.h>	//StringCchPrintf
 #include <iostream>
 #include <vector>
 
@@ -434,8 +436,8 @@ void UpdateFont()
 	CenterWindow();
 }
 
-template <size_t N>
-void Initialise(const unsigned char(*lvl_begin)[N], const unsigned char(*lvl_end)[N])
+//template <size_t N>
+void Initialise(const unsigned char(*lvl_begin)[columnsCount], const unsigned char(*lvl_end)[columnsCount])
 {
 	// Load level
 
@@ -450,9 +452,9 @@ void Initialise(const unsigned char(*lvl_begin)[N], const unsigned char(*lvl_end
 	
 	//Initialise
 	int currentRow = 0;
-	for (const unsigned char(*row)[N] = lvl_begin; row != lvl_end; ++row)
+	for (const unsigned char(*row)[columnsCount] = lvl_begin; row != lvl_end; ++row)
 	{
-		for (int c = 0; c < N; ++c)
+		for (int c = 0; c < columnsCount; ++c)
 		{
 			switch ((*row)[c])
 			{
@@ -720,6 +722,9 @@ void BonusWall()
 
 	warning = bonusWallWarning;
 	levelData[16][6] = symbolKey;
+
+	// Clear getch input stream
+	FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 }
 
 void DieAnimation(int row, int column) {
@@ -737,12 +742,8 @@ void DieAnimation(int row, int column) {
 		Sleep(225);
 	}
 
-	//using namespace std;
-	/*std::cin.clear();
-	fflush(stdin);*/
-	//_getch();
-	//_getch();
-	//system("cls");
+	// Clear getch input stream
+	FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE)); // STD_OUTPUT_HANDLE is not fit here
 }
 
 void MoveHeroTo(int row, int column)
@@ -791,28 +792,23 @@ void MoveHeroTo(int row, int column)
 		case symbolCrystal:
 		{
 			++CrystalCount;
-			//canMoveToCell = true; // error purpose
+			canMoveToCell = true; // error purpose
 			if (levelSelector == 3)
 			{
 				if (CrystalCount == 1) //5
 				{
 					levelData[6][5] = symbolPortal;
 					levelData[6][9] = symbolPortal;
-					canMoveToCell = true;
+					//canMoveToCell = true;
 				}
 				else if (CrystalCount == 2) // 7
 				{
-					RandomizeCrystals(10);
-					/*levelData[5][6] = symbolCrystal;
-					levelData[5][7] = symbolCrystal;
-					levelData[5][8] = symbolCrystal;
-					levelData[4][6] = symbolCrystal;
-					levelData[4][7] = symbolCrystal;
-					levelData[4][8] = symbolCrystal;*/
-					canMoveToCell = true;
+					RandomizeCrystals(6);
+					//canMoveToCell = true;
 				}
 				else if (CrystalCount == 13) //13
 				{
+					canMoveToCell = false;
 					levelData[heroRow][heroColumn] = ' ';	// replace hero
 					levelData[row][column] = ' ';			// replace crystal
 					//levelData[6][5] = '.';				// потом нельзя будет вернуться
@@ -1088,12 +1084,12 @@ void MoveHeroTo(int row, int column)
 				{
 					levelData[4][12] = symbolBomb;
 					if (levelData[4][13] != symbolBomb) warning = secretBombRight;
-					else 
+					else
 					{
 						warning = secretBombDamn;
 						levelData[3][11] = ' ';
-						levelData[5][10] = symbolWall;
-						levelData[4][9] = ' ';
+						//levelData[5][10] = symbolWall;
+						//levelData[4][9] = ' ';
 					}
 				}
 				else if (row == 6 && column == 13)
@@ -1104,8 +1100,8 @@ void MoveHeroTo(int row, int column)
 					{
 						warning = secretBombDamn;
 						levelData[3][11] = ' ';
-						levelData[5][10] = symbolWall;
-						levelData[4][9] = ' ';
+						//levelData[5][10] = symbolWall;
+						//levelData[4][9] = ' ';
 					}
 				}
 				// Final Door
@@ -1143,62 +1139,62 @@ void Update()
 {
 	int inputChar = _getch();
 	//inputChar = tolower(inputChar);
-
+	
 	switch (inputChar)
 	{
-		// Up
-		case 'w':
-		case 'W':
-		case 150:	//ц
-		case 230:	//Ц
-		case 72:
-		{
-			MoveHeroTo(heroRow - 1, heroColumn);
-			break;
-		}
-		// Down
-		case 's':
-		case 'S':
-		case 155:	//ы
-		case 235:	//Ы
-		case 63:	//і
-		case 80:
-		{
-			MoveHeroTo(heroRow + 1, heroColumn);
-			break;
-		}
-		// Left
-		case 'a':
-		case 'A':
-		case 148:	//ф
-		case 228:	//Ф
-		case 75:
-		{
-			MoveHeroTo(heroRow, heroColumn - 1);
-			break;
-		}
-		// Right
-		case 'd':
-		case 'D':
-		case 130:	//в
-		case 162:	//В
-		case 77:
-		{
-			MoveHeroTo(heroRow, heroColumn + 1);
-			break;
-		}
+	// Up
+	case 'w':
+	case 'W':
+	case 150:	//ц
+	case 230:	//Ц
+	case 72:
+	{
+		MoveHeroTo(heroRow - 1, heroColumn);
+		break;
+	}
+	// Down
+	case 's':
+	case 'S':
+	case 155:	//ы
+	case 235:	//Ы
+	case 63:	//і
+	case 80:
+	{
+		MoveHeroTo(heroRow + 1, heroColumn);
+		break;
+	}
+	// Left
+	case 'a':
+	case 'A':
+	case 148:	//ф
+	case 228:	//Ф
+	case 75:
+	{
+		MoveHeroTo(heroRow, heroColumn - 1);
+		break;
+	}
+	// Right
+	case 'd':
+	case 'D':
+	case 130:	//в
+	case 162:	//В
+	case 77:
+	{
+		MoveHeroTo(heroRow, heroColumn + 1);
+		break;
+	}
 
-		// Restart level
-		/*case 114:
-		case 82:*/
-		case 'r':
-		case 'R':
-		case 170:	//к
-		case 138:	//К
-		{
-			LevelClear();
-			break;
-		}
+	// Restart level
+	/*case 114:
+	case 82:*/
+	case 'r':
+	case 'R':
+	case 170:	//к
+	case 138:	//К
+	{
+		LevelClear();
+		break;
+	}
 
 
 	}
@@ -1270,23 +1266,19 @@ void RandomizeCrystals(int crystalCount)
 
 	auto funcCheck = [](short x, short y) -> bool
 	{
-		if (levelData[x + 1][y] != ' ' || levelData[x - 1][y] != ' ')
-			return false;
-		else if (levelData[x][y + 1] != ' ' || levelData[x][y - 1] != ' ') 
-			return false;
-		else 
-			return true;
+		return (levelData[x + 1][y] == ' ' && levelData[x - 1][y] == ' ' &&
+				levelData[x][y + 1] == ' ' && levelData[x][y - 1] == ' ');
 	};
 
 	// initialise empty cells vector
 	for (short i = 2; i < rowsCount3 - 3; ++i)
 		for (short j = 2; j < columnsCount - 3; ++j)
 		{
-			if (levelData[i][j] == ' ')
+			if (levelData[i][j] == ' ') // && funcCheck(i, j))
 				crystals.push_back(COORD{ i, j });
 		}
 
-	// remove some empty cells
+	// remove some empty cells around invisible portals
 	funcClear(6, 5); 
 	funcClear(6, 9);
 	funcClear(heroRow, heroColumn);
@@ -1345,16 +1337,16 @@ int main()
 	//} 
 	//while ( isGameActive );
 
-	//// Level 2
-	//system("cls");
-	//isGameActive = true;
-	//levelSelector = 2;
-	//Initialise(std::begin(levelData2), std::end(levelData2));
-	//do
-	//{
-	//	Render();
-	//	Update();
-	//} while (isGameActive);
+	// Level 2
+	system("cls");
+	isGameActive = true;
+	levelSelector = 2;
+	Initialise(std::begin(levelData2), std::end(levelData2));
+	do
+	{
+		Render();
+		Update();
+	} while (isGameActive);
 	
 	// Level 3
 	system("cls");
