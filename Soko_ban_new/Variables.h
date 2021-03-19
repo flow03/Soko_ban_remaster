@@ -42,10 +42,12 @@ bool futureSelector = false;
 //int global_Restarts = 0;
 //int global_Mines = 0;
 //
-//// Achievements
-//bool AllMinesAchieve = false;
-//bool AllCrystalsAchieve = false;
-//bool NullRestartsAchieve = false;
+// Achievements
+//bool AllMinesAchieve = false;			// ¬зорватьс€ на всех минах
+//bool AllCrystalsAchieve = false;		// —обрать все кристаллы в игре
+//bool lvl3_CrystalsAchieve = false;		// —обрать все кристаллы на уровне 3
+//bool ManyRestartsAchieve = false;		// 10 рестартов подр€д на уровне 3
+//bool NullRestartsAchieve = false;		// 0 рестартов игры
 //bool PovorotNeTydaAchieve = false;		// ѕоворот не туда(за нахождение секретной комнаты)
 //bool OnMyWayAchieve = false;			// ѕо своим следам
 //

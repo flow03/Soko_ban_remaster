@@ -19,6 +19,7 @@
 #include "Variables.h"
 #include "ConsoleColor.h"
 #include "Warnings.h"
+#include "Level_3.h"
 
 
 
@@ -37,7 +38,7 @@ const unsigned char levelData1[10][columnsCount] =  {
 	"##2############",
  };
 
-const unsigned char levelData2[18][columnsCount] = {
+const unsigned char levelData2[rowsCount][columnsCount] = {
 	"###2#########",
 	"#cb   # k# p#",
 	"2  c#g## X   ",
@@ -65,7 +66,7 @@ const unsigned char levelData3[rowsCount3][columnsCount] = {
 	"#           XX#",
 	"#             #",
 	"#             #",
-	"2      1      #",
+	"2      1      2",
 	"#             #",
 	"#             #",
 	"#             #",
@@ -75,26 +76,9 @@ const unsigned char levelData3[rowsCount3][columnsCount] = {
 	"               "
 };
 
-const unsigned char levelData4[rowsCount3][columnsCount] = {
-	"############22#",
-	"#   X   X  #  #",
-	"#X  X  X XX#tt#",
-	"#  ####### #  #",
-	"#  # v   # #  #",
-	"#XX# #   # #  #",
-	"#  # ##### #tt#",
-	"#  #       #  #",
-	"#XX#########  #",
-	"#  b   bXXXXtt#",
-	"#    b tXXXX  #",
-	"###############",
-	"               ",
-};
 
 
 // Functions
-
-void RandomizeCrystals(int);
 
 void CenterWindow()
 {
@@ -511,18 +495,19 @@ void LevelClear()
 
 void Render()
 {
-	// Move console cursor to (0,0)
-	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
-	//system("cls");
+	short x = 2;
+	// Move console cursor to 34 column
+	SetConsoleCursorPosition(consoleHandle, COORD{ 34, x });
 
 	setlocale(LC_ALL, "C");
 
-	std::cout<<'\n';
 	for (int r = 0; r < rowsCount; ++r)
 	{
 		if (levelData[r][0] != '\0')
 		{
-		std::cout << "\n\t\t\t\t  ";
+		// Move console cursor for each line
+		SetConsoleCursorPosition(consoleHandle, COORD{ 34, x++ });
+		
 		for (int c = 0; c < columnsCount; ++c)
 		{
 			unsigned char symbol = levelData[r][c];
@@ -694,53 +679,6 @@ void DieAnimation(int row, int column) {
 	FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE)); // STD_OUTPUT_HANDLE is not fit here
 }
 
-void SaveFutureFunction()
-{
-	//levelData[heroRow][heroColumn] = ' ';
-	// Save Future array
-	for (int r = 0; r < rowsCount3; r++)
-		for (int c = 0; c < columnsCount; c++)
-		{
-			Future[r][c] = levelData[r][c];
-		}
-}
-
-void LoadFutureFunction()
-{
-	for (int r = 0; r < rowsCount3; r++)
-		for (int c = 0; c < columnsCount; c++)
-		{
-			levelData[r][c] = Future[r][c];
-		}
-
-	levelSelector = 4;
-	heroRow = 5;
-	heroColumn = 7;
-}
-
-void SavePastFunction()
-{
-	// Save Past array
-	for (int r = 0; r < rowsCount3; r++)
-		for (int c = 0; c < columnsCount; c++)
-		{
-			Past[r][c] = levelData[r][c];
-		}
-}
-
-void LoadPastFunction()
-{
-	for (int r = 0; r < rowsCount3; r++)
-		for (int c = 0; c < columnsCount; c++)
-		{
-			levelData[r][c] = Past[r][c];
-		}
-
-	levelSelector = 3;
-	heroRow = 6;
-	heroColumn = 7;
-}
-
 void MoveHeroTo(int row, int column)
 {
 	unsigned char destinationCell = levelData[row][column];
@@ -763,19 +701,17 @@ void MoveHeroTo(int row, int column)
 				//warning2 = true;
 				canMoveToCell = false;
 			}
-			else
-			if (levelSelector == 3)
+			else if (levelSelector == 3)
 			{
 				levelData[row][column] = symbolWall;
 				canMoveToCell = false;
 			}
-			else
-			if ((levelSelector == 4) && (CrystalCount < 14)) //13
+			else if ((levelSelector == 4) && (CrystalCount < 14)) //13
 			{
-				//warning2 = true;
 				warning = crystalWarning;
 				canMoveToCell = false;
-				levelData[4][7] = symbolPortal;
+				levelData[4][7] = symbolPortal;	// New portal
+				levelData[4][9] = ' ';			// shortcut
 			}
 			else
 			isGameActive = false;
@@ -805,39 +741,12 @@ void MoveHeroTo(int row, int column)
 					canMoveToCell = false;
 					levelData[heroRow][heroColumn] = ' ';	// replace hero
 					levelData[row][column] = ' ';			// replace crystal
-					//levelData[6][5] = '.';				// потом нельзя будет вернуться
 					// Save Past array
-					for (int r = 0; r < rowsCount3; r++)
-						for (int c = 0; c < columnsCount; c++)
-						{
-							Past[r][c] = levelData[r][c];
-						}
+					SavePastFunction();
+					// Load Future array
+					LoadFutureFunction();
 
-					if (futureSelector == false)
-					{
-						levelSelector = 4;
-						Initialise(std::begin(levelData4), std::end(levelData4));
-						warning = bonusLevelWarning;
-						futureSelector = true;
-
-						heroRow = 5;
-						heroColumn = 7;
-						levelData[heroRow][heroColumn] = symbolHero;
-					}
-					else
-					{
-						levelSelector = 4;
-						// Load future array
-						for (int r = 0; r < rowsCount3; r++)
-							for (int c = 0; c < columnsCount; c++)
-							{
-								levelData[r][c] = Future[r][c];
-							}
-
-						heroRow = 5;
-						heroColumn = 7;
-						levelData[heroRow][heroColumn] = symbolHero;
-					}
+					levelData[heroRow][heroColumn] = symbolHero;
 				}
 				else canMoveToCell = true;
 			}
@@ -875,28 +784,20 @@ void MoveHeroTo(int row, int column)
 						heroRow = 1;
 						heroColumn = 13;
 					}
-					else
+					else if (levelData[10][2] == symbolCrystal)
 					{
 						heroRow = 10;
 						heroColumn = 1;
 					}
+					else levelData[6][9] = ' '; // Portal disapear
+						
 				}
 				else if (row == 6 && column == 5) // Left Portal
 				{
 					// Save Past array
 					SavePastFunction();
-
-					if (futureSelector == false)
-					{
-						levelSelector = 4;
-						Initialise(std::begin(levelData4), std::end(levelData4));
-						heroRow = 10;
-						heroColumn = 6;
-
-						warning = bonusLevelWarning;
-						futureSelector = true;
-					}
-					else LoadFutureFunction(); // Load future array
+					// Load Future array
+					LoadFutureFunction(); 
 				}
 			}
 			// Level 4 portal
@@ -996,15 +897,14 @@ void MoveHeroTo(int row, int column)
 			// Bonus wall
 			if (levelSelector == 2) // && row == 16 && column == 11) // && (bonusWallSelector == false))
 			{
-				//canMoveToCell = true;
-				levelData[heroRow][heroColumn] = ' ';
+				canMoveToCell = true;
+				/*levelData[heroRow][heroColumn] = ' ';
 				heroRow = row;
 				heroColumn = column;
-				levelData[heroRow][heroColumn] = symbolHero;
+				levelData[heroRow][heroColumn] = symbolHero;*/
 
 				BonusWall();
 			}
-			
 			else if (levelSelector == 4)
 			{
 				// Secret door
@@ -1078,8 +978,9 @@ void MoveHeroTo(int row, int column)
 					levelData[1][12] = symbolDoorG;
 					levelData[1][13] = symbolDoorG;
 					levelData[10][13] = symbolKey;
-					levelData[4][9] = ' '; // shortcut
+					//levelData[4][9] = ' '; // shortcut
 
+					// Reset the same trap near
 					if (column == 12) levelData[2][13] = ' ';
 					else if (column == 13) levelData[2][12] = ' ';
 				}
@@ -1198,80 +1099,6 @@ void Shutdown()
 	SetCurrentConsoleFontEx(consoleHandle, TRUE, &defaultFont); // Установить прежний шрифт
 }
 
-void RandomizeCrystals(int crystalCount)
-{
-	std::vector<COORD> crystals;
-	crystals.reserve((rowsCount3 - 5) * (columnsCount - 5)); // 8 * 11 = 88 - 6 = 82
-	// 5 = 2 wall rows + 2 near wall rows + 1 empty row 
-	// 5 = 2 wall cols + 2 near wall cols + 1 \0 col
-
-	//Random
-	std::mt19937 engine; //minstd_rand, mt19937, mt19937_64, default_random_engine
-	std::random_device device;
-	//double en = device.entropy();
-	//engine.seed(static_cast<unsigned int>(time(0)));
-	engine.seed(device());
-
-	auto funcClear = [&crystals](short x, short y)
-	{
-		//std::vector<COORD>::iterator
-		auto result = std::remove_if(crystals.begin(), crystals.end(), [x, y](COORD a)
-		{
-			return	(a.X >= (x - 1) && a.X <= (x + 1) && a.Y == y) ||
-					(a.Y >= (y - 1) && a.Y <= (y + 1) && a.X == x);			// 5
-		/*	return	((a.X >= (x - 1)) && (a.X <= (x + 1))) &&
-					((a.Y >= (y - 1)) && (a.Y <= (y + 1)));*/				// 3x3
-		/*	return
-					(a.X == x - 1) && (a.Y == y) ||
-					(a.X == x + 1) && (a.Y == y) ||
-					(a.Y == y - 1) && (a.X == x) ||
-					(a.Y == y + 1) && (a.X == x) ||
-					(a.Y == y) && (a.X == x);*/
-		});
-
-		crystals.erase(result, crystals.end());
-	};
-
-	auto funcCheck = [](short x, short y) -> bool
-	{
-		return (levelData[x + 1][y] == ' ' && levelData[x - 1][y] == ' ' &&
-				levelData[x][y + 1] == ' ' && levelData[x][y - 1] == ' ');
-	};
-
-	// initialise empty cells vector
-	for (short i = 2; i < rowsCount3 - 3; ++i)
-		for (short j = 2; j < columnsCount - 3; ++j)
-		{
-			if (levelData[i][j] == ' ') // && funcCheck(i, j))
-				crystals.push_back(COORD{ i, j });
-		}
-
-	// remove some empty cells around invisible portals
-	funcClear(6, 5); 
-	funcClear(6, 9);
-	funcClear(heroRow, heroColumn);
-
-	int index = 0;
-	short x = 0; short y = 0;
-
-	while (crystalCount > 0 && crystals.size() != 0)
-	{
-		index = engine() % crystals.size();
-		x = crystals.at(index).X;
-		y = crystals.at(index).Y;
-
-		if (funcCheck(x, y))
-		{
-			levelData[x][y] = symbolCrystal;
-			funcClear(x, y);
-			--crystalCount;
-		}
-		else
-			crystals.erase(crystals.begin() + index);
-	}
-
-}
-
 
 int main()
 {
@@ -1306,7 +1133,7 @@ int main()
 	//while ( isGameActive );
 
 	// Level 2
-	/*system("cls");
+	system("cls");
 	isGameActive = true;
 	levelSelector = 2;
 	Initialise(std::begin(levelData2), std::end(levelData2));
@@ -1314,7 +1141,7 @@ int main()
 	{
 		Render();
 		Update();
-	} while (isGameActive);*/
+	} while (isGameActive);
 	
 	// Level 3
 	system("cls");
