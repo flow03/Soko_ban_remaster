@@ -37,16 +37,16 @@ int randomCrystals = 10;
 bool futureSelector = false;
 
 // Global counters
-int global_Keys = 0;
-int global_Crystals = 0;
-int global_Restarts = 0;
-int global_Mines = 0;
-
-// Achievements
-bool AllMinesAchieve = false;
-bool PovorotNeTydaAchieve = false;	// Поворот не туда(за нахождение секретной комнаты)
-bool AllCrystalsAchieve = false;
-bool NullRestartsAchieve = false;
-bool OnMyWayAchieve = false;			// По своим следам
-
-bool AllAchieves = false;			// Сбор всех достижений
+//int global_Keys = 0;
+//int global_Crystals = 0;
+//int global_Restarts = 0;
+//int global_Mines = 0;
+//
+//// Achievements
+//bool AllMinesAchieve = false;
+//bool AllCrystalsAchieve = false;
+//bool NullRestartsAchieve = false;
+//bool PovorotNeTydaAchieve = false;		// Поворот не туда(за нахождение секретной комнаты)
+//bool OnMyWayAchieve = false;			// По своим следам
+//
+//bool AllAchieves = false;				// Сбор всех достижений

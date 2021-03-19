@@ -22,7 +22,7 @@
 
 
 
-// Game settings
+// Level settings
 
 const unsigned char levelData1[10][columnsCount] =  {
 	"#####2#########",
@@ -35,7 +35,7 @@ const unsigned char levelData1[10][columnsCount] =  {
 	"#XXX # # X   ##",
 	"#1 X #   X X  #",
 	"##2############",
-                                                                };
+ };
 
 const unsigned char levelData2[18][columnsCount] = {
 	"###2#########",
@@ -57,7 +57,7 @@ const unsigned char levelData2[18][columnsCount] = {
 	"#c   c c c t#",
 	"##2##########",
 
-                                                                  };
+};
 
 const unsigned char levelData3[rowsCount3][columnsCount] = {
 	"#######2#######",
@@ -69,11 +69,11 @@ const unsigned char levelData3[rowsCount3][columnsCount] = {
 	"#             #",
 	"#             #",
 	"#             #",
-	"#XX    .      #",
+	"#XX           #",
 	"#XcX          #",
 	"#######2#######",
 	"               "
-                                                               };
+};
 
 const unsigned char levelData4[rowsCount3][columnsCount] = {
 	"############22#",
@@ -694,11 +694,57 @@ void DieAnimation(int row, int column) {
 	FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE)); // STD_OUTPUT_HANDLE is not fit here
 }
 
+void SaveFutureFunction()
+{
+	//levelData[heroRow][heroColumn] = ' ';
+	// Save Future array
+	for (int r = 0; r < rowsCount3; r++)
+		for (int c = 0; c < columnsCount; c++)
+		{
+			Future[r][c] = levelData[r][c];
+		}
+}
+
+void LoadFutureFunction()
+{
+	for (int r = 0; r < rowsCount3; r++)
+		for (int c = 0; c < columnsCount; c++)
+		{
+			levelData[r][c] = Future[r][c];
+		}
+
+	levelSelector = 4;
+	heroRow = 5;
+	heroColumn = 7;
+}
+
+void SavePastFunction()
+{
+	// Save Past array
+	for (int r = 0; r < rowsCount3; r++)
+		for (int c = 0; c < columnsCount; c++)
+		{
+			Past[r][c] = levelData[r][c];
+		}
+}
+
+void LoadPastFunction()
+{
+	for (int r = 0; r < rowsCount3; r++)
+		for (int c = 0; c < columnsCount; c++)
+		{
+			levelData[r][c] = Past[r][c];
+		}
+
+	levelSelector = 3;
+	heroRow = 6;
+	heroColumn = 7;
+}
+
 void MoveHeroTo(int row, int column)
 {
 	unsigned char destinationCell = levelData[row][column];
 	bool canMoveToCell = false;
-	//warning = None; //warning reset
 
 	switch (destinationCell)
 	{
@@ -802,95 +848,69 @@ void MoveHeroTo(int row, int column)
 		// Portal
 		case symbolPortal:
 		{
-			if (levelSelector == 2 && row == 1 && column == 11)
+			// Before each portal
+			levelData[heroRow][heroColumn] = ' ';
+
+			// Level 2 portals
+			if (levelSelector == 2)
 			{
-				levelData[heroRow][heroColumn] = ' ';
-				heroRow = 1;
-				heroColumn = 7;
-				levelData[1][7] = symbolHero;
-			}
-			else if (levelSelector == 2 && row == 12 && column == 1)
-			{
-				levelData[heroRow][heroColumn] = ' ';
-				heroRow = 15;
-				heroColumn = 2;
-				levelData[15][2] = symbolHero;
-			}
-			else if (levelSelector == 3 && row == 6 && column == 9) // Key Portal
-			{
-				levelData[heroRow][heroColumn] = ' ';
-				if (levelData[1][12] == symbolKey)
+				if (row == 1 && column == 11)
 				{
 					heroRow = 1;
-					heroColumn = 13;
-				}
-				else
-				{
-					heroRow = 10;
-					heroColumn = 1;
-				}
-				levelData[heroRow][heroColumn] = symbolHero;
-			}
-			else if (levelSelector == 3 && row == 6 && column == 5) // Old Portal
-			{
-				levelData[heroRow][heroColumn] = ' ';
-				//levelData[6][5] = '.'; // потом нельзя будет вернуться
-				// Save Past array
-				for (int r = 0; r < rowsCount3; r++)
-				for (int c = 0; c < columnsCount; c++)
-				{
-					Past[r][c] = levelData[r][c];
-				}
-
-				if (futureSelector == false)
-				{
-					levelSelector = 4;
-					Initialise(std::begin(levelData4), std::end(levelData4));
-					heroRow = 10;
-					heroColumn = 6;
-					levelData[heroRow][heroColumn] = symbolHero;
-
-					warning = bonusLevelWarning;
-					futureSelector = true;
-				}
-				else
-				{
-					// Load future array
-					for (int r = 0; r < rowsCount3; r++)
-						for (int c = 0; c < columnsCount; c++)
-						{
-							levelData[r][c] = Future[r][c];
-						}
-
-					levelSelector = 4;
-					heroRow = 5;
 					heroColumn = 7;
-					levelData[heroRow][heroColumn] = symbolHero;
+				}
+				else if (row == 12 && column == 1)
+				{
+					heroRow = 15;
+					heroColumn = 2;
 				}
 			}
-			else
-			if (levelSelector == 4 && row == 4 && column == 7) // New Portal
+			// Level 3 portals
+			else if (levelSelector == 3)
 			{
-				levelData[heroRow][heroColumn] = ' ';
-				// Save Future array
-				for (int r = 0; r < rowsCount3; r++)
-					for (int c = 0; c < columnsCount; c++)
+				if (row == 6 && column == 9) // Key Portal
+				{
+					if (levelData[1][12] == symbolKey)
 					{
-						Future[r][c] = levelData[r][c];
+						heroRow = 1;
+						heroColumn = 13;
 					}
-				// Load Past array
-				for (int r = 0; r < rowsCount3; r++)
-					for (int c = 0; c < columnsCount; c++)
+					else
 					{
-						levelData[r][c] = Past[r][c];
+						heroRow = 10;
+						heroColumn = 1;
 					}
+				}
+				else if (row == 6 && column == 5) // Left Portal
+				{
+					// Save Past array
+					SavePastFunction();
 
-				levelSelector = 3;
-				heroRow = 6;
-				heroColumn = 7;
-				levelData[6][7] = symbolHero;
+					if (futureSelector == false)
+					{
+						levelSelector = 4;
+						Initialise(std::begin(levelData4), std::end(levelData4));
+						heroRow = 10;
+						heroColumn = 6;
+
+						warning = bonusLevelWarning;
+						futureSelector = true;
+					}
+					else LoadFutureFunction(); // Load future array
+				}
+			}
+			// Level 4 portal
+			else if (levelSelector == 4 && row == 4 && column == 7) // New Portal
+			{
+				// Save Future array
+				SaveFutureFunction();
+				// Load Past array
+				LoadPastFunction();
 			}
 			
+			// After each portal
+			levelData[heroRow][heroColumn] = symbolHero;
+
 			break;
 		}
 		// Key
@@ -1286,7 +1306,7 @@ int main()
 	//while ( isGameActive );
 
 	// Level 2
-	system("cls");
+	/*system("cls");
 	isGameActive = true;
 	levelSelector = 2;
 	Initialise(std::begin(levelData2), std::end(levelData2));
@@ -1294,7 +1314,7 @@ int main()
 	{
 		Render();
 		Update();
-	} while (isGameActive);
+	} while (isGameActive);*/
 	
 	// Level 3
 	system("cls");
@@ -1314,4 +1334,3 @@ int main()
 
 	return 0;
 }
-
