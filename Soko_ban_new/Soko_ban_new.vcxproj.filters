@@ -21,6 +21,9 @@
     <ClInclude Include="Warnings.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="Variables.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sokoban.cpp">

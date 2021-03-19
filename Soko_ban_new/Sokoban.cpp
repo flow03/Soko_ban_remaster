@@ -6,7 +6,7 @@
 #include <algorithm>	// std::remove_if
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctime>
+//#include <ctime>
 #include <Windows.h> 
 #include <conio.h>
 #include <ctype.h>
@@ -16,25 +16,13 @@
 #include <iostream>
 #include <vector>
 
+#include "Variables.h"
 #include "ConsoleColor.h"
+#include "Warnings.h"
+
 
 
 // Game settings
-const int rowsCount = 18;
-const int columnsCount = 16;
-
-const unsigned char symbolHero = 2;
-const unsigned char symbolWall = 219;
-const unsigned char symbolBox = 254;
-const unsigned char symbolExit = 176;
-const unsigned char symbolCrystal = 3;
-const unsigned char symbolDoorV = 186;
-const unsigned char symbolDoorG = 205;
-const unsigned char symbolPortal = 79;
-//const unsigned char symbolPoint = 46;
-const unsigned char symbolKey = 21;
-const unsigned char symbolBomb = 15;
-
 
 const unsigned char levelData1[10][columnsCount] =  {
 	"#####2#########",
@@ -48,9 +36,6 @@ const unsigned char levelData1[10][columnsCount] =  {
 	"#1 X #   X X  #",
 	"##2############",
                                                                 };
-
-//const int rowsCount2 = 18;
-//const int columnsCount2 = 16;
 
 const unsigned char levelData2[18][columnsCount] = {
 	"###2#########",
@@ -73,9 +58,6 @@ const unsigned char levelData2[18][columnsCount] = {
 	"##2##########",
 
                                                                   };
-
-const int rowsCount3 = 13;
-//const int columnsCount3 = 16;
 
 const unsigned char levelData3[rowsCount3][columnsCount] = {
 	"#######2#######",
@@ -108,40 +90,6 @@ const unsigned char levelData4[rowsCount3][columnsCount] = {
 	"###############",
 	"               ",
 };
-
-
-
-// Logic variables
-HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-bool isGameActive = true;
-unsigned char levelData[rowsCount][columnsCount]; // Change for need
-unsigned char Past[rowsCount3][columnsCount];
-unsigned char Future[rowsCount3][columnsCount];
-int heroRow = 0;
-int heroColumn = 0;
-int levelSelector = 1;
-int CrystalCount = 0;
-int KeyCount = 0;
-int Localization = 1; //Language
-int font = 1; // Font
-TCHAR szbuff[255]; //StringCchPrintf
-CONSOLE_FONT_INFOEX defaultFont;
-int randomCrystals = 10;
-
-#include "Warnings.h"
-
-//bool warning1 = false;
-//bool warning2 = false;
-//bool bombSelector = false;
-//bool bonusWallSelector = false;
-//bool bonusWallWarning = false;
-//bool secretDoorSelector = false;
-//bool secretDoorWarning = false;
-//bool secretBombsWarning = false;
-//bool bonusLevelWarning = false;
-
-bool futureSelector = false;
-
 
 
 // Functions
