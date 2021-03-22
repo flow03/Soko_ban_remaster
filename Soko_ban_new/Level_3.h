@@ -94,7 +94,6 @@ void RandomizeCrystals(int crystalCount)
 
 void SaveFutureFunction()
 {
-	// Save Future array
 	for (int r = 0; r < rowsCount3; r++)
 		for (int c = 0; c < columnsCount; c++)
 		{
@@ -124,7 +123,6 @@ void LoadFutureFunction()
 
 void SavePastFunction()
 {
-	// Save Past array
 	for (int r = 0; r < rowsCount3; r++)
 		for (int c = 0; c < columnsCount; c++)
 		{

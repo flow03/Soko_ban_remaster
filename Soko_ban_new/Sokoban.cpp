@@ -6,7 +6,7 @@
 #include <algorithm>	// std::remove_if
 #include <stdio.h>
 #include <stdlib.h>
-//#include <ctime>
+#include <ctime>
 #include <Windows.h> 
 #include <conio.h>
 #include <ctype.h>
@@ -122,6 +122,7 @@ void SetupFont()
 void SetupSystem()
 {
 	//consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	time(&start_time); // start_time = time(0);
 
 	CONSOLE_SCREEN_BUFFER_INFOEX scrBuffer;
 	scrBuffer.cbSize = sizeof(scrBuffer);
@@ -489,8 +490,6 @@ void LevelClear()
 		RandomizeCrystals(randomCrystals);
 	}
 
-	/*std::cin.clear();
-	fflush(stdin);*/
 }
 
 void Render()
@@ -722,7 +721,9 @@ void MoveHeroTo(int row, int column)
 		case symbolCrystal:
 		{
 			++CrystalCount;
+			++global_Crystals;
 			canMoveToCell = true; // error purpose
+
 			if (levelSelector == 3)
 			{
 				if (CrystalCount == 1) //5
@@ -757,6 +758,7 @@ void MoveHeroTo(int row, int column)
 		// Portal
 		case symbolPortal:
 		{
+			++global_Portals;
 			// Before each portal
 			levelData[heroRow][heroColumn] = ' ';
 
@@ -818,6 +820,7 @@ void MoveHeroTo(int row, int column)
 		case symbolKey:
 		{
 			++KeyCount;
+			++global_Keys;
 			canMoveToCell = true;
 
 			if (levelSelector == 4)
@@ -864,6 +867,7 @@ void MoveHeroTo(int row, int column)
 		// Bomb
 		case symbolBomb:
 		{
+			++global_Bombs;
 			levelData[heroRow][heroColumn] = ' ';
 			
 			DieAnimation(row, column);
@@ -1007,7 +1011,11 @@ void MoveHeroTo(int row, int column)
 void Update()
 {
 	int inputChar = _getch();
-	//inputChar = tolower(inputChar);
+	//inputChar = tolower(inputChar); // work only with english symbols
+
+	// miss first char arrows and Num codes
+	if (inputChar == 0 || inputChar == 224)
+		inputChar = _getch();
 	
 	switch (inputChar)
 	{
@@ -1026,7 +1034,7 @@ void Update()
 	case 'S':
 	case 155:	//ы
 	case 235:	//Ы
-	case 63:	//і
+	case 63:	//і, І
 	case 80:
 	{
 		MoveHeroTo(heroRow + 1, heroColumn);
@@ -1061,6 +1069,7 @@ void Update()
 	case 170:	//к
 	case 138:	//К
 	{
+		++global_Restarts;
 		LevelClear();
 		break;
 	}
@@ -1071,6 +1080,15 @@ void Update()
 
 void Shutdown()
 {
+	using std::cout; using std::endl;
+
+	time_t diff_time = static_cast<time_t>(difftime(time(0), start_time));	// gmtime(difftime(time(0), start_time));
+	struct tm diff_tm; // = gmtime(&diff_time);
+	char time_buffer[20];
+	gmtime_s(&diff_tm, &diff_time);
+
+	strftime(time_buffer, 20, "%H:%M:%S", &diff_tm);
+
 	system("cls");
 	switch (Localization)
 	{
@@ -1083,7 +1101,20 @@ void Shutdown()
 		case 2:
 		{
 			setlocale(LC_ALL, "Russian");
-			printf("\n\t Неплохо сыграно. Нажмите любую клавишу для того чтобы выйти...");
+			SetConsoleCursorPosition(consoleHandle, COORD{ 30, 1 });
+			cout << "Статистика игрока";
+
+			cout << "\n\n Сердечек собрано\t" << global_Crystals;
+			printColorText(consoleHandle, symbolCrystal, Magenta);
+			cout << "\n\n Ключей собрано\t\t" << global_Keys;
+			printColorText(consoleHandle, symbolKey, LightMagenta);
+			cout << "\n\n Мин взорвано\t\t" << global_Bombs;
+			printColorText(consoleHandle, symbolBomb, Red);
+			cout << "\n\n Порталов пройдено\t" << global_Portals;
+			printColorText(consoleHandle, symbolPortal, LightCyan);
+			cout << "\n\n Рестартов\t\t" << global_Restarts;
+			cout << "\n\n\n Время в игре\t\t" << time_buffer;
+			
 			break;
 		}
 		case 1:
@@ -1144,7 +1175,7 @@ int main()
 	} while (isGameActive);
 	
 	// Level 3
-	system("cls");
+	/*system("cls");
 	isGameActive = true;
 	LevelClear();
 	levelSelector = 3;
@@ -1154,7 +1185,7 @@ int main()
 	{
 		Render();
 		Update();
-	} while (isGameActive);
+	} while (isGameActive);*/
 	
 
 	Shutdown();

@@ -28,20 +28,24 @@ int heroColumn = 0;
 int levelSelector = 1;
 int CrystalCount = 0;
 int KeyCount = 0;
-int Localization = 1;	//Language
+int Localization = 2;	//Language
 int font = 1;			// Font
 TCHAR szbuff[255];		//StringCchPrintf
 CONSOLE_FONT_INFOEX defaultFont;
 int randomCrystals = 10;
+time_t start_time = 0;
 
 bool futureSelector = false;
 
 // Global counters
-//int global_Keys = 0;
-//int global_Crystals = 0;
-//int global_Restarts = 0;
-//int global_Mines = 0;
-//
+int global_Crystals = 0;
+int global_Keys = 0;
+int global_Bombs = 0;
+int global_Portals = 0;
+//int global_Boxes = 0;
+int global_Restarts = 0;
+
+
 // Achievements
 //bool AllMinesAchieve = false;			// Взорваться на всех минах
 //bool AllCrystalsAchieve = false;		// Собрать все кристаллы в игре
