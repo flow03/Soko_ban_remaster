@@ -39,14 +39,8 @@ void RandomizeCrystals(int crystalCount)
 		{
 			return	(a.X >= (x - 1) && a.X <= (x + 1) && a.Y == y) ||
 				(a.Y >= (y - 1) && a.Y <= (y + 1) && a.X == x);			// 5
-	/*	return	((a.X >= (x - 1)) && (a.X <= (x + 1))) &&
-				((a.Y >= (y - 1)) && (a.Y <= (y + 1)));*/				// 3x3
-				/*	return
-							(a.X == x - 1) && (a.Y == y) ||
-							(a.X == x + 1) && (a.Y == y) ||
-							(a.Y == y - 1) && (a.X == x) ||
-							(a.Y == y + 1) && (a.X == x) ||
-							(a.Y == y) && (a.X == x);*/
+			/*return	((a.X >= (x - 1)) && (a.X <= (x + 1))) &&
+					((a.Y >= (y - 1)) && (a.Y <= (y + 1)));*/				// 3x3
 		});
 
 		crystals.erase(result, crystals.end());
@@ -143,4 +137,32 @@ void LoadPastFunction()
 	levelSelector = 3;
 	heroRow = 6;
 	heroColumn = 7;
+}
+
+
+void InitVectors()	// Don't work with objects appered after init
+{
+	for (short i = 0; i < rowsCount; ++i)
+		for (short j = 0; j < columnsCount; ++j)
+		{
+			if (levelData[i][j] == symbolBox)
+				markedBoxes.push_back(COORD{ i, j });
+			else if (levelData[i][j] == symbolBomb)
+				markedMines.push_back(COORD{ i, j });
+			else if (levelData[i][j] == '\0')
+				break;
+		}
+}
+
+void CkeckBomb(short x, short  y)
+{
+	for (auto iter = markedMines.begin(); iter != markedMines.end(); iter++)
+	{
+		if (iter->X == x && iter->Y == y)
+		{
+			++a_UniBombsDie;
+			markedMines.erase(iter);
+			break;
+		}
+	}
 }
