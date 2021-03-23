@@ -38,9 +38,9 @@ time_t start_time = 0;
 bool futureSelector = false;
 
 // Global counters
-int global_Crystals = 0;
-int global_Keys = 0;
-int global_Bombs = 0;
+int global_Crystals = 15;
+int global_Keys = 192;
+int global_Bombs = 10;
 int global_Portals = 0;
 //int global_Boxes = 0;
 int global_Restarts = 0;

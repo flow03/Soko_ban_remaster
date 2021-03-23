@@ -4,16 +4,17 @@
 // Include libraries
 #include <random>		//std::default_random_engine and std::random_device
 #include <algorithm>	// std::remove_if
-#include <stdio.h>
-#include <stdlib.h>
+//#include <stdio.h>
+//#include <stdlib.h>
 #include <ctime>
 #include <Windows.h> 
 #include <conio.h>
-#include <ctype.h>
+//#include <ctype.h>
 #include <locale.h>
 //#include <assert.h>
 #include <strsafe.h>	//StringCchPrintf
 #include <iostream>
+#include <iomanip>		//std::setw and others
 #include <vector>
 
 #include "Variables.h"
@@ -1082,12 +1083,20 @@ void Shutdown()
 {
 	using std::cout; using std::endl;
 
-	time_t diff_time = static_cast<time_t>(difftime(time(0), start_time));	// gmtime(difftime(time(0), start_time));
+	//time_t diff_time = static_cast<time_t>(difftime(time(0), start_time));
+	time_t diff_time = time(0) - start_time; // faster
 	struct tm diff_tm; // = gmtime(&diff_time);
 	char time_buffer[20];
 	gmtime_s(&diff_tm, &diff_time);
-
+	//diff_tm.tm_hour = 23; // 0 - 23
 	strftime(time_buffer, 20, "%H:%M:%S", &diff_tm);
+
+	size_t f_size = 3; // size of global values output
+
+	// std::setw works only with 1 next str link, right/left flags/manips works all time
+	// cout.setf(std::ios::left) flag works only with cout.unsetf(std::ios::right)
+	// but cout << std::left manip always work, and reset right manips/flags independently
+	// right flags/manips always works
 
 	system("cls");
 	switch (Localization)
@@ -1104,17 +1113,24 @@ void Shutdown()
 			SetConsoleCursorPosition(consoleHandle, COORD{ 30, 1 });
 			cout << "Статистика игрока";
 
-			cout << "\n\n Сердечек собрано\t" << global_Crystals;
+			cout.setf(std::ios::right); // default
+			cout << "\n\n Сердечек собрано\t" << std::setw(f_size) << global_Crystals;
 			printColorText(consoleHandle, symbolCrystal, Magenta);
-			cout << "\n\n Ключей собрано\t\t" << global_Keys;
+
+			cout << "\n\n Ключей собрано\t\t";
+			cout.width(f_size);
+			cout << global_Keys;
 			printColorText(consoleHandle, symbolKey, LightMagenta);
-			cout << "\n\n Мин взорвано\t\t" << global_Bombs;
+
+			cout << "\n\n Мин взорвано\t\t" << std::setw(f_size) << global_Bombs;
 			printColorText(consoleHandle, symbolBomb, Red);
-			cout << "\n\n Порталов пройдено\t" << global_Portals;
+
+			cout << "\n\n Порталов пройдено\t" << std::setw(f_size) << global_Portals;
 			printColorText(consoleHandle, symbolPortal, LightCyan);
-			cout << "\n\n Рестартов\t\t" << global_Restarts;
-			cout << "\n\n\n Время в игре\t\t" << time_buffer;
-			
+
+			cout << "\n\n Рестартов\t\t" << std::setw(f_size) << global_Restarts;
+			cout << "\n\n\n Время в игре\t" << std::setw(f_size + 8) << time_buffer << endl;
+
 			break;
 		}
 		case 1:
@@ -1164,7 +1180,7 @@ int main()
 	//while ( isGameActive );
 
 	// Level 2
-	system("cls");
+	/*system("cls");
 	isGameActive = true;
 	levelSelector = 2;
 	Initialise(std::begin(levelData2), std::end(levelData2));
@@ -1172,7 +1188,7 @@ int main()
 	{
 		Render();
 		Update();
-	} while (isGameActive);
+	} while (isGameActive);*/
 	
 	// Level 3
 	/*system("cls");
