@@ -44,7 +44,7 @@ const unsigned char levelData2[rowsCount][columnsCount] = {
 	"#cb   # k# p#",
 	"2  c#g## X   ",
 	"# t #   ## ##",
-	"# k   1     2",
+	"# k   1   c 2",
 	"#g# #b  ## X#",
 	"# # c# #  X #",
 	"#  # #   # ##",
@@ -479,6 +479,7 @@ void LevelClear()
 	CrystalCount = 0;
 	KeyCount = 0;
 	futureSelector = false;
+	randomCrystals = 10;
 
 	if (levelSelector == 1)
 		Initialise(std::begin(levelData1), std::end(levelData1));
@@ -632,7 +633,7 @@ void Render()
 	Description();
 
 	//SetConsoleTitle
-	StringCchPrintf(szbuff, 255, TEXT("row %d column %d"), heroRow, heroColumn);
+	StringCchPrintf(szbuff, 255, TEXT("Level %d row %d column %d"), levelSelector, heroRow, heroColumn);
 	SetConsoleTitle(szbuff);
 }
 
@@ -727,6 +728,9 @@ void MoveHeroTo(int row, int column)
 
 			if (levelSelector == 3)
 			{
+				ClearCrystals();
+				RandomizeCrystals(--randomCrystals, row, column);
+
 				if (CrystalCount == 1) //5
 				{
 					levelData[6][5] = symbolPortal;
@@ -735,7 +739,8 @@ void MoveHeroTo(int row, int column)
 				}
 				else if (CrystalCount == 2) // 7
 				{
-					RandomizeCrystals(6);
+					//RandomizeCrystals(6);
+					randomCrystals += 6;
 					//canMoveToCell = true;
 				}
 				else if (CrystalCount == 13) //13
@@ -880,6 +885,8 @@ void MoveHeroTo(int row, int column)
 		// Box
 		case symbolBox:
 		{
+			
+
 			// Calculate hero move direction
 			int heroDirectionR = row - heroRow;
 			int heroDirectionC = column - heroColumn;
@@ -887,6 +894,8 @@ void MoveHeroTo(int row, int column)
 			// Check for empty space behind the box
 			if (levelData[row + heroDirectionR][column + heroDirectionC] == ' ')
 			{
+				++global_Boxes;
+				CkeckBox(row, column);
 				canMoveToCell = true;
 
 				// Remove box symbol from previous position
@@ -1123,16 +1132,16 @@ int main()
 	//while ( isGameActive );
 
 	// Level 2
-	system("cls");
-	isGameActive = true;
-	levelSelector = 2;
-	Initialise(std::begin(levelData2), std::end(levelData2));
-	InitVectors(); // Bombs and Boxes vectors
-	do
-	{
-		Render();
-		Update();
-	} while (isGameActive);
+	//system("cls");
+	//isGameActive = true;
+	//levelSelector = 2;
+	//Initialise(std::begin(levelData2), std::end(levelData2));
+	//InitVectors(); // Bombs and Boxes vectors
+	//do
+	//{
+	//	Render();
+	//	Update();
+	//} while (isGameActive);
 	
 	// Level 3
 	/*system("cls");

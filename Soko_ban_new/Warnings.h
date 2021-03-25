@@ -514,9 +514,10 @@ void Statistic()
 		}
 		case 2:
 		{
-			setlocale(LC_ALL, "Russian");
-			SetConsoleCursorPosition(consoleHandle, COORD{ 30, 1 });
-			cout << "Статистика игрока";
+			setlocale(LC_ALL, "RUS");
+			SetConsoleCursorPosition(consoleHandle, COORD{ 5, 1 }); // 30, 1
+			cout << "Статистика игрока\t\t\tДостижения (" 
+				<< a_AchievesCount << '/' << a_AchievesMax << ')';
 
 			cout.setf(std::ios::right); // default
 			cout << "\n\n Сердечек собрано\t" << std::setw(f_size) << global_Crystals;
@@ -533,9 +534,38 @@ void Statistic()
 			cout << "\n\n Порталов пройдено\t" << std::setw(f_size) << global_Portals;
 			printColorText(consoleHandle, symbolPortal, LightCyan);
 
+			cout << "\n\n Ящиков подвигано раз\t" << std::setw(f_size) << global_Boxes;
+			setlocale(LC_ALL, "C");
+			printColorText(consoleHandle, symbolBox, Yellow);	// 254
+			setlocale(LC_ALL, "Russian");
+
 			cout << "\n\n Рестартов\t\t" << std::setw(f_size) << global_Restarts;
 			cout << "\n\n\n Время в игре\t" << std::setw(f_size + 8) << time_buffer << endl;
 			cout << "\n\n a_UniBombsDie\t" << std::setw(f_size) << a_UniBombsDie << endl;
+			cout << " a_UniBoxMove\t" << std::setw(f_size) << a_UniBoxMove << endl;
+
+			// Achieves output
+			short y = 40;
+			short x = 3;
+			if (AllMinesAchieve)
+			{
+				SetConsoleCursorPosition(consoleHandle, COORD{ y, x });
+				printColorText(consoleHandle, "Взорваться на всех минах", Yellow);
+				x += 2;
+			}
+			if (lvl3_CrystalsAchieve)
+			{
+				SetConsoleCursorPosition(consoleHandle, COORD{ y, x });
+				printColorText(consoleHandle, "Собрать все кристаллы на уровне 3", Yellow);
+				x += 2;
+			}
+			if (AllCrystalsAchieve)
+			{
+				SetConsoleCursorPosition(consoleHandle, COORD{ y, x });
+				printColorText(consoleHandle, "Собрать все кристаллы в игре", Yellow);
+				x += 2;
+			}
+
 			break;
 		}
 		case 1:

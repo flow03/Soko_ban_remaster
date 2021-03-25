@@ -18,7 +18,7 @@ const unsigned char levelData3sub[rowsCount3][columnsCount] = {
 
 void Initialise(const unsigned char(*)[columnsCount], const unsigned char(*)[columnsCount]);
 
-void RandomizeCrystals(int crystalCount)
+void RandomizeCrystals(int crystalCount, short clear_x = heroRow, short clear_y = heroColumn)
 {
 	std::vector<COORD> crystals;
 	crystals.reserve((rowsCount3 - 5) * (columnsCount - 5)); // 8 * 11 = 88 - 6 = 82
@@ -63,7 +63,8 @@ void RandomizeCrystals(int crystalCount)
 	// remove some empty cells around invisible portals
 	funcClear(6, 5);
 	funcClear(6, 9);
-	funcClear(heroRow, heroColumn);
+	// sub arguments
+	funcClear(clear_x, clear_y);
 
 	int index = 0;
 	short x = 0; short y = 0;
@@ -83,6 +84,16 @@ void RandomizeCrystals(int crystalCount)
 		else
 			crystals.erase(crystals.begin() + index);
 	}
+}
+
+void ClearCrystals() 
+{
+	for (short i = 2; i < rowsCount3 - 3; ++i)
+		for (short j = 2; j < columnsCount - 3; ++j)
+		{
+			if (levelData[i][j] == symbolCrystal)
+				levelData[i][j] = ' ';
+		}
 }
 
 
@@ -162,6 +173,19 @@ void CkeckBomb(short x, short  y)
 		{
 			++a_UniBombsDie;
 			markedMines.erase(iter);
+			break;
+		}
+	}
+}
+
+void CkeckBox(short x, short  y)
+{
+	for (auto iter = markedBoxes.begin(); iter != markedBoxes.end(); iter++)
+	{
+		if (iter->X == x && iter->Y == y)
+		{
+			++a_UniBoxMove;
+			markedBoxes.erase(iter);
 			break;
 		}
 	}

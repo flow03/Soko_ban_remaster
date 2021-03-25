@@ -45,20 +45,36 @@ int global_Crystals = 0;
 int global_Keys = 0;
 int global_Bombs = 0;
 int global_Portals = 0;
-int global_Boxes = 0;
+int global_Boxes = 0;			// Всего ящиков подвигано раз
 int global_Restarts = 0;
 
-// Achieve sub variables
+// Achieve sub variables(with a_ prefix)
 int a_UniBombsDie = 0;			// Смерть на новой бомбе
+int a_UniBoxMove = 0;			// Разных ящиков подвигано
+int a_AchievesCount = 0;		// Разблокировано достижений
+int a_AchievesMax = 10;			// Достижений всего
 
+struct Ahieve;
 
 // Achievements
-//bool AllMinesAchieve = false;			// Взорваться на всех минах
-//bool AllCrystalsAchieve = false;		// Собрать все кристаллы в игре
-//bool lvl3_CrystalsAchieve = false;		// Собрать все кристаллы на уровне 3
-//bool ManyRestartsAchieve = false;		// 10 рестартов подряд на уровне 3
-//bool NullRestartsAchieve = false;		// 0 рестартов игры
+Ahieve AllMinesAchieve = { true, "Взорваться на всех минах" };			// Взорваться на всех минах
+Ahieve AllCrystalsAchieve = true;			// Собрать все кристаллы в игре
+Ahieve lvl3_CrystalsAchieve = true;			// Собрать все кристаллы на уровне 3
+Ahieve TenRestartsAchieve = false;			// 10 рестартов подряд на уровне 3
+//bool NullRestartsAchieve = false;			// 0 рестартов игры
 //bool PovorotNeTydaAchieve = false;		// Поворот не туда(за нахождение секретной комнаты)
 //bool OnMyWayAchieve = false;			// По своим следам
 //
 //bool AllAchieves = false;				// Сбор всех достижений
+
+struct Ahieve
+{
+	bool value;
+	const char * label;
+
+	Ahieve(bool val, const char * lab) : value(val), label(lab) {}
+	Ahieve(bool val) : value(val) {}
+
+	Ahieve operator=(bool val) { this->value = val; return this;}
+	Ahieve operator=(const char * lab) { this->label = lab; return this;}
+};
