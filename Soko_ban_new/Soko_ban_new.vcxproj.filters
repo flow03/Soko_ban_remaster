@@ -27,6 +27,9 @@
     <ClInclude Include="Level_3.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="Achievements.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sokoban.cpp">

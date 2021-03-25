@@ -545,7 +545,7 @@ void Statistic()
 			cout << " a_UniBoxMove\t" << std::setw(f_size) << a_UniBoxMove << endl;
 
 			// Achieves output
-			short y = 40;
+			/*short y = 40;
 			short x = 3;
 			if (AllMinesAchieve)
 			{
@@ -564,7 +564,7 @@ void Statistic()
 				SetConsoleCursorPosition(consoleHandle, COORD{ y, x });
 				printColorText(consoleHandle, "Собрать все кристаллы в игре", Yellow);
 				x += 2;
-			}
+			}*/
 
 			break;
 		}
