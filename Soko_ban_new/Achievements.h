@@ -1,94 +1,81 @@
 #pragma once
 
+enum Achieve_id
+{
+	AllAchieves = 0,		// Сбор всех достижений
+	AllCrystalsAchieve,		// Собрать все кристаллы в игре
+	lvl3_CrystalsAchieve,	// Собрать все кристаллы на уровне 3
+	TenRestartsAchieve,		// 10 рестартов подряд на уровне 3
+	NullRestartsAchieve,	// 0 рестартов игры
+	PovorotNeTydaAchieve,	// Поворот не туда(за нахождение секретной комнаты)
+	OnMyWayAchieve,			// По своим следам
+	AllMinesAchieve			// Взорваться на всех минах
+};
+
 struct Achieve
 {
-	bool value;
-	unsigned char id;
-	//const char * label;
+	Achieve_id id;
+	const char * label;
+
+	// Constructor + implicit conversion from Achieve_id to Achieve
+	Achieve(Achieve_id id_) : id(id_) { setLabel(); }
+
+	void setLabel();
+	const char * getLabel() const { return label; }
 	
-
-	explicit Achieve(bool val, unsigned char id_) 
-		: value(val), id(id_) {}
-
-	const char * getLabel() const;
-
-	Achieve operator=(bool val) { this->value = val; return *this; }
+	Achieve operator=(Achieve_id val) { return Achieve(val); }
+	//operator Achieve_id() const { return id; }
 	//Achieve operator=(const char * lab) { this->label = lab; return *this; }
 };
+
+
+// Achievements
+std::vector<Achieve> AchievesComplete;
 
 // Achieve sub variables(with a_ prefix)
 int a_UniBombsDie = 0;			// Смерть на новой бомбе
 int a_UniBoxMove = 0;			// Разных ящиков подвигано
-int a_AchievesCount = 0;		// Разблокировано достижений
-int a_AchievesMax = 10;			// Достижений всего
-
-// Achievements
-Achieve AllCrystalsAchieve	( true, 1 );	// Собрать все кристаллы в игре
-Achieve lvl3_CrystalsAchieve	{ true, 2 };	// Собрать все кристаллы на уровне 3
-Achieve TenRestartsAchieve	{ true, 3 };	// 10 рестартов подряд на уровне 3
-Achieve NullRestartsAchieve	{ true, 4 };	// 0 рестартов игры
-Achieve PovorotNeTydaAchieve	{ true, 5 };	// Поворот не туда(за нахождение секретной комнаты)
-Achieve OnMyWayAchieve		{ true, 6 };	// По своим следам
-Achieve AllMinesAchieve		{ true, 7 };	// Взорваться на всех минах
-
-Achieve AllAchieves			{ true, 0 };	// Сбор всех достижений
+//int a_AchievesCount = 0;		// Разблокировано достижений
+int a_AchievesMax = 8;			// Достижений всего
 
 
-const char * Achieve::getLabel() const
+void Achieve::setLabel()
 {
-	const char * label;
-
 	if (Localization == 2)
 		switch (id)
 		{
-		case 1:
+		case AllCrystalsAchieve:
 			label = "Собрать все кристаллы в игре"; break;
-		case 2:
+		case lvl3_CrystalsAchieve:
 			label = "Собрать все кристаллы на уровне 3"; break;
-		case 3:
+		case TenRestartsAchieve:
 			label = "10 рестартов подряд на уровне 3"; break;
-		case 4:
+		case NullRestartsAchieve:
 			label = "0 рестартов игры"; break;
-		case 5:
+		case PovorotNeTydaAchieve:
 			label = "Поворот не туда"; break;
-		case 6:
+		case OnMyWayAchieve:
 			label = "По своим следам"; break;
-		case 7:
+		case AllMinesAchieve:
 			label = "Взорваться на всех минах"; break;
 
-		case 0:
+		case AllAchieves:
 			label = "ВСЕ ДОСТИЖЕНИЯ ОТКРЫТЫ"; break;
 		}
-
-	return label;
 }
 
-void AchieveOutput(short x, short y)
+void changeLabels(std::vector<Achieve> &Achieves)
 {
-	y = 40;
-	x = 3;
+	for (Achieve ach : Achieves)
+		ach.setLabel();
+}
 
-	auto funcOut = [x, y](const Achieve &A) {
-
-		if (A.value)
-		{
-			SetConsoleCursorPosition(consoleHandle, COORD{ y, x });
-			printColorText(consoleHandle, A.getLabel(), Yellow);
-			x += 2;
-		}
-	};
-
-	if (AllMinesAchieve.value)
+void AchievesOutput(COORD coord)
+{
+	for (Achieve ach : AchievesComplete)
 	{
-		SetConsoleCursorPosition(consoleHandle, COORD{ y, x });
-		printColorText(consoleHandle, AllMinesAchieve.getLabel(), Yellow);
-		x += 2;
+		SetConsoleCursorPosition(consoleHandle, coord);
+		printColorText(consoleHandle, ach.getLabel(), Yellow);
+		coord.Y += 2;
 	}
-	if (lvl3_CrystalsAchieve.value)
-	{
-		SetConsoleCursorPosition(consoleHandle, COORD{ y, x });
-		printColorText(consoleHandle, lvl3_CrystalsAchieve.getLabel(), Yellow);
-		x += 2;
-	}
-
 }

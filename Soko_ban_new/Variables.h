@@ -48,5 +48,3 @@ int global_Portals = 0;
 int global_Boxes = 0;			// Всего ящиков подвигано раз
 int global_Restarts = 0;
 
-#include "Achievements.h"
-

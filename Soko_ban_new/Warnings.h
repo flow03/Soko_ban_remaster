@@ -503,6 +503,10 @@ void Statistic()
 	// but cout << std::left manip always work, and reset right manips/flags independently
 	// right flags/manips always works
 
+	/*AchievesComplete.push_back(Achieve(AllCrystalsAchieve));
+	AchievesComplete.push_back(lvl3_CrystalsAchieve);
+	AchievesComplete.push_back(OnMyWayAchieve);*/
+
 	system("cls");
 	switch (Localization)
 	{
@@ -517,7 +521,7 @@ void Statistic()
 			setlocale(LC_ALL, "RUS");
 			SetConsoleCursorPosition(consoleHandle, COORD{ 5, 1 }); // 30, 1
 			cout << "Статистика игрока\t\t\tДостижения (" 
-				<< a_AchievesCount << '/' << a_AchievesMax << ')';
+				<< AchievesComplete.size() << '/' << a_AchievesMax << ')';
 
 			cout.setf(std::ios::right); // default
 			cout << "\n\n Сердечек собрано\t" << std::setw(f_size) << global_Crystals;
@@ -545,26 +549,7 @@ void Statistic()
 			cout << " a_UniBoxMove\t" << std::setw(f_size) << a_UniBoxMove << endl;
 
 			// Achieves output
-			/*short y = 40;
-			short x = 3;
-			if (AllMinesAchieve)
-			{
-				SetConsoleCursorPosition(consoleHandle, COORD{ y, x });
-				printColorText(consoleHandle, "Взорваться на всех минах", Yellow);
-				x += 2;
-			}
-			if (lvl3_CrystalsAchieve)
-			{
-				SetConsoleCursorPosition(consoleHandle, COORD{ y, x });
-				printColorText(consoleHandle, "Собрать все кристаллы на уровне 3", Yellow);
-				x += 2;
-			}
-			if (AllCrystalsAchieve)
-			{
-				SetConsoleCursorPosition(consoleHandle, COORD{ y, x });
-				printColorText(consoleHandle, "Собрать все кристаллы в игре", Yellow);
-				x += 2;
-			}*/
+			AchievesOutput(COORD{ 40, 3 });
 
 			break;
 		}
