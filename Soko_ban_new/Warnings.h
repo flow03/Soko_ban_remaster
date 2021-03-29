@@ -503,9 +503,14 @@ void Statistic()
 	// but cout << std::left manip always work, and reset right manips/flags independently
 	// right flags/manips always works
 
-	/*AchievesComplete.push_back(Achieve(AllCrystalsAchieve));
-	AchievesComplete.push_back(lvl3_CrystalsAchieve);
-	AchievesComplete.push_back(OnMyWayAchieve);*/
+	if (global_Restarts == 0)
+	{
+		AchievesComplete.push_back(&NullRestartsAchieve_);
+		NullRestartsAchieve_ = true;
+	}
+
+	//AchievesComplete.push_back(&AllCrystalsAchieve_);
+	//AchievesComplete.push_back(&OnMyWayAchieve_);
 
 	system("cls");
 	switch (Localization)
@@ -538,16 +543,22 @@ void Statistic()
 			cout << "\n\n ѕорталов пройдено\t" << std::setw(f_size) << global_Portals;
 			printColorText(consoleHandle, symbolPortal, LightCyan);
 
-			cout << "\n\n ящиков подвигано раз\t" << std::setw(f_size) << global_Boxes;
+			cout << "\n\n ящиков подвигано\t" << std::setw(f_size) << a_UniBoxMove;
 			setlocale(LC_ALL, "C");
 			printColorText(consoleHandle, symbolBox, Yellow);	// 254
 			setlocale(LC_ALL, "Russian");
+			cout << "\n\n ящиков подвигано раз\t" << std::setw(f_size) << global_Boxes;
 
 			cout << "\n\n –естартов\t\t" << std::setw(f_size) << global_Restarts;
 			cout << "\n\n\n ¬рем€ в игре\t" << std::setw(f_size + 8) << time_buffer << endl;
-			cout << "\n\n a_UniBombsDie\t" << std::setw(f_size) << a_UniBombsDie << endl;
-			cout << " a_UniBoxMove\t" << std::setw(f_size) << a_UniBoxMove << endl;
+			cout << "\n\n";
+			cout << " a_UniBombsDie\t" << std::setw(f_size) << a_UniBombsDie << endl;
+			//cout << " a_UniBoxMove\t" << std::setw(f_size) << a_UniBoxMove << endl;
 
+			/*cout << "&AllCrystalsAchieve_ before " << &AllCrystalsAchieve_ << endl;
+			AllCrystalsAchieve_ = true;
+			cout << "&AllCrystalsAchieve_ after  " << &AllCrystalsAchieve_ << endl;
+			cout << "AllCrystalsAchieve_.id " << AllCrystalsAchieve_.id << endl;*/
 			// Achieves output
 			AchievesOutput(COORD{ 40, 3 });
 

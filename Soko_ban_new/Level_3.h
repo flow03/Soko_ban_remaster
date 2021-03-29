@@ -16,6 +16,8 @@ const unsigned char levelData3sub[rowsCount3][columnsCount] = {
 	"               ",
 };
 
+void InitVectors();
+
 void Initialise(const unsigned char(*)[columnsCount], const unsigned char(*)[columnsCount]);
 
 void RandomizeCrystals(int crystalCount, short clear_x = heroRow, short clear_y = heroColumn)
@@ -119,6 +121,7 @@ void LoadFutureFunction()
 	}
 
 	Initialise(std::begin(Future), std::end(Future));
+	InitVectors();
 
 	levelSelector = 4;
 
@@ -144,6 +147,7 @@ void LoadPastFunction()
 		}*/
 
 	Initialise(std::begin(Past), std::end(Past));
+	InitVectors();
 
 	levelSelector = 3;
 	heroRow = 6;
@@ -153,6 +157,9 @@ void LoadPastFunction()
 
 void InitVectors()	// Don't work with objects appered after init
 {
+	markedBoxes.clear();
+	markedMines.clear();
+
 	for (short i = 0; i < rowsCount; ++i)
 		for (short j = 0; j < columnsCount; ++j)
 		{

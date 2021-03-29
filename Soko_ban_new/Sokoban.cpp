@@ -493,6 +493,16 @@ void LevelClear()
 		levelSelector = 3;
 		Initialise(std::begin(levelData3), std::end(levelData3));
 		RandomizeCrystals(randomCrystals);
+
+		if (!lvl3_RestartsAchieve_)
+		{
+			++a_lvl3Restarts;
+			if (a_lvl3Restarts == 10)
+			{
+				lvl3_RestartsAchieve_ = true;
+				AchievesComplete.push_back(&lvl3_RestartsAchieve_);
+			}
+		}
 	}
 
 }
@@ -732,21 +742,29 @@ void MoveHeroTo(int row, int column)
 			if (levelSelector == 3)
 			{
 				ClearCrystals();
-				RandomizeCrystals(--randomCrystals, row, column);
+				if (randomCrystals > 0)
+					RandomizeCrystals(--randomCrystals, row, column);
+
+				if (!lvl3_CrystalsAchieve_)
+					if (CrystalCount == 17)
+					{
+						AchievesComplete.push_back(&lvl3_CrystalsAchieve_);
+						lvl3_CrystalsAchieve_ = true;
+					}
+
+				if (!lvl3_RestartsAchieve_)
+					a_lvl3Restarts = 0;
 
 				if (CrystalCount == 1) //5
 				{
 					levelData[6][5] = symbolPortal;
 					levelData[6][9] = symbolPortal;
-					//canMoveToCell = true;
 				}
 				else if (CrystalCount == 2) // 7
 				{
-					//RandomizeCrystals(6);
 					randomCrystals += 6;
-					//canMoveToCell = true;
 				}
-				else if (CrystalCount == 13) //13
+				else if (CrystalCount == 13 && futureSelector == false) //13
 				{
 					canMoveToCell = false;
 					levelData[heroRow][heroColumn] = ' ';	// replace hero
@@ -888,8 +906,6 @@ void MoveHeroTo(int row, int column)
 		// Box
 		case symbolBox:
 		{
-			
-
 			// Calculate hero move direction
 			int heroDirectionR = row - heroRow;
 			int heroDirectionC = column - heroColumn;
@@ -1147,17 +1163,18 @@ int main()
 	//} while (isGameActive);
 	
 	// Level 3
-	/*system("cls");
+	system("cls");
 	isGameActive = true;
 	LevelClear();
 	levelSelector = 3;
 	Initialise(std::begin(levelData3), std::end(levelData3));
+	InitVectors();
 	RandomizeCrystals(randomCrystals);
 	do
 	{
 		Render();
 		Update();
-	} while (isGameActive);*/
+	} while (isGameActive);
 	
 
 	Shutdown();
