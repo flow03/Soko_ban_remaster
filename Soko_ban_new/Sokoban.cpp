@@ -480,9 +480,8 @@ void Initialise(const unsigned char(*lvl_begin)[columnsCount], const unsigned ch
 void LevelClear()
 {
 	CrystalCount = 0;
+	CrystalMaxCount = 0;
 	KeyCount = 0;
-	futureSelector = false;
-	randomCrystals = 10;
 
 	if (levelSelector == 1)
 		Initialise(std::begin(levelData1), std::end(levelData1));
@@ -491,6 +490,8 @@ void LevelClear()
 	else if (levelSelector == 3 || levelSelector == 4)
 	{
 		levelSelector = 3;
+		futureSelector = false;
+		randomCrystals = 10;
 		Initialise(std::begin(levelData3), std::end(levelData3));
 		RandomizeCrystals(randomCrystals);
 
@@ -500,7 +501,8 @@ void LevelClear()
 			if (a_lvl3Restarts == 10)
 			{
 				lvl3_RestartsAchieve_ = true;
-				AchievesComplete.push_back(&lvl3_RestartsAchieve_);
+				warning = a_RestartsWarning;
+				//AchievesComplete.push_back(&lvl3_RestartsAchieve_);
 			}
 		}
 	}
@@ -709,21 +711,23 @@ void MoveHeroTo(int row, int column)
 		// Exit cell
 		case symbolExit:
 		{
+			canMoveToCell = false;
 			if ((levelSelector == 2) && (CrystalCount < 1)) //13
 			{
 				warning = crystalWarning;
-				//warning2 = true;
-				canMoveToCell = false;
+				CrystalMaxCount = 1;
+				//canMoveToCell = false;
 			}
 			else if (levelSelector == 3)
 			{
 				levelData[row][column] = symbolWall;
-				canMoveToCell = false;
+				//canMoveToCell = false;
 			}
 			else if ((levelSelector == 4) && (CrystalCount < 14)) //13
 			{
 				warning = crystalWarning;
-				canMoveToCell = false;
+				CrystalMaxCount = 14;
+				//canMoveToCell = false;
 				levelData[4][7] = symbolPortal;	// New portal
 				levelData[4][9] = ' ';			// shortcut
 			}
@@ -741,15 +745,18 @@ void MoveHeroTo(int row, int column)
 
 			if (levelSelector == 3)
 			{
+				if (row == 10 && column == 2)
+					randomCrystals += 6;
+
 				ClearCrystals();
 				if (randomCrystals > 0)
 					RandomizeCrystals(--randomCrystals, row, column);
 
 				if (!lvl3_CrystalsAchieve_)
-					if (CrystalCount == 17)
+					if (CrystalCount >= 16)
 					{
-						AchievesComplete.push_back(&lvl3_CrystalsAchieve_);
 						lvl3_CrystalsAchieve_ = true;
+						warning = a_CrystalsWarning;
 					}
 
 				if (!lvl3_RestartsAchieve_)
@@ -760,10 +767,10 @@ void MoveHeroTo(int row, int column)
 					levelData[6][5] = symbolPortal;
 					levelData[6][9] = symbolPortal;
 				}
-				else if (CrystalCount == 2) // 7
-				{
-					randomCrystals += 6;
-				}
+				//else if (CrystalCount == 2) // 7
+				//{
+				//	randomCrystals += 6;
+				//}
 				else if (CrystalCount == 13 && futureSelector == false) //13
 				{
 					canMoveToCell = false;
@@ -895,7 +902,8 @@ void MoveHeroTo(int row, int column)
 		case symbolBomb:
 		{
 			++global_Bombs;
-			CkeckBomb(row, column);
+			++global_Restarts;
+			CheckBomb(row, column);
 			levelData[heroRow][heroColumn] = ' ';
 			
 			DieAnimation(row, column);
@@ -914,7 +922,7 @@ void MoveHeroTo(int row, int column)
 			if (levelData[row + heroDirectionR][column + heroDirectionC] == ' ')
 			{
 				++global_Boxes;
-				CkeckBox(row, column);
+				CheckBox(row, column);
 				canMoveToCell = true;
 
 				// Remove box symbol from previous position
@@ -1151,25 +1159,25 @@ int main()
 	//while ( isGameActive );
 
 	// Level 2
-	//system("cls");
-	//isGameActive = true;
-	//levelSelector = 2;
-	//Initialise(std::begin(levelData2), std::end(levelData2));
-	//InitVectors(); // Bombs and Boxes vectors
-	//do
-	//{
-	//	Render();
-	//	Update();
-	//} while (isGameActive);
+	system("cls");
+	isGameActive = true;
+	levelSelector = 2;
+	Initialise(std::begin(levelData2), std::end(levelData2));
+	InitVectors(); // Bombs and Boxes vectors
+	do
+	{
+		Render();
+		Update();
+	} while (isGameActive);
 	
 	// Level 3
 	system("cls");
 	isGameActive = true;
-	LevelClear();
 	levelSelector = 3;
-	Initialise(std::begin(levelData3), std::end(levelData3));
+	//Initialise(std::begin(levelData3), std::end(levelData3));
+	LevelClear();	// Initialise + RandomizeCrystals
 	InitVectors();
-	RandomizeCrystals(randomCrystals);
+	//RandomizeCrystals(randomCrystals);
 	do
 	{
 		Render();

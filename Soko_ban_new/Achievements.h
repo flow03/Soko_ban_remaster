@@ -32,10 +32,14 @@ struct Achieve
 	//operator Achieve_id() const { return id; }
 };
 
+// Achieve sub variables(with a_ prefix)
+int a_UniBombsDie = 0;			// Смерть на новой бомбе
+int a_UniBoxMove = 0;			// Разных ящиков подвигано
+int a_lvl3Restarts = 0;			// Рестарты уровня 3 до сбора сердечек
+//int a_AchievesCount = 0;		// Разблокировано достижений
+const size_t a_AchievesMax = 8;	// Достижений всего
 
 // Achievements
-std::vector<Achieve*> AchievesComplete;
-
 Achieve AllAchieves_(AllAchieves);
 Achieve AllCrystalsAchieve_(AllCrystalsAchieve);
 Achieve lvl3_CrystalsAchieve_(lvl3_CrystalsAchieve);	// +
@@ -45,12 +49,17 @@ Achieve PovorotNeTydaAchieve_(PovorotNeTydaAchieve);
 Achieve OnMyWayAchieve_(OnMyWayAchieve);
 Achieve AllMinesAchieve_(AllMinesAchieve);
 
-// Achieve sub variables(with a_ prefix)
-int a_UniBombsDie = 0;			// Смерть на новой бомбе
-int a_UniBoxMove = 0;			// Разных ящиков подвигано
-int a_lvl3Restarts = 0;			// Рестарты уровня 3 до сбора сердечек
-//int a_AchievesCount = 0;		// Разблокировано достижений
-int a_AchievesMax = 8;			// Достижений всего
+Achieve* AchievesComplete[a_AchievesMax] = {
+	
+	&AllCrystalsAchieve_, 
+	&lvl3_CrystalsAchieve_,
+	&lvl3_RestartsAchieve_,
+	&NullRestartsAchieve_,
+	&PovorotNeTydaAchieve_,
+	&OnMyWayAchieve_,
+	&AllMinesAchieve_,
+	&AllAchieves_
+};
 
 
 void Achieve::setLabel()
@@ -78,9 +87,13 @@ void Achieve::setLabel()
 		}
 }
 
-void changeLabels(std::vector<Achieve*> &Achieves)
+void changeLabels()
 {
-	for (Achieve* ach : Achieves)
+	/*for (Achieve* ach : Achieves)
+		ach->setLabel();*/
+	/*for(size_t i = 0; i < a_AchievesMax; ++i)
+		Achieves[i]->setLabel();*/
+	for (Achieve* ach : AchievesComplete)
 		ach->setLabel();
 }
 
@@ -88,8 +101,20 @@ void AchievesOutput(COORD coord)
 {
 	for (Achieve* ach : AchievesComplete)
 	{
-		SetConsoleCursorPosition(consoleHandle, coord);
-		printColorText(consoleHandle, ach->getLabel(), Yellow);
-		coord.Y += 2;
+		if (ach->value)
+		{
+			SetConsoleCursorPosition(consoleHandle, coord);
+			printColorText(consoleHandle, ach->getLabel(), Yellow);
+			coord.Y += 2;
+		}
 	}
+}
+
+size_t AchievesSize()
+{
+	size_t size = 0;
+	for (Achieve* ach : AchievesComplete)
+		if (ach->value) ++size;
+
+	return size;
 }

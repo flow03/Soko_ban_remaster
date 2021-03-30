@@ -27,6 +27,7 @@ int heroRow = 0;
 int heroColumn = 0;
 int levelSelector = 1;
 int CrystalCount = 0;
+int CrystalMaxCount = 0;
 int KeyCount = 0;
 int Localization = 2;	//Language
 int font = 1;			// Font

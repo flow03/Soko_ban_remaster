@@ -172,7 +172,7 @@ void InitVectors()	// Don't work with objects appered after init
 		}
 }
 
-void CkeckBomb(short x, short  y)
+void CheckBomb(short x, short  y)
 {
 	for (auto iter = markedMines.begin(); iter != markedMines.end(); iter++)
 	{
@@ -185,7 +185,7 @@ void CkeckBomb(short x, short  y)
 	}
 }
 
-void CkeckBox(short x, short  y)
+void CheckBox(short x, short  y)
 {
 	for (auto iter = markedBoxes.begin(); iter != markedBoxes.end(); iter++)
 	{
@@ -196,4 +196,9 @@ void CkeckBox(short x, short  y)
 			break;
 		}
 	}
+}
+
+void NextLevel()
+{
+
 }

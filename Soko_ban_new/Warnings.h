@@ -14,7 +14,10 @@ enum Warning
 	secretBombsWarning,
 	secretBombLeft, 
 	secretBombRight,
-	secretBombDamn
+	secretBombDamn,
+
+	a_RestartsWarning,
+	a_CrystalsWarning
 };
 
 Warning warning = None; //None test
@@ -146,7 +149,7 @@ void Warnings(Warning warn) {
 			//setlocale(LC_ALL, "С");
 			printColorText(consoleHandle, "\n\t\t\t      Surprise, motherfucker!", Yellow);
 		}
-		warning = None;
+		//warning = None;	// ???
 		break;
 	case secretDoorWarning:
 		switch (Localization)
@@ -256,6 +259,16 @@ void Warnings(Warning warn) {
 			break;
 		}
 		}
+		break;
+	case a_RestartsWarning:
+		std::cout << "\n\t\t\t  ";
+		printColorText(consoleHandle, lvl3_RestartsAchieve_.getLabel(), Yellow);
+		printColorText(consoleHandle, '!', Yellow);
+		break;
+	case a_CrystalsWarning:
+		std::cout << "\n\t\t\t";
+		printColorText(consoleHandle, lvl3_CrystalsAchieve_.getLabel(), Yellow);
+		printColorText(consoleHandle, '!', Yellow);
 		break;
 	}
 
@@ -470,11 +483,14 @@ void Description()
 
 void Counters()
 {
-	std::cout << "\n\t\t\t\t      "; // 34 to level render +4 = 38 spases
+	std::cout << "\n\t\t\t\t      "; // 34 to level render +4 = 38 spaces
 	if (CrystalCount != 0)
 	{
 		printColorText(consoleHandle, symbolCrystal, Magenta);
-		std::cout << CrystalCount << ' ';
+		std::cout << CrystalCount;
+		if (CrystalMaxCount > 0)
+			std::cout << '/' << CrystalMaxCount << ' ';
+		else std::cout << ' ';
 	}
 	//else std::cout << "   "; //3
 	if (KeyCount != 0)
@@ -504,10 +520,7 @@ void Statistic()
 	// right flags/manips always works
 
 	if (global_Restarts == 0)
-	{
-		AchievesComplete.push_back(&NullRestartsAchieve_);
 		NullRestartsAchieve_ = true;
-	}
 
 	//AchievesComplete.push_back(&AllCrystalsAchieve_);
 	//AchievesComplete.push_back(&OnMyWayAchieve_);
@@ -524,12 +537,12 @@ void Statistic()
 		case 2:
 		{
 			setlocale(LC_ALL, "RUS");
-			SetConsoleCursorPosition(consoleHandle, COORD{ 5, 1 }); // 30, 1
+			SetConsoleCursorPosition(consoleHandle, COORD{ 6, 1 }); // 30, 1
 			cout << "Статистика игрока\t\t\tДостижения (" 
-				<< AchievesComplete.size() << '/' << a_AchievesMax << ')';
+				<< AchievesSize() << '/' << a_AchievesMax << ')';
 
 			cout.setf(std::ios::right); // default
-			cout << "\n\n Сердечек собрано\t" << std::setw(f_size) << global_Crystals;
+			cout << "\n\n\n Сердечек собрано\t" << std::setw(f_size) << global_Crystals;
 			printColorText(consoleHandle, symbolCrystal, Magenta);
 
 			cout << "\n\n Ключей собрано\t\t";
@@ -560,7 +573,7 @@ void Statistic()
 			cout << "&AllCrystalsAchieve_ after  " << &AllCrystalsAchieve_ << endl;
 			cout << "AllCrystalsAchieve_.id " << AllCrystalsAchieve_.id << endl;*/
 			// Achieves output
-			AchievesOutput(COORD{ 40, 3 });
+			AchievesOutput(COORD{ 40, 4 });
 
 			break;
 		}
