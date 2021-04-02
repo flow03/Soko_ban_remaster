@@ -25,8 +25,6 @@
 
 
 
-
-
 // Level settings
 
 const unsigned char levelData1[10][columnsCount] =  {
@@ -374,7 +372,8 @@ void UpdateFont()
 }
 
 //template <size_t N>
-void Initialise(const unsigned char(*lvl_begin)[columnsCount], const unsigned char(*lvl_end)[columnsCount])
+void Initialise(const unsigned char(*lvl_begin)[columnsCount], 
+				const unsigned char(*lvl_end)[columnsCount])
 {
 	// Load level
 
@@ -497,8 +496,8 @@ void LevelClear()
 
 		if (!lvl3_RestartsAchieve_)
 		{
-			++a_lvl3Restarts;
-			if (a_lvl3Restarts == 10)
+			++a_lvl3_Restarts;
+			if (a_lvl3_Restarts == 10)
 			{
 				lvl3_RestartsAchieve_ = true;
 				warning = a_RestartsWarning;
@@ -644,6 +643,9 @@ void Render()
 	Counters();
 
 	// Warnings
+	/*a_lvl2_Mines = true;
+	a_lvl3_Mines = true;
+	warning = a_AllMinesWarning;*/
 	Warnings(warning); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
 	Description();
 
@@ -760,7 +762,7 @@ void MoveHeroTo(int row, int column)
 					}
 
 				if (!lvl3_RestartsAchieve_)
-					a_lvl3Restarts = 0;
+					a_lvl3_Restarts = 0;
 
 				if (CrystalCount == 1) //5
 				{
@@ -1186,6 +1188,6 @@ int main()
 	
 
 	Shutdown();
-
+	
 	return 0;
 }

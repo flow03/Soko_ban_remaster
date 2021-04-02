@@ -183,6 +183,19 @@ void CheckBomb(short x, short  y)
 			break;
 		}
 	}
+	
+	if (markedMines.size() == 0)
+	{
+		if (levelSelector == 2)
+			a_lvl2_Mines = true;
+		else if (levelSelector == 3)
+			a_lvl3_Mines = true;
+
+		warning = a_AllMinesWarning;
+
+		if (a_lvl2_Mines && a_lvl3_Mines)
+			AllMinesAchieve_ = true;
+	}
 }
 
 void CheckBox(short x, short  y)

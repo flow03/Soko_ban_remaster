@@ -14,10 +14,6 @@ enum Achieve_id
 
 struct Achieve
 {
-	bool value;
-	Achieve_id id;
-	const char * label;
-
 	// Constructor + implicit conversion from Achieve_id to Achieve
 	Achieve(Achieve_id id_, bool val = false)
 		: id(id_), value(val) { setLabel(); }
@@ -30,14 +26,22 @@ struct Achieve
 	//Achieve operator=(const char * lab) { this->label = lab; return *this; }
 	operator bool() const { return value; }
 	//operator Achieve_id() const { return id; }
+
+private:
+	bool value;
+	Achieve_id id;
+	const char * label;
 };
 
 // Achieve sub variables(with a_ prefix)
 int a_UniBombsDie = 0;			// Смерть на новой бомбе
 int a_UniBoxMove = 0;			// Разных ящиков подвигано
-int a_lvl3Restarts = 0;			// Рестарты уровня 3 до сбора сердечек
-//int a_AchievesCount = 0;		// Разблокировано достижений
+int a_lvl3_Restarts = 0;			// Рестарты уровня 3 до сбора сердечек
+bool a_lvl2_Mines = false;			// Все мины уровня 2
+bool a_lvl3_Mines = false;			// Все мины уровня 3
+
 const size_t a_AchievesMax = 8;	// Достижений всего
+//int a_AchievesCount = 0;		// Разблокировано достижений
 
 // Achievements
 Achieve AllAchieves_(AllAchieves);
@@ -101,7 +105,7 @@ void AchievesOutput(COORD coord)
 {
 	for (Achieve* ach : AchievesComplete)
 	{
-		if (ach->value)
+		if (*ach)
 		{
 			SetConsoleCursorPosition(consoleHandle, coord);
 			printColorText(consoleHandle, ach->getLabel(), Yellow);
@@ -114,7 +118,7 @@ size_t AchievesSize()
 {
 	size_t size = 0;
 	for (Achieve* ach : AchievesComplete)
-		if (ach->value) ++size;
+		if (*ach) ++size;
 
 	return size;
 }

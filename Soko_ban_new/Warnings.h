@@ -1,6 +1,4 @@
 #pragma once
-//int Localization;
-//HANDLE consoleHandle;
 
 enum Warning
 {
@@ -17,7 +15,8 @@ enum Warning
 	secretBombDamn,
 
 	a_RestartsWarning,
-	a_CrystalsWarning
+	a_CrystalsWarning,
+	a_AllMinesWarning
 };
 
 Warning warning = None; //None test
@@ -269,6 +268,17 @@ void Warnings(Warning warn) {
 		std::cout << "\n\t\t\t";
 		printColorText(consoleHandle, lvl3_CrystalsAchieve_.getLabel(), Yellow);
 		printColorText(consoleHandle, '!', Yellow);
+		break;
+	case a_AllMinesWarning:
+		std::cout << "\n\t\t\t  ";
+		printColorText(consoleHandle, AllMinesAchieve_.getLabel(), Yellow);
+		printColorText(consoleHandle, '(', Yellow);
+		if(a_lvl2_Mines && a_lvl3_Mines)
+			printColorText(consoleHandle, '2', Yellow);
+		else
+			printColorText(consoleHandle, '1', Yellow);
+
+		printColorText(consoleHandle, "/2)", Yellow);
 		break;
 	}
 
@@ -566,14 +576,17 @@ void Statistic()
 			cout << "\n\n\n Время в игре\t" << std::setw(f_size + 8) << time_buffer << endl;
 			cout << "\n\n";
 			cout << " a_UniBombsDie\t" << std::setw(f_size) << a_UniBombsDie << endl;
-			//cout << " a_UniBoxMove\t" << std::setw(f_size) << a_UniBoxMove << endl;
 
 			/*cout << "&AllCrystalsAchieve_ before " << &AllCrystalsAchieve_ << endl;
 			AllCrystalsAchieve_ = true;
 			cout << "&AllCrystalsAchieve_ after  " << &AllCrystalsAchieve_ << endl;
 			cout << "AllCrystalsAchieve_.id " << AllCrystalsAchieve_.id << endl;*/
+			//cout << AllMinesAchieve_.getLabel() << endl;
+			//cout << (int *)"asdasd" << ' ' << (int *)"sdasd" << endl;
 			// Achieves output
 			AchievesOutput(COORD{ 40, 4 });
+
+			
 
 			break;
 		}
