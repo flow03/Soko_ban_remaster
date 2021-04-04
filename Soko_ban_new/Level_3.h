@@ -136,6 +136,9 @@ void SavePastFunction()
 		{
 			Past[r][c] = levelData[r][c];
 		}
+
+	/*tempMines = markedMines;
+	tempBoxes = markedBoxes;*/
 }
 
 void LoadPastFunction()
@@ -148,6 +151,8 @@ void LoadPastFunction()
 
 	Initialise(std::begin(Past), std::end(Past));
 	InitVectors();
+	/*markedMines = tempMines;
+	markedBoxes = tempBoxes;*/
 
 	levelSelector = 3;
 	heroRow = 6;
@@ -191,10 +196,10 @@ void CheckBomb(short x, short  y)
 		else if (levelSelector == 3)
 			a_lvl3_Mines = true;
 
-		warning = a_AllMinesWarning;
+		warning = (Warning)AllMinesAchieve;	// carefull, double warning
 
 		if (a_lvl2_Mines && a_lvl3_Mines)
-			AllMinesAchieve_ = true;
+			AllMinesAchieve_ = true;		// carefull, double warning
 	}
 }
 

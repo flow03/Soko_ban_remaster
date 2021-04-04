@@ -2,7 +2,8 @@
 
 enum Achieve_id
 {
-	AllAchieves = 0,		// Сбор всех достижений
+	// (start_value > Min_Warnings) && (start_value < Max_Warnings)
+	AllAchievesAchieve = 17,// Сбор всех достижений
 	AllCrystalsAchieve,		// Собрать все кристаллы в игре
 	lvl3_CrystalsAchieve,	// Собрать все кристаллы на уровне 3
 	lvl3_RestartsAchieve,	// 10 рестартов подряд на уровне 3
@@ -12,16 +13,25 @@ enum Achieve_id
 	AllMinesAchieve			// Взорваться на всех минах
 };
 
+//enum Warning; // declaration in Variables.h
+
 struct Achieve
 {
 	// Constructor + implicit conversion from Achieve_id to Achieve
 	Achieve(Achieve_id id_, bool val = false)
-		: id(id_), value(val) { setLabel(); }
+		: id(id_), value(val) {
+		setLabel();
+	}
 
 	void setLabel();
 	const char * getLabel() const { return label; }
-	
-	Achieve operator=(bool val) { this->value = val; return *this; } //{ return Achieve(this->id, val); }
+
+	Achieve operator=(bool val)
+	{
+		this->value = val;
+		if (val) warning = static_cast<Warning>(this->id);
+		return *this;
+	}
 	//Achieve operator=(Achieve_id val) { return Achieve(val); }
 	//Achieve operator=(const char * lab) { this->label = lab; return *this; }
 	operator bool() const { return value; }
@@ -34,8 +44,8 @@ private:
 };
 
 // Achieve sub variables(with a_ prefix)
-int a_UniBombsDie = 0;			// Смерть на новой бомбе
-int a_UniBoxMove = 0;			// Разных ящиков подвигано
+int a_UniBombsDie = 0;				// Смерть на новой бомбе
+int a_UniBoxMove = 0;				// Разных ящиков подвигано
 int a_lvl3_Restarts = 0;			// Рестарты уровня 3 до сбора сердечек
 bool a_lvl2_Mines = false;			// Все мины уровня 2
 bool a_lvl3_Mines = false;			// Все мины уровня 3
@@ -44,14 +54,14 @@ const size_t a_AchievesMax = 8;	// Достижений всего
 //int a_AchievesCount = 0;		// Разблокировано достижений
 
 // Achievements
-Achieve AllAchieves_(AllAchieves);
+Achieve AllAchievesAchieve_(AllAchievesAchieve);
 Achieve AllCrystalsAchieve_(AllCrystalsAchieve);
 Achieve lvl3_CrystalsAchieve_(lvl3_CrystalsAchieve);	// +
 Achieve lvl3_RestartsAchieve_(lvl3_RestartsAchieve);	// +
 Achieve NullRestartsAchieve_(NullRestartsAchieve);		// +
 Achieve PovorotNeTydaAchieve_(PovorotNeTydaAchieve);
-Achieve OnMyWayAchieve_(OnMyWayAchieve);
-Achieve AllMinesAchieve_(AllMinesAchieve);
+Achieve OnMyWayAchieve_(OnMyWayAchieve);//In its wake	
+Achieve AllMinesAchieve_(AllMinesAchieve);				// +
 
 Achieve* AchievesComplete[a_AchievesMax] = {
 	
@@ -62,7 +72,7 @@ Achieve* AchievesComplete[a_AchievesMax] = {
 	&PovorotNeTydaAchieve_,
 	&OnMyWayAchieve_,
 	&AllMinesAchieve_,
-	&AllAchieves_
+	&AllAchievesAchieve_
 };
 
 
@@ -86,7 +96,7 @@ void Achieve::setLabel()
 		case AllMinesAchieve:
 			label = "Взорваться на всех минах"; break;
 
-		case AllAchieves:
+		case AllAchievesAchieve:
 			label = "ВСЕ ДОСТИЖЕНИЯ ОТКРЫТЫ"; break;
 		}
 }
@@ -119,6 +129,10 @@ size_t AchievesSize()
 	size_t size = 0;
 	for (Achieve* ach : AchievesComplete)
 		if (*ach) ++size;
+
+	if (!AllAchievesAchieve_)
+		if (size >= a_AchievesMax - 1)	// Minus AllAchievesAchieve_
+			AllAchievesAchieve_ = true;
 
 	return size;
 }

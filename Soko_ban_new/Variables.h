@@ -35,9 +35,13 @@ TCHAR szbuff[255];		//StringCchPrintf
 CONSOLE_FONT_INFOEX defaultFont;
 int randomCrystals = 10;
 time_t start_time = 0;
+enum Warning;
+Warning warning = Warning(0); //None
 
 std::vector<COORD> markedMines;
 std::vector<COORD> markedBoxes;
+//std::vector<COORD> tempMines;
+//std::vector<COORD> tempBoxes;
 
 bool futureSelector = false;
 

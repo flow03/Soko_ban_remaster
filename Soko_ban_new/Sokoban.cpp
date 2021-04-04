@@ -500,7 +500,7 @@ void LevelClear()
 			if (a_lvl3_Restarts == 10)
 			{
 				lvl3_RestartsAchieve_ = true;
-				warning = a_RestartsWarning;
+				//warning = a_RestartsWarning;
 				//AchievesComplete.push_back(&lvl3_RestartsAchieve_);
 			}
 		}
@@ -758,7 +758,7 @@ void MoveHeroTo(int row, int column)
 					if (CrystalCount >= 16)
 					{
 						lvl3_CrystalsAchieve_ = true;
-						warning = a_CrystalsWarning;
+						//warning = a_CrystalsWarning;
 					}
 
 				if (!lvl3_RestartsAchieve_)
@@ -861,7 +861,15 @@ void MoveHeroTo(int row, int column)
 
 			if (levelSelector == 4)
 				if((levelData[8][6] != ' ') && row == 10 && column == 13)
+				{ 
 					levelData[8][6] = symbolDoorG;
+					if ((levelData[7][13] == ' ' &&  levelData[4][12] == ' ') ||
+						(levelData[7][12] == ' ' &&  levelData[4][13] == ' '))
+					{
+						OnMyWayAchieve_ = true;
+						//warning = (Warning)OnMyWayAchieve;
+					}
+				}
 			break;
 		}
 		// Gorisontal door
@@ -1161,16 +1169,16 @@ int main()
 	//while ( isGameActive );
 
 	// Level 2
-	system("cls");
-	isGameActive = true;
-	levelSelector = 2;
-	Initialise(std::begin(levelData2), std::end(levelData2));
-	InitVectors(); // Bombs and Boxes vectors
-	do
-	{
-		Render();
-		Update();
-	} while (isGameActive);
+	//system("cls");
+	//isGameActive = true;
+	//levelSelector = 2;
+	//Initialise(std::begin(levelData2), std::end(levelData2));
+	//InitVectors(); // Bombs and Boxes vectors
+	//do
+	//{
+	//	Render();
+	//	Update();
+	//} while (isGameActive);
 	
 	// Level 3
 	system("cls");

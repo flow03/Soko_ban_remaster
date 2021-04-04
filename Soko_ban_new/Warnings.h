@@ -1,5 +1,7 @@
 #pragma once
 
+//#include "Ahievements_Header.h"
+
 enum Warning
 {
 	None,
@@ -12,14 +14,16 @@ enum Warning
 	secretBombsWarning,
 	secretBombLeft, 
 	secretBombRight,
-	secretBombDamn,
+	secretBombDamn = 100,
 
-	a_RestartsWarning,
+	/*a_RestartsWarning,
 	a_CrystalsWarning,
-	a_AllMinesWarning
+	a_AllMinesWarning,
+	a_AllAchievesWarning,
+	a_OnMyWayWarning*/
 };
 
-Warning warning = None; //None test
+//Warning warning = None; //None test
 
 void Warnings(Warning warn) {
 
@@ -259,17 +263,17 @@ void Warnings(Warning warn) {
 		}
 		}
 		break;
-	case a_RestartsWarning:
+	case (Warning)lvl3_RestartsAchieve:
 		std::cout << "\n\t\t\t  ";
 		printColorText(consoleHandle, lvl3_RestartsAchieve_.getLabel(), Yellow);
 		printColorText(consoleHandle, '!', Yellow);
 		break;
-	case a_CrystalsWarning:
+	case (Warning)lvl3_CrystalsAchieve:
 		std::cout << "\n\t\t\t";
 		printColorText(consoleHandle, lvl3_CrystalsAchieve_.getLabel(), Yellow);
 		printColorText(consoleHandle, '!', Yellow);
 		break;
-	case a_AllMinesWarning:
+	case (Warning)AllMinesAchieve:
 		std::cout << "\n\t\t\t  ";
 		printColorText(consoleHandle, AllMinesAchieve_.getLabel(), Yellow);
 		printColorText(consoleHandle, '(', Yellow);
@@ -279,6 +283,16 @@ void Warnings(Warning warn) {
 			printColorText(consoleHandle, '1', Yellow);
 
 		printColorText(consoleHandle, "/2)", Yellow);
+		break;
+	case (Warning)OnMyWayAchieve:
+		std::cout << "\n\t\t\t\t";
+		printColorText(consoleHandle, OnMyWayAchieve_.getLabel(), Yellow);
+		printColorText(consoleHandle, '!', Yellow);
+		break;
+	case (Warning)AllAchievesAchieve:
+		std::cout << "\n\t\t\t\t";
+		printColorText(consoleHandle, AllAchievesAchieve_.getLabel(), Yellow);
+		printColorText(consoleHandle, '!', Yellow);
 		break;
 	}
 
