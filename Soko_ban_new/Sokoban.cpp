@@ -2,7 +2,7 @@
 //#define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
 
 // Include libraries
-#include <random>		//std::default_random_engine and std::random_device
+#include <random>		// std::default_random_engine and std::random_device
 #include <algorithm>	// std::remove_if
 //#include <stdio.h>
 //#include <stdlib.h>
@@ -12,9 +12,9 @@
 //#include <ctype.h>
 #include <locale.h>
 //#include <assert.h>
-#include <strsafe.h>	//StringCchPrintf
+#include <strsafe.h>	// StringCchPrintf
 #include <iostream>
-#include <iomanip>		//std::setw and others
+#include <iomanip>		// std::setw and others
 #include <vector>
 
 #include "Variables.h"
@@ -25,58 +25,7 @@
 
 
 
-// Level settings
 
-const unsigned char levelData1[10][columnsCount] =  {
-	"#####2#########",
-	"#  X   #   X ##",
-	"# X ### X  #  #",
-	"#X X  X  ## X #",
-	"# X    ##  #  #",
-	"#######    # X#",
-	"#   X   XX #X #",
-	"#XXX # # X   ##",
-	"#1 X #   X X  #",
-	"##2############",
- };
-
-const unsigned char levelData2[rowsCount][columnsCount] = {
-	"###2#########",
-	"#cb   # k# p#",
-	"2  c#g## X   ",
-	"# t #   ## ##",
-	"# k   1   c 2",
-	"#g# #b  ## X#",
-	"# # c# #  X #",
-	"#  # #   # ##",
-	"#X   # ##c c#",
-	"#  # #  #####",
-	"#     # v #k#",
-	"#c#XXX# # b #",
-	"#p#   X #   #",
-	"##    ### # #",
-	"#  c# c  X  #",
-	"#   #XbX  bc#",
-	"#c   c c c t#",
-	"##2##########",
-
-};
-
-const unsigned char levelData3[rowsCount3][columnsCount] = {
-	"#######2#######",
-	"#          XkX#",
-	"#           XX#",
-	"#             #",
-	"#             #",
-	"2      1      2",
-	"#             #",
-	"#             #",
-	"#             #",
-	"#XX           #",
-	"#XcX          #",
-	"#######2#######",
-	"               "
-};
 
 
 
@@ -123,7 +72,6 @@ void SetupFont()
 
 void SetupSystem()
 {
-	//consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	time(&start_time); // start_time = time(0);
 
 	CONSOLE_SCREEN_BUFFER_INFOEX scrBuffer;
@@ -148,7 +96,6 @@ void SetupSystem()
 
 	SetConsoleScreenBufferInfoEx(consoleHandle, &scrBuffer);
 	SetConsoleCursorInfo(consoleHandle, &cursorInfo);
-	//SetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // Установить измененный шрифт
 
 	SetupFont();
 	CenterWindow();
@@ -488,24 +435,22 @@ void LevelClear()
 		Initialise(std::begin(levelData2), std::end(levelData2));
 	else if (levelSelector == 3 || levelSelector == 4)
 	{
-		levelSelector = 3;
+		//levelSelector = 3;
 		futureSelector = false;
-		randomCrystals = 10;
+		randomCrystals = 10;	// maybe better add another const variable
 		Initialise(std::begin(levelData3), std::end(levelData3));
 		RandomizeCrystals(randomCrystals);
-
-		if (!lvl3_RestartsAchieve_)
-		{
-			++a_lvl3_Restarts;
-			if (a_lvl3_Restarts == 10)
-			{
-				lvl3_RestartsAchieve_ = true;
-				//warning = a_RestartsWarning;
-				//AchievesComplete.push_back(&lvl3_RestartsAchieve_);
-			}
-		}
 	}
+}
 
+void NextLevel()
+{
+	system("cls");
+	++levelSelector;
+	LevelClear();	// Initialise + RandomizeCrystals
+	InitVectors();
+	if (levelSelector > 3)
+		isGameActive = false;
 }
 
 void Render()
@@ -529,7 +474,7 @@ void Render()
 
 			switch (symbol)
 			{
-				// Walls - grey
+			// Walls - grey
 			case symbolWall:
 			{
 				std::cout << symbolWall;
@@ -608,7 +553,10 @@ void Render()
 			// Bomb - Red
 			case symbolBomb:
 			{
-				printColorText(consoleHandle, symbolBomb, Red);
+				if (!EasyMode)
+					printColorText(consoleHandle, symbolBomb, Red);
+				else
+					printColorText(consoleHandle, symbolBomb, Green);
 				break;
 			}
 			// Trap
@@ -678,8 +626,9 @@ void BonusWall()
 	FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 }
 
-void DieAnimation(int row, int column) {
-
+void DieAnimation(int row, int column) 
+{
+	levelData[heroRow][heroColumn] = ' ';
 	for (int i = 0; i < 3; ++i)
 	{
 		warning = bombWarning;
@@ -733,8 +682,8 @@ void MoveHeroTo(int row, int column)
 				levelData[4][7] = symbolPortal;	// New portal
 				levelData[4][9] = ' ';			// shortcut
 			}
-			else
-			isGameActive = false;
+			else NextLevel();
+			//isGameActive = false;
 		    
 			break;
 		}
@@ -911,13 +860,15 @@ void MoveHeroTo(int row, int column)
 		// Bomb
 		case symbolBomb:
 		{
-			++global_Bombs;
-			++global_Restarts;
-			CheckBomb(row, column);
-			levelData[heroRow][heroColumn] = ' ';
-			
-			DieAnimation(row, column);
-			LevelClear();
+			if (!EasyMode)
+			{
+				++global_Bombs;
+				++global_Restarts;
+				CheckBomb(row, column);
+
+				DieAnimation(row, column);
+				LevelClear();
+			}
 			
 			break;
 		}
@@ -1118,6 +1069,16 @@ void Update()
 	case 138:	//К
 	{
 		++global_Restarts;
+		if (!lvl3_RestartsAchieve_)
+		{
+			++a_lvl3_Restarts;
+			if (a_lvl3_Restarts == 10)
+			{
+				lvl3_RestartsAchieve_ = true;
+				//warning = a_RestartsWarning;
+				//AchievesComplete.push_back(&lvl3_RestartsAchieve_);
+			}
+		}
 		LevelClear();
 		break;
 	}
@@ -1157,16 +1118,18 @@ int main()
 	} while (isGameActive == true);*/
 	
 	//Level 1
-	//system("cls");
-	//isGameActive = true;
-	//levelSelector = 1;
-	//Initialise(std::begin(levelData1), std::end(levelData1));
-	//do
-	//{
-	//	Render();
-	//	Update();
-	//} 
-	//while ( isGameActive );
+	/*system("cls");
+	isGameActive = true;
+	levelSelector = 1;
+	Initialise(std::begin(levelData1), std::end(levelData1));
+	InitVectors();*/
+	NextLevel();
+	do
+	{
+		Render();
+		Update();
+	} 
+	while ( isGameActive );
 
 	// Level 2
 	//system("cls");
@@ -1181,18 +1144,18 @@ int main()
 	//} while (isGameActive);
 	
 	// Level 3
-	system("cls");
-	isGameActive = true;
-	levelSelector = 3;
-	//Initialise(std::begin(levelData3), std::end(levelData3));
-	LevelClear();	// Initialise + RandomizeCrystals
-	InitVectors();
-	//RandomizeCrystals(randomCrystals);
-	do
-	{
-		Render();
-		Update();
-	} while (isGameActive);
+	//system("cls");
+	//isGameActive = true;
+	//levelSelector = 3;
+	////Initialise(std::begin(levelData3), std::end(levelData3));
+	//LevelClear();	// Initialise + RandomizeCrystals
+	//InitVectors();
+	////RandomizeCrystals(randomCrystals);
+	//do
+	//{
+	//	Render();
+	//	Update();
+	//} while (isGameActive);
 	
 
 	Shutdown();

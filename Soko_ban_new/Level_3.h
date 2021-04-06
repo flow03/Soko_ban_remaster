@@ -106,6 +106,9 @@ void SaveFutureFunction()
 		{
 			Future[r][c] = levelData[r][c];
 		}
+
+	futureBoxes = markedBoxes;
+	futureMines = markedMines;
 }
 
 void LoadFutureFunction()
@@ -118,10 +121,15 @@ void LoadFutureFunction()
 
 		futureSelector = true;
 		warning = bonusLevelWarning;
+		InitVectors();	// NOT GOOD, make init 1 time per game
+	}
+	else
+	{
+		markedBoxes = futureBoxes;
+		markedMines = futureMines;
 	}
 
 	Initialise(std::begin(Future), std::end(Future));
-	InitVectors();
 
 	levelSelector = 4;
 
@@ -137,8 +145,7 @@ void SavePastFunction()
 			Past[r][c] = levelData[r][c];
 		}
 
-	/*tempMines = markedMines;
-	tempBoxes = markedBoxes;*/
+	pastBoxes = markedBoxes;
 }
 
 void LoadPastFunction()
@@ -151,8 +158,8 @@ void LoadPastFunction()
 
 	Initialise(std::begin(Past), std::end(Past));
 	InitVectors();
-	/*markedMines = tempMines;
-	markedBoxes = tempBoxes;*/
+	
+	markedBoxes = pastBoxes;
 
 	levelSelector = 3;
 	heroRow = 6;
@@ -196,10 +203,10 @@ void CheckBomb(short x, short  y)
 		else if (levelSelector == 3)
 			a_lvl3_Mines = true;
 
-		warning = (Warning)AllMinesAchieve;	// carefull, double warning
-
 		if (a_lvl2_Mines && a_lvl3_Mines)
-			AllMinesAchieve_ = true;		// carefull, double warning
+			AllMinesAchieve_ = true;		// carefull, maybe double warning
+		else
+			warning = (Warning)AllMinesAchieve;
 	}
 }
 
@@ -214,9 +221,4 @@ void CheckBox(short x, short  y)
 			break;
 		}
 	}
-}
-
-void NextLevel()
-{
-
 }

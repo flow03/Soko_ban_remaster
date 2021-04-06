@@ -302,7 +302,8 @@ void Warnings(Warning warn) {
 
 void Description() 
 {
-	std::cout << std::endl;
+	using std::cout;
+	cout << std::endl;
 
 	if (levelSelector != 1)
 	switch (Localization)
@@ -336,45 +337,27 @@ void Description()
 		case 2: //RU
 		{
 			setlocale(LC_ALL, "Russian");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("\n   Управляйте ");
-			SetConsoleTextAttribute(consoleHandle, 10);
-			printf("Героем");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(". Собирайте ");
-			SetConsoleTextAttribute(consoleHandle, 5);
-			printf("%c", symbolCrystal);
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(" и ");
-			SetConsoleTextAttribute(consoleHandle, 13);
-			printf("Ключи");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
-			SetConsoleTextAttribute(consoleHandle, 13);
-			printf("%c", symbolKey);
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") чтобы выиграть. R - Перезапуск.");
-			printf("\n   Используйте ");
-			SetConsoleTextAttribute(consoleHandle, 11);
-			printf("Порталы");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
-			SetConsoleTextAttribute(consoleHandle, 11);
-			printf("O");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") и Двери (");
+			std::cout << "\n   Управляйте ";
+			printColorText(consoleHandle, "Героем", LightGreen);
+			std::cout << ". Собирайте ";
+			printColorText(consoleHandle, symbolCrystal, Magenta);
+			std::cout << " и ";
+			printColorText(consoleHandle, "Ключи", LightMagenta);
+			std::cout << "(";
+			printColorText(consoleHandle, symbolKey, LightMagenta);
+			std::cout << ") чтобы выиграть. R - Перезапуск.\n   Используйте ";
+			printColorText(consoleHandle, "Порталы", LightCyan);
+			std::cout << "(";
+			printColorText(consoleHandle, 'O', LightCyan);
+			std::cout << ") и Двери (";
 			setlocale(LC_ALL, "C");
-			printf("%c, %c", symbolDoorG, symbolDoorV);
+			std::cout << symbolDoorG << ", " << symbolDoorV;
 			setlocale(LC_ALL, "Russian");
-			printf("). Будьте осторожны с ");
-			SetConsoleTextAttribute(consoleHandle, Red);
-			printf("Минами");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
-			SetConsoleTextAttribute(consoleHandle, Red);
-			printf("%c", symbolBomb);
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("). Удачи");
+			std::cout << "). Будьте осторожны с ";
+			printColorText(consoleHandle, "Минами", Red);
+			std::cout << "(";
+			printColorText(consoleHandle, symbolBomb, Red);
+			std::cout << "). Удачи";
 			break;
 		}
 		case 3: //ENG
@@ -448,30 +431,19 @@ void Description()
 		case 2:
 		{
 			setlocale(LC_ALL, "Russian");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("\n\n\tИспользуйте клавиши AWSD чтобы управлять ");
-			SetConsoleTextAttribute(consoleHandle, 10);
-			printf("Героем");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(".\n\tДвигайте ");
-			SetConsoleTextAttribute(consoleHandle, 14);
-			printf("Ящики");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("(");
+			cout << "\n\n\tИспользуйте клавиши AWSD чтобы управлять ";
+			printColorText(consoleHandle, "Героем", LightGreen);
+			cout << ".\n\tДвигайте ";
+			printColorText(consoleHandle, "Ящики", Yellow);
+			cout << "(";
 			setlocale(LC_ALL, "C");
-			SetConsoleTextAttribute(consoleHandle, 14);
-			printf("%c", symbolBox);
+			printColorText(consoleHandle, symbolBox, Yellow);
 			setlocale(LC_ALL, "Russian");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(") чтобы добраться до Выхода(");
+			cout << ") чтобы добраться до Выхода(";
 			setlocale(LC_ALL, "C");
-			SetConsoleTextAttribute(consoleHandle, 12);
-			printf("%c", symbolExit);
+			printColorText(consoleHandle, symbolExit, Red);
 			setlocale(LC_ALL, "Russian");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf(").");
-			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("\n\tR - перезапустить уровень.");
+			cout << ").\n\tR - перезапустить уровень.";
 			break;
 		}
 		case 1:
@@ -522,7 +494,7 @@ void Counters()
 		printColorText(consoleHandle, symbolKey, LightMagenta);
 		std::cout << KeyCount;
 	}
-	else std::cout << "       "; //7
+	else std::cout << "          "; //10
 }
 
 void Statistic()

@@ -33,10 +33,19 @@ void printColorText(HANDLE hStdOut, const char* text, int textColor)
 	SetColor(hStdOut, LightGray, Black);
 }
 
-void printColorText(HANDLE hStdOut, const unsigned char text, int textColor)
+void printColorText(HANDLE hStdOut, const unsigned char symbol, int textColor)
 {
 	SetColor(hStdOut, textColor);
-	std::cout << text;
+	if (symbol > 127)
+	{
+		//getlocale
+		setlocale(LC_ALL, "C");
+	}
+	std::cout << symbol;
+	if (symbol > 127)
+	{
+		setlocale(LC_ALL, "Russian");
+	}
 	SetColor(hStdOut, LightGray, Black);
 }
 
