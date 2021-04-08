@@ -26,9 +26,6 @@
 
 
 
-
-
-
 // Functions
 
 void CenterWindow()
@@ -452,6 +449,12 @@ void NextLevel()
 	{
 		Initialise(std::begin(levelData3sub), std::end(levelData3sub));
 		InitVectors();
+
+		markedMines.push_back(COORD{ 7,12 });
+		markedMines.push_back(COORD{ 7,13 });
+		markedMines.push_back(COORD{ 4,12 });
+		markedMines.push_back(COORD{ 4,13 });
+
 		futureBoxes = markedBoxes;
 		futureMines = markedMines;
 
@@ -471,9 +474,9 @@ void NextLevel()
 
 void Render()
 {
-	short x = 2;
+	short render_x = 2;
 	// Move console cursor to 34 column
-	SetConsoleCursorPosition(consoleHandle, COORD{ 34, x });
+	SetConsoleCursorPosition(consoleHandle, COORD{ 34, render_x });
 
 	setlocale(LC_ALL, "C");
 
@@ -482,7 +485,7 @@ void Render()
 		if (levelData[r][0] != '\0')
 		{
 		// Move console cursor for each line
-		SetConsoleCursorPosition(consoleHandle, COORD{ 34, x++ });
+		SetConsoleCursorPosition(consoleHandle, COORD{ 34, render_x++ });	// postfix
 		
 		for (int c = 0; c < columnsCount; ++c)
 		{
@@ -604,14 +607,14 @@ void Render()
 	}
 
 	// Crystal/Key counters
-	Counters();
+	Counters(render_x);
 
 	// Warnings
 	/*a_lvl2_Mines = true;
-	a_lvl3_Mines = true;
+	a_lvl4_Mines = true;
 	warning = a_AllMinesWarning;*/
-	Warnings(warning); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
-	Description();
+	Warnings(warning, render_x); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
+	Description(render_x);
 
 	//SetConsoleTitle
 	StringCchPrintf(szbuff, 255, TEXT("Level %d row %d column %d"), levelSelector, heroRow, heroColumn);
@@ -683,18 +686,15 @@ void MoveHeroTo(int row, int column)
 			{
 				warning = crystalWarning;
 				CrystalMaxCount = 1;
-				//canMoveToCell = false;
 			}
 			else if (levelSelector == 3)
 			{
 				levelData[row][column] = symbolWall;
-				//canMoveToCell = false;
 			}
 			else if ((levelSelector == 4) && (CrystalCount < 14)) //13
 			{
 				warning = crystalWarning;
 				CrystalMaxCount = 14;
-				//canMoveToCell = false;
 				levelData[4][7] = symbolPortal;	// New portal
 				levelData[4][9] = ' ';			// shortcut
 			}
@@ -952,8 +952,8 @@ void MoveHeroTo(int row, int column)
 					levelData[7][12] = symbolBomb;
 					if (levelData[7][13] != symbolBomb) warning = secretBombRight;
 					else 
-					{ 
-						warning = secretBombDamn; 
+					{
+						warning = secretBombDamn;
 						levelData[6][11] = ' ';
 					}
 				}

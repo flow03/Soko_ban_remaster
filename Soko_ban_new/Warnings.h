@@ -25,25 +25,26 @@ enum Warning
 
 //Warning warning = None; //None test
 
-void Warnings(Warning warn) {
+void Warnings(Warning warn, short &x_position) {
 
 	setlocale(LC_ALL, "Russian");
 
-	SetConsoleCursorPosition(consoleHandle, COORD{ 0, 16 });
-	std::cout.width(64);
-	SetConsoleCursorPosition(consoleHandle, COORD{ 0, 16 });
+	// new warning clear
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0, x_position });
+	std::cout << std::setw(80) << std::right << "";		// don't work properly without empty str
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0, x_position });
 
 	switch (warn)
 	{
 	case None:
-		std::cout << "\n\t\t\t\t\t\t\t\t"; // 64
+		//std::cout << "\t\t\t\t\t\t\t\t"; // 64
 		break;
 	case keyWarning:
 		switch (Localization)
 		{
 		case 1:
 		{
-			printColorText(consoleHandle, "\n\t\t\t    I куди ти без ", Yellow);
+			printColorText(consoleHandle, "\t\t\t    I куди ти без ", Yellow);
 			printColorText(consoleHandle, "Ключа", LightMagenta);
 			printColorText(consoleHandle, " лiзеш ? ", Yellow);
 			break;
@@ -52,14 +53,14 @@ void Warnings(Warning warn) {
 		{
 			/*if (levelSelector == 3 || levelSelector == 4)
 				printf(" ");*/
-			printColorText(consoleHandle, "\n\t\t\t\t    Нужен ", Yellow);
+			printColorText(consoleHandle, "\t\t\t\t    Нужен ", Yellow);
 			printColorText(consoleHandle, "Ключ     ", LightMagenta);
 			break;
 		}
 		case 3:
 		{
 			//setlocale(LC_ALL, "C");
-			printColorText(consoleHandle, "\n\t\t\t\t  Need some ", Yellow);
+			printColorText(consoleHandle, "\t\t\t\t  Need some ", Yellow);
 			printColorText(consoleHandle, "Key     ", LightMagenta);
 			break;
 		}
@@ -71,7 +72,7 @@ void Warnings(Warning warn) {
 		case 1:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t   Куди зiбрався? А ну ", Yellow);
+			printColorText(consoleHandle, "\t\t\t   Куди зiбрався? А ну ", Yellow);
 			printColorText(consoleHandle, symbolCrystal, Magenta);
 			printColorText(consoleHandle, " збирай!", Yellow);
 			break;
@@ -79,14 +80,14 @@ void Warnings(Warning warn) {
 		case 2:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t\t  Нужно больше ", Yellow);
+			printColorText(consoleHandle, "\t\t\t\t  Нужно больше ", Yellow);
 			printColorText(consoleHandle, symbolCrystal, Magenta);
 			break;
 		}
 		case 3:
 		{
 			//setlocale(LC_ALL, "C");
-			printColorText(consoleHandle, "\n\t\t\t\t  Collect more ", Yellow);
+			printColorText(consoleHandle, "\t\t\t\t  Collect more ", Yellow);
 			printColorText(consoleHandle, symbolCrystal, Magenta);
 			break;
 		}
@@ -98,7 +99,7 @@ void Warnings(Warning warn) {
 		case 1:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t     Я ж казав не лiзти в ", Yellow);
+			printColorText(consoleHandle, "\t\t\t     Я ж казав не лiзти в ", Yellow);
 			printColorText(consoleHandle, "Яму", Red);
 			printColorText(consoleHandle, "!", Yellow);
 			break;
@@ -106,13 +107,13 @@ void Warnings(Warning warn) {
 		case 2:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t\t    ПОТРАЧЕНО", Yellow);
+			printColorText(consoleHandle, "\t\t\t\t    ПОТРАЧЕНО", Yellow);
 			break;
 		}
 		case 3:
 		{
 			//setlocale(LC_ALL, "C");
-			printColorText(consoleHandle, "\n\t\t\t       Oops! You just died", Yellow);
+			printColorText(consoleHandle, "\t\t\t       Oops! You just died", Yellow);
 			break;
 		}
 		}
@@ -123,19 +124,19 @@ void Warnings(Warning warn) {
 		case 1:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t\tСтiна в подарунок", Yellow);
+			printColorText(consoleHandle, "\t\t\t\tСтiна в подарунок", Yellow);
 			break;
 		}
 		case 2:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t\t     Сюрприз", Yellow);
+			printColorText(consoleHandle, "\t\t\t\t     Сюрприз", Yellow);
 			break;
 		}
 		case 3:
 		{
 			//setlocale(LC_ALL, "C");
-			printColorText(consoleHandle, "\n\t\t\t\t     Surprise", Yellow);
+			printColorText(consoleHandle, "\t\t\t\t     Surprise", Yellow);
 			break;
 		}
 		}
@@ -144,17 +145,16 @@ void Warnings(Warning warn) {
 		if (Localization == 1)
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t       Оце так несподiванка!", Yellow);
+			printColorText(consoleHandle, "\t\t\t       Оце так несподiванка!", Yellow);
 		}
 		else if (Localization == 2)
 		{
-			//
-			printColorText(consoleHandle, "\n\t\t\t\t  Вот это поворот!", Yellow);
+			printColorText(consoleHandle, "\t\t\t\t  Вот это поворот!", Yellow);
 		}
 		else if (Localization == 3)
 		{
 			//setlocale(LC_ALL, "С");
-			printColorText(consoleHandle, "\n\t\t\t      Surprise, motherfucker!", Yellow);
+			printColorText(consoleHandle, "\t\t\t      Surprise, motherfucker!", Yellow);
 		}
 		//warning = None;	// ???
 		break;
@@ -165,19 +165,19 @@ void Warnings(Warning warn) {
 		{
 			//
 			printColorText(consoleHandle,
-				"\n\t\t     Ти знайшов таємний лаз. Нiчого особливого", Yellow); //41+21=62
+				"\t\t     Ти знайшов таємний лаз. Нiчого особливого", Yellow); //41+21=62
 			break;
 		}
 		case 2:
 		{
 			//
-			printColorText(consoleHandle, "\n\t\t\t  Эй! Кто открыл тайную комнату?!", Yellow); //57
+			printColorText(consoleHandle, "\t\t\t  Эй! Кто открыл тайную комнату?!", Yellow); //57
 			break;
 		}
 		case 3:
 		{
 			//setlocale(LC_ALL, "C");
-			printColorText(consoleHandle, "\n\t\t\t  Hey! You found the secret door!", Yellow); //57
+			printColorText(consoleHandle, "\t\t\t  Hey! You found the secret door!", Yellow); //57
 			break;
 		}
 		}
@@ -188,7 +188,7 @@ void Warnings(Warning warn) {
 			case 1:
 			{
 				//
-				printColorText(consoleHandle, "\n\t\t\t  Обережно! Тут прихованi ", Yellow);  // 25+33=58
+				printColorText(consoleHandle, "\t\t\t  Обережно! Тут прихованi ", Yellow);  // 25+33=58
 				printColorText(consoleHandle, "пастки", Red);
 				printColorText(consoleHandle, '!', Yellow);
 				break;
@@ -196,7 +196,7 @@ void Warnings(Warning warn) {
 			case 2:
 			{
 				//
-				printColorText(consoleHandle, "\n\t\t\t Осторожно! Здесь припрятаны ", Yellow); // 24+33=57
+				printColorText(consoleHandle, "\t\t\t Осторожно! Здесь припрятаны ", Yellow); // 24+33=57
 				printColorText(consoleHandle, "мины", Red);
 				printColorText(consoleHandle, '!', Yellow);
 				break;
@@ -204,7 +204,7 @@ void Warnings(Warning warn) {
 			case 3:
 			{
 				//setlocale(LC_ALL, "C");
-				printColorText(consoleHandle, "\n\t\t\t Carreful! There are hidden ", Yellow); // 25+33=58
+				printColorText(consoleHandle, "\t\t\t Carreful! There are hidden ", Yellow); // 25+33=58
 				printColorText(consoleHandle, "bombs", Red);
 				printColorText(consoleHandle, '!', Yellow);
 				break;
@@ -217,7 +217,7 @@ void Warnings(Warning warn) {
 		{
 			case 1:
 			{
-				printColorText(consoleHandle, "\n\t\t\t  Попереду ", Yellow);
+				printColorText(consoleHandle, "\t\t\t  Попереду ", Yellow);
 				printColorText(consoleHandle, "пастка", Red);
 				printColorText(consoleHandle, '!', Yellow);
 				printColorText(consoleHandle, " Не раджу йти ", Yellow);
@@ -227,7 +227,7 @@ void Warnings(Warning warn) {
 			}
 			case 2:
 			{
-				printColorText(consoleHandle, "\n\t\t\tВпереди ", Yellow);
+				printColorText(consoleHandle, "\t\t\tВпереди ", Yellow);
 				printColorText(consoleHandle, "мина", Red);
 				printColorText(consoleHandle, '!', Yellow);
 				printColorText(consoleHandle, " Не советую ступать ", Yellow);
@@ -238,7 +238,7 @@ void Warnings(Warning warn) {
 			case 3:
 			{
 				//setlocale(LC_ALL, "C");
-				printColorText(consoleHandle, "\n\t\t\t     Bomb", Red);
+				printColorText(consoleHandle, "\t\t\t     Bomb", Red);
 				printColorText(consoleHandle, " ahead! Don't go ", Yellow);
 				if (warn == secretBombLeft) printColorText(consoleHandle, "left", Yellow);
 				else if (warn == secretBombRight) printColorText(consoleHandle, "right", Yellow);
@@ -251,37 +251,37 @@ void Warnings(Warning warn) {
 		{
 		case 1:
 		{
-			printColorText(consoleHandle, "\n\t\t\t\tТа нехай йому грець!\t\t", Yellow);
+			printColorText(consoleHandle, "\t\t\t\tТа нехай йому грець!", Yellow);
 			break;
 		}
 		case 2:
 		{
-			printColorText(consoleHandle, "\n\t\t\t\t    Чёрт побери!\t\t", Yellow); 
+			printColorText(consoleHandle, "\t\t\t\t    Чёрт побери!", Yellow); 
 			break;
 		}
 		case 3:
 		{
 			//setlocale(LC_ALL, "C");
-			printColorText(consoleHandle, "\n\t\t\t\t Damn! I warned you\t\t", Yellow);
+			printColorText(consoleHandle, "\t\t\t\t Damn! I warned you", Yellow);
 			break;
 		}
 		}
 		break;
 	case (Warning)lvl3_RestartsAchieve:
-		std::cout << "\n\t\t\t  ";
+		std::cout << "\t\t\t  ";
 		printColorText(consoleHandle, lvl3_RestartsAchieve_.getLabel(), Yellow);
 		printColorText(consoleHandle, '!', Yellow);
 		break;
 	case (Warning)lvl3_CrystalsAchieve:
-		std::cout << "\n\t\t\t";
+		std::cout << "\t\t\t";
 		printColorText(consoleHandle, lvl3_CrystalsAchieve_.getLabel(), Yellow);
 		printColorText(consoleHandle, '!', Yellow);
 		break;
 	case (Warning)AllMinesAchieve:
-		std::cout << "\n\t\t\t  ";
+		std::cout << "\t\t\t  ";
 		printColorText(consoleHandle, AllMinesAchieve_.getLabel(), Yellow);
 		printColorText(consoleHandle, '(', Yellow);
-		if(a_lvl2_Mines && a_lvl3_Mines)
+		if(a_lvl2_Mines && a_lvl4_Mines)
 			printColorText(consoleHandle, '2', Yellow);
 		else
 			printColorText(consoleHandle, '1', Yellow);
@@ -289,25 +289,28 @@ void Warnings(Warning warn) {
 		printColorText(consoleHandle, "/2)", Yellow);
 		break;
 	case (Warning)OnMyWayAchieve:
-		std::cout << "\n\t\t\t\t";
+		std::cout << "\t\t\t\t";
 		printColorText(consoleHandle, OnMyWayAchieve_.getLabel(), Yellow);
 		printColorText(consoleHandle, '!', Yellow);
 		break;
 	case (Warning)AllAchievesAchieve:
-		std::cout << "\n\t\t\t\t";
+		std::cout << "\t\t\t\t";
 		printColorText(consoleHandle, AllAchievesAchieve_.getLabel(), Yellow);
 		printColorText(consoleHandle, '!', Yellow);
 		break;
 	}
 
+	++x_position;
 	warning = None; //Warnings reset
 	setlocale(LC_ALL, "C");
 }
 
-void Description() 
+void Description(short x_position)
 {
 	using std::cout;
-	cout << std::endl;
+	if (levelSelector == 2) --x_position;
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0, x_position });
+	//cout << std::endl;
 
 	if (levelSelector != 1)
 	switch (Localization)
@@ -412,7 +415,7 @@ void Description()
 		{
 			//setlocale(LC_ALL, "Russian");
 			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("\n\n\tUse AWSD to move your ");
+			printf("\n\n\tUse WASD to move your ");
 			SetConsoleTextAttribute(consoleHandle, 10);
 			printf("Hero");
 			SetConsoleTextAttribute(consoleHandle, 7);
@@ -482,9 +485,11 @@ void Description()
 	}
 }
 
-void Counters()
+void Counters(short &x_position)
 {
-	std::cout << "\n\t\t\t\t      "; // 34 to level render +4 = 38 spaces
+	if (levelSelector == 2) ++x_position;
+	SetConsoleCursorPosition(consoleHandle, COORD{ 38, x_position });
+	//std::cout << "\n\t\t\t\t      "; // 34 to level render +4 = 38 spaces
 	if (CrystalCount != 0)
 	{
 		printColorText(consoleHandle, symbolCrystal, Magenta);
@@ -500,6 +505,8 @@ void Counters()
 		std::cout << KeyCount;
 	}
 	else std::cout << "          "; //10
+
+	++x_position;	// set x on the next row
 }
 
 void Statistic()

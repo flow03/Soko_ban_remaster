@@ -77,7 +77,7 @@ unsigned char Past[rowsCount3][columnsCount];
 unsigned char Future[rowsCount3][columnsCount];
 int heroRow = 0;
 int heroColumn = 0;
-int levelSelector = 2;	// level = level - 1
+int levelSelector = 1;	// level = level - 1
 int CrystalCount = 0;
 int CrystalMaxCount = 0;
 int KeyCount = 0;
@@ -90,6 +90,7 @@ time_t start_time = 0;
 enum Warning;
 Warning warning = Warning(0); //None
 bool EasyMode = false;
+//short render_x = 2;
 
 std::vector<COORD> markedMines;
 std::vector<COORD> markedBoxes;

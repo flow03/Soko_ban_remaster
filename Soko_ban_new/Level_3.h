@@ -197,10 +197,10 @@ void CheckBomb(short x, short  y)
 	{
 		if (levelSelector == 2)
 			a_lvl2_Mines = true;
-		else if (levelSelector == 3)
-			a_lvl3_Mines = true;
+		else if (levelSelector == 4)		// no mines on level 3
+			a_lvl4_Mines = true;
 
-		if (a_lvl2_Mines && a_lvl3_Mines)
+		if (a_lvl2_Mines && a_lvl4_Mines)
 			AllMinesAchieve_ = true;		// carefull, maybe double warning
 		else
 			warning = (Warning)AllMinesAchieve;

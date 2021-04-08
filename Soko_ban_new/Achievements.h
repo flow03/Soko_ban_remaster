@@ -48,7 +48,7 @@ int a_UniBombsDie = 0;				// Смерть на новой бомбе
 int a_UniBoxMove = 0;				// Разных ящиков подвигано
 int a_lvl3_Restarts = 0;			// Рестарты уровня 3 до сбора сердечек
 bool a_lvl2_Mines = false;			// Все мины уровня 2
-bool a_lvl3_Mines = false;			// Все мины уровня 3
+bool a_lvl4_Mines = false;			// Все мины уровня 4
 
 const size_t a_AchievesMax = 8;	// Достижений всего
 //int a_AchievesCount = 0;		// Разблокировано достижений
