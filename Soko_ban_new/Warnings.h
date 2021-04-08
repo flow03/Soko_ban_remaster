@@ -29,6 +29,10 @@ void Warnings(Warning warn) {
 
 	setlocale(LC_ALL, "Russian");
 
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0, 16 });
+	std::cout.width(64);
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0, 16 });
+
 	switch (warn)
 	{
 	case None:
@@ -430,20 +434,21 @@ void Description()
 		}
 		case 2:
 		{
+			//SetConsoleCursorPosition(consoleHandle, COORD{ 3, 23 });
 			setlocale(LC_ALL, "Russian");
-			cout << "\n\n\tИспользуйте клавиши AWSD чтобы управлять ";
+			cout << "\n   Используйте клавиши WASD чтобы управлять ";
 			printColorText(consoleHandle, "Героем", LightGreen);
-			cout << ".\n\tДвигайте ";
+			cout << ". Двигайте ";
 			printColorText(consoleHandle, "Ящики", Yellow);
 			cout << "(";
 			setlocale(LC_ALL, "C");
 			printColorText(consoleHandle, symbolBox, Yellow);
 			setlocale(LC_ALL, "Russian");
-			cout << ") чтобы добраться до Выхода(";
+			cout << ") чтобы\n   добраться до Выхода(";
 			setlocale(LC_ALL, "C");
 			printColorText(consoleHandle, symbolExit, Red);
 			setlocale(LC_ALL, "Russian");
-			cout << ").\n\tR - перезапустить уровень.";
+			cout << "). R - перезапустить уровень.";
 			break;
 		}
 		case 1:

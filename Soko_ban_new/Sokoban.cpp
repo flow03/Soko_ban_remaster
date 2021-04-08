@@ -435,7 +435,7 @@ void LevelClear()
 		Initialise(std::begin(levelData2), std::end(levelData2));
 	else if (levelSelector == 3 || levelSelector == 4)
 	{
-		//levelSelector = 3;
+		levelSelector = 3;
 		futureSelector = false;
 		randomCrystals = 10;	// maybe better add another const variable
 		Initialise(std::begin(levelData3), std::end(levelData3));
@@ -447,9 +447,25 @@ void NextLevel()
 {
 	system("cls");
 	++levelSelector;
-	LevelClear();	// Initialise + RandomizeCrystals
-	InitVectors();
-	if (levelSelector > 3)
+	
+	if (levelSelector == 3)
+	{
+		Initialise(std::begin(levelData3sub), std::end(levelData3sub));
+		InitVectors();
+		futureBoxes = markedBoxes;
+		futureMines = markedMines;
+
+		LevelClear();
+		InitVectors();
+		//pastBoxes = markedBoxes;
+	}
+	else
+	{
+		LevelClear();	// Initialise + RandomizeCrystals
+		InitVectors();
+	}
+
+	if (levelSelector > 4)
 		isGameActive = false;
 }
 

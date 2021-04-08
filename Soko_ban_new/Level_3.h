@@ -121,17 +121,14 @@ void LoadFutureFunction()
 
 		futureSelector = true;
 		warning = bonusLevelWarning;
-		InitVectors();	// NOT GOOD, make init 1 time per game
+		//InitVectors();	// NOT GOOD, make init 1 time per game
 	}
-	else
-	{
-		markedBoxes = futureBoxes;
-		markedMines = futureMines;
-	}
-
-	Initialise(std::begin(Future), std::end(Future));
 
 	levelSelector = 4;
+	Initialise(std::begin(Future), std::end(Future));
+
+	markedBoxes = futureBoxes;
+	markedMines = futureMines;
 
 	heroRow = 10;	// 5
 	heroColumn = 6;	// 7

@@ -77,13 +77,13 @@ unsigned char Past[rowsCount3][columnsCount];
 unsigned char Future[rowsCount3][columnsCount];
 int heroRow = 0;
 int heroColumn = 0;
-int levelSelector = 0; // level - 1 
+int levelSelector = 2;	// level = level - 1
 int CrystalCount = 0;
 int CrystalMaxCount = 0;
 int KeyCount = 0;
-int Localization = 2;	//Language
+int Localization = 2;	// Language
 int font = 1;			// Font
-TCHAR szbuff[255];		//StringCchPrintf
+TCHAR szbuff[255];		// StringCchPrintf
 CONSOLE_FONT_INFOEX defaultFont;
 int randomCrystals = 10;
 time_t start_time = 0;
