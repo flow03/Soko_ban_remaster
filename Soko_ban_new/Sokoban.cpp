@@ -458,7 +458,7 @@ void NextLevel()
 		futureBoxes = markedBoxes;
 		futureMines = markedMines;
 
-		LevelClear();
+		LevelClear();		// 2 lines to reset
 		InitVectors();
 		//pastBoxes = markedBoxes;
 	}
@@ -470,6 +470,8 @@ void NextLevel()
 
 	if (levelSelector > 4)
 		isGameActive = false;
+
+	Description();
 }
 
 void Render()
@@ -614,7 +616,7 @@ void Render()
 	a_lvl4_Mines = true;
 	warning = a_AllMinesWarning;*/
 	Warnings(warning, render_x); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
-	Description(render_x);
+	//Description(render_x);
 
 	//SetConsoleTitle
 	StringCchPrintf(szbuff, 255, TEXT("Level %d row %d column %d"), levelSelector, heroRow, heroColumn);

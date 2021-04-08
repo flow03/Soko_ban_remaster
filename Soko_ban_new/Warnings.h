@@ -14,13 +14,7 @@ enum Warning
 	secretBombsWarning,
 	secretBombLeft, 
 	secretBombRight,
-	secretBombDamn = 100,
-
-	/*a_RestartsWarning,
-	a_CrystalsWarning,
-	a_AllMinesWarning,
-	a_AllAchievesWarning,
-	a_OnMyWayWarning*/
+	secretBombDamn = 100,	// set enum range
 };
 
 //Warning warning = None; //None test
@@ -300,17 +294,24 @@ void Warnings(Warning warn, short &x_position) {
 		break;
 	}
 
-	++x_position;
+	//++x_position;
 	warning = None; //Warnings reset
 	setlocale(LC_ALL, "C");
 }
 
-void Description(short x_position)
+void Description()
 {
 	using std::cout;
-	if (levelSelector == 2) --x_position;
+
+	short x_position = 0;
+	if (levelSelector == 1)
+		x_position = 14;
+	else if (levelSelector == 2) 
+		x_position = 22;
+	else if (levelSelector == 3 || levelSelector == 4)
+		x_position = 17;
+
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0, x_position });
-	//cout << std::endl;
 
 	if (levelSelector != 1)
 	switch (Localization)
