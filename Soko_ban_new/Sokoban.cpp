@@ -16,6 +16,7 @@
 #include <iostream>
 #include <iomanip>		// std::setw and others
 #include <vector>
+#include <queue>		// #include <deque>
 
 #include "Variables.h"
 #include "ConsoleColor.h"
@@ -432,6 +433,9 @@ void LevelClear()
 		Initialise(std::begin(levelData2), std::end(levelData2));
 	else if (levelSelector == 3 || levelSelector == 4)
 	{
+		futureBoxes = markedBoxes;
+		futureMines = markedMines;
+
 		levelSelector = 3;
 		futureSelector = false;
 		randomCrystals = 10;	// maybe better add another const variable
@@ -450,17 +454,17 @@ void NextLevel()
 		Initialise(std::begin(levelData3sub), std::end(levelData3sub));
 		InitVectors();
 
-		markedMines.push_back(COORD{ 7,12 });
+		/*markedMines.push_back(COORD{ 7,12 });
 		markedMines.push_back(COORD{ 7,13 });
 		markedMines.push_back(COORD{ 4,12 });
-		markedMines.push_back(COORD{ 4,13 });
+		markedMines.push_back(COORD{ 4,13 });*/
 
 		futureBoxes = markedBoxes;
 		futureMines = markedMines;
 
 		LevelClear();		// 2 lines to reset
 		InitVectors();
-		//pastBoxes = markedBoxes;
+		pastBoxes = markedBoxes;
 	}
 	else
 	{
@@ -615,9 +619,9 @@ void Render()
 	/*a_lvl2_Mines = true;
 	a_lvl4_Mines = true;
 	warning = a_AllMinesWarning;*/
-	Warnings(warning, render_x); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
+	Warnings(render_x); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
 	//Description(render_x);
-
+	
 	//SetConsoleTitle
 	StringCchPrintf(szbuff, 255, TEXT("Level %d row %d column %d"), levelSelector, heroRow, heroColumn);
 	SetConsoleTitle(szbuff);
@@ -649,15 +653,18 @@ void BonusWall()
 
 void DieAnimation(int row, int column) 
 {
+	//warning1.push(bombWarning);
 	levelData[heroRow][heroColumn] = ' ';
 	for (int i = 0; i < 3; ++i)
 	{
-		warning = bombWarning;
+		//warning = bombWarning;
+		warning1.push(bombWarning);
 		levelData[row][column] = 'd';
 		Render();
 		Sleep(225);
 
-		warning = bombWarning;
+		//warning = bombWarning;
+		warning1.push(bombWarning);
 		levelData[row][column] = ' ';
 		Render();
 		Sleep(225);
@@ -723,10 +730,7 @@ void MoveHeroTo(int row, int column)
 
 				if (!lvl3_CrystalsAchieve_)
 					if (CrystalCount >= 16)
-					{
 						lvl3_CrystalsAchieve_ = true;
-						//warning = a_CrystalsWarning;
-					}
 
 				if (!lvl3_RestartsAchieve_)
 					a_lvl3_Restarts = 0;
@@ -860,7 +864,8 @@ void MoveHeroTo(int row, int column)
 			else
 			{
 				//warning1 = true;
-				warning = keyWarning;
+				//warning = keyWarning;
+				warning1.push(keyWarning);
 			}
 			break;
 		}
@@ -872,7 +877,7 @@ void MoveHeroTo(int row, int column)
 				--KeyCount;
 				canMoveToCell = true;
 			}
-			else warning = keyWarning;
+			else warning1.push(keyWarning);
 			break;
 		}
 		// Bomb
@@ -882,9 +887,10 @@ void MoveHeroTo(int row, int column)
 			{
 				++global_Bombs;
 				++global_Restarts;
-				CheckBomb(row, column);
 
 				DieAnimation(row, column);
+				CheckBomb(row, column);
+
 				LevelClear();
 			}
 			
@@ -931,7 +937,8 @@ void MoveHeroTo(int row, int column)
 				// Secret door
 				if (row == 10 && column == 7)
 				{
-					warning = secretDoorWarning;
+					//warning = secretDoorWarning;
+					warning1.push(secretDoorWarning);
 
 					levelData[11][7] = ' ';
 					levelData[11][12] = 't';
@@ -940,32 +947,39 @@ void MoveHeroTo(int row, int column)
 				// Secret bombs warning
 				else if ((row == 11 && column == 12))
 				{
-					warning = secretBombsWarning;
+					//warning = secretBombsWarning;
+					warning1.push(secretBombsWarning);
 					levelData[11][13] = ' ';
 				}
 				else if ((row == 11 && column == 13))
 				{
-					warning = secretBombsWarning;
+					//warning = secretBombsWarning;
+					warning1.push(secretBombsWarning);
 					levelData[11][12] = ' ';
 				}
 				// Secret bombs
 				else if (row == 9 && column == 12)
 				{
 					levelData[7][12] = symbolBomb;
-					if (levelData[7][13] != symbolBomb) warning = secretBombRight;
+					if (levelData[7][13] != symbolBomb) //warning = secretBombRight;
+						warning1.push(secretBombRight);
 					else 
 					{
-						warning = secretBombDamn;
+						//warning = secretBombDamn;
+						warning1.push(secretBombDamn);
 						levelData[6][11] = ' ';
 					}
 				}
 				else if (row == 9 && column == 13)
 				{
 					levelData[7][13] = symbolBomb;
-					if(levelData[7][12] != symbolBomb) warning = secretBombLeft;
+					if(levelData[7][12] != symbolBomb) //warning = secretBombLeft;
+					warning1.push(secretBombLeft);
+
 					else
 					{
-						warning = secretBombDamn;
+						//warning = secretBombDamn;
+						warning1.push(secretBombDamn);
 						levelData[6][11] = ' ';
 					}
 				}

@@ -30,11 +30,11 @@ const unsigned char levelData2[rowsCount][columnsCount] = {
 	"#X   # ##c c#",
 	"#  # #  #####",
 	"#     # v #k#",
-	"#c#XXX# # b #",
+	"#c#XXX# # X #",
 	"#p#   X #   #",
 	"##    ### # #",
 	"#  c# c  X  #",
-	"#   #XbX  bc#",
+	"#   #XXX  Xc#",
 	"#c   c c c t#",
 	"##2##########",
 
@@ -89,6 +89,7 @@ int randomCrystals = 10;
 time_t start_time = 0;
 enum Warning;
 Warning warning = Warning(0); //None
+std::queue<Warning> warning1;
 bool EasyMode = false;
 //short render_x = 2;
 

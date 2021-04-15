@@ -16,7 +16,7 @@ const unsigned char levelData3sub[rowsCount3][columnsCount] = {
 	"               ",
 };
 
-void InitVectors();
+//void InitVectors();
 
 void Initialise(const unsigned char(*)[columnsCount], const unsigned char(*)[columnsCount]);
 
@@ -154,7 +154,7 @@ void LoadPastFunction()
 		}*/
 
 	Initialise(std::begin(Past), std::end(Past));
-	InitVectors();
+	//InitVectors();
 	
 	markedBoxes = pastBoxes;
 
@@ -195,6 +195,8 @@ void CheckBomb(short x, short  y)
 	
 	if (markedMines.size() == 0)
 	{
+		markedMines.push_back(COORD{0, 0});
+
 		if (levelSelector == 2)
 			a_lvl2_Mines = true;
 		else if (levelSelector == 4)		// no mines on level 3
@@ -203,7 +205,7 @@ void CheckBomb(short x, short  y)
 		if (a_lvl2_Mines && a_lvl4_Mines)
 			AllMinesAchieve_ = true;		// carefull, maybe double warning
 		else
-			warning = (Warning)AllMinesAchieve;
+			warning1.push((Warning)AllMinesAchieve);
 	}
 }
 
