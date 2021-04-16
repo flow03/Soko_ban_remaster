@@ -436,6 +436,9 @@ void LevelClear()
 		futureBoxes = markedBoxes;
 		futureMines = markedMines;
 
+		markedBoxes = pastBoxes;
+		//markedMines = pastMines;	// if you need
+
 		levelSelector = 3;
 		futureSelector = false;
 		randomCrystals = 10;	// maybe better add another const variable
@@ -444,26 +447,31 @@ void LevelClear()
 	}
 }
 
-void NextLevel()
+void NextLevel(int new_level)
 {
 	system("cls");
-	++levelSelector;
+	levelSelector = new_level;
 	
 	if (levelSelector == 3)
 	{
 		Initialise(std::begin(levelData3sub), std::end(levelData3sub));
 		InitVectors();
 
-		/*markedMines.push_back(COORD{ 7,12 });
+		markedMines.push_back(COORD{ 7,12 });
 		markedMines.push_back(COORD{ 7,13 });
 		markedMines.push_back(COORD{ 4,12 });
-		markedMines.push_back(COORD{ 4,13 });*/
+		markedMines.push_back(COORD{ 4,13 });
 
-		futureBoxes = markedBoxes;
-		futureMines = markedMines;
+		/*futureBoxes = markedBoxes;
+		futureMines = markedMines;*/
 
-		LevelClear();		// 2 lines to reset
+		LevelClear();		// future init here
 		InitVectors();
+
+		CheckBox( 1, 13 );
+		CheckBox( 10, 1 );
+		a_UniBoxMove -= 2;	// non-elegant way to solve it
+
 		pastBoxes = markedBoxes;
 	}
 	else
@@ -472,10 +480,9 @@ void NextLevel()
 		InitVectors();
 	}
 
-	if (levelSelector > 4)
-		isGameActive = false;
+	if (levelSelector > 4) isGameActive = false;
 
-	Description();
+	if (isGameActive) Description();
 }
 
 void Render()
@@ -616,35 +623,34 @@ void Render()
 	Counters(render_x);
 
 	// Warnings
-	/*a_lvl2_Mines = true;
-	a_lvl4_Mines = true;
-	warning = a_AllMinesWarning;*/
 	Warnings(render_x); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
-	//Description(render_x);
 	
 	//SetConsoleTitle
 	StringCchPrintf(szbuff, 255, TEXT("Level %d row %d column %d"), levelSelector, heroRow, heroColumn);
 	SetConsoleTitle(szbuff);
 }
 
-void BonusWall()
+void BonusWall(int row, int column)
 {
-	warning = bonusWallWarning;
+	levelData[heroRow][heroColumn] = ' ';
+	levelData[row][column] = symbolHero;
+
+	warning.push(bonusWallWarning);
 	levelData[14][8] = symbolWall;
 	Render();
 	Sleep(275);
 
-	warning = bonusWallWarning;
+	warning.push(bonusWallWarning);
 	levelData[15][8] = symbolWall;
 	Render();
 	Sleep(275);
 
-	warning = bonusWallWarning;
+	warning.push(bonusWallWarning);
 	levelData[16][8] = symbolWall;
 	Render();
 	Sleep(275);
 
-	warning = bonusWallWarning;
+	warning.push(bonusWallWarning);
 	levelData[16][6] = symbolKey;
 
 	// Clear getch input stream
@@ -653,18 +659,16 @@ void BonusWall()
 
 void DieAnimation(int row, int column) 
 {
-	//warning1.push(bombWarning);
+	//warning.push(bombWarning);
 	levelData[heroRow][heroColumn] = ' ';
 	for (int i = 0; i < 3; ++i)
 	{
-		//warning = bombWarning;
-		warning1.push(bombWarning);
+		warning.push(bombWarning);
 		levelData[row][column] = 'd';
 		Render();
 		Sleep(225);
 
-		//warning = bombWarning;
-		warning1.push(bombWarning);
+		warning.push(bombWarning);
 		levelData[row][column] = ' ';
 		Render();
 		Sleep(225);
@@ -693,7 +697,7 @@ void MoveHeroTo(int row, int column)
 			canMoveToCell = false;
 			if ((levelSelector == 2) && (CrystalCount < 1)) //13
 			{
-				warning = crystalWarning;
+				warning.push(crystalWarning);
 				CrystalMaxCount = 1;
 			}
 			else if (levelSelector == 3)
@@ -702,12 +706,12 @@ void MoveHeroTo(int row, int column)
 			}
 			else if ((levelSelector == 4) && (CrystalCount < 14)) //13
 			{
-				warning = crystalWarning;
+				warning.push(crystalWarning);
 				CrystalMaxCount = 14;
 				levelData[4][7] = symbolPortal;	// New portal
 				levelData[4][9] = ' ';			// shortcut
 			}
-			else NextLevel();
+			else NextLevel(levelSelector + 1);	// no modify value
 			//isGameActive = false;
 		    
 			break;
@@ -722,14 +726,14 @@ void MoveHeroTo(int row, int column)
 			if (levelSelector == 3)
 			{
 				if (row == 10 && column == 2)
-					randomCrystals += 6;
+					randomCrystals += 10;
 
 				ClearCrystals();
 				if (randomCrystals > 0)
 					RandomizeCrystals(--randomCrystals, row, column);
 
 				if (!lvl3_CrystalsAchieve_)
-					if (CrystalCount >= 16)
+					if (CrystalCount >= 20)
 						lvl3_CrystalsAchieve_ = true;
 
 				if (!lvl3_RestartsAchieve_)
@@ -740,11 +744,7 @@ void MoveHeroTo(int row, int column)
 					levelData[6][5] = symbolPortal;
 					levelData[6][9] = symbolPortal;
 				}
-				//else if (CrystalCount == 2) // 7
-				//{
-				//	randomCrystals += 6;
-				//}
-				else if (CrystalCount == 13 && futureSelector == false) //13
+				else if (CrystalCount == 2 && futureSelector == false) //13
 				{
 					canMoveToCell = false;
 					levelData[heroRow][heroColumn] = ' ';	// replace hero
@@ -754,7 +754,7 @@ void MoveHeroTo(int row, int column)
 					// Load Future array
 					LoadFutureFunction();
 
-					levelData[heroRow][heroColumn] = symbolHero;
+					//levelData[heroRow][heroColumn] = symbolHero;
 				}
 				else canMoveToCell = true;
 			}
@@ -861,12 +861,7 @@ void MoveHeroTo(int row, int column)
 						levelData[10][13] = symbolKey;
 				}
 			}
-			else
-			{
-				//warning1 = true;
-				//warning = keyWarning;
-				warning1.push(keyWarning);
-			}
+			else warning.push(keyWarning);
 			break;
 		}
 		// Vertical door
@@ -877,7 +872,7 @@ void MoveHeroTo(int row, int column)
 				--KeyCount;
 				canMoveToCell = true;
 			}
-			else warning1.push(keyWarning);
+			else warning.push(keyWarning);
 			break;
 		}
 		// Bomb
@@ -930,7 +925,7 @@ void MoveHeroTo(int row, int column)
 				heroColumn = column;
 				levelData[heroRow][heroColumn] = symbolHero;*/
 
-				BonusWall();
+				BonusWall(row, column);
 			}
 			else if (levelSelector == 4)
 			{
@@ -938,7 +933,7 @@ void MoveHeroTo(int row, int column)
 				if (row == 10 && column == 7)
 				{
 					//warning = secretDoorWarning;
-					warning1.push(secretDoorWarning);
+					warning.push(secretDoorWarning);
 
 					levelData[11][7] = ' ';
 					levelData[11][12] = 't';
@@ -948,48 +943,42 @@ void MoveHeroTo(int row, int column)
 				else if ((row == 11 && column == 12))
 				{
 					//warning = secretBombsWarning;
-					warning1.push(secretBombsWarning);
+					warning.push(secretBombsWarning);
 					levelData[11][13] = ' ';
 				}
 				else if ((row == 11 && column == 13))
 				{
-					//warning = secretBombsWarning;
-					warning1.push(secretBombsWarning);
+					warning.push(secretBombsWarning);
 					levelData[11][12] = ' ';
 				}
 				// Secret bombs
 				else if (row == 9 && column == 12)
 				{
 					levelData[7][12] = symbolBomb;
-					if (levelData[7][13] != symbolBomb) //warning = secretBombRight;
-						warning1.push(secretBombRight);
+					if (levelData[7][13] != symbolBomb) warning.push(secretBombRight);
 					else 
 					{
-						//warning = secretBombDamn;
-						warning1.push(secretBombDamn);
+						warning.push(secretBombDamn);
 						levelData[6][11] = ' ';
 					}
 				}
 				else if (row == 9 && column == 13)
 				{
 					levelData[7][13] = symbolBomb;
-					if(levelData[7][12] != symbolBomb) //warning = secretBombLeft;
-					warning1.push(secretBombLeft);
-
+					if(levelData[7][12] != symbolBomb) warning.push(secretBombLeft);
 					else
 					{
-						//warning = secretBombDamn;
-						warning1.push(secretBombDamn);
+						warning.push(secretBombDamn);
 						levelData[6][11] = ' ';
 					}
 				}
 				else if (row == 6 && column == 12)
 				{
 					levelData[4][12] = symbolBomb;
-					if (levelData[4][13] != symbolBomb) warning = secretBombRight;
+					if (levelData[4][13] != symbolBomb) warning.push(secretBombRight);
 					else
 					{
-						warning = secretBombDamn;
+						warning.push(secretBombDamn);
 						levelData[3][11] = ' ';
 						//levelData[5][10] = symbolWall;
 						//levelData[4][9] = ' ';
@@ -998,10 +987,10 @@ void MoveHeroTo(int row, int column)
 				else if (row == 6 && column == 13)
 				{
 					levelData[4][13] = symbolBomb;
-					if (levelData[4][12] != symbolBomb) warning = secretBombLeft;
+					if (levelData[4][12] != symbolBomb) warning.push(secretBombLeft);
 					else 
 					{
-						warning = secretBombDamn;
+						warning.push(secretBombDamn);
 						levelData[3][11] = ' ';
 						//levelData[5][10] = symbolWall;
 						//levelData[4][9] = ' ';
@@ -1107,14 +1096,11 @@ void Update()
 			if (a_lvl3_Restarts == 10)
 			{
 				lvl3_RestartsAchieve_ = true;
-				//warning = a_RestartsWarning;
-				//AchievesComplete.push_back(&lvl3_RestartsAchieve_);
 			}
 		}
 		LevelClear();
 		break;
 	}
-
 
 	}
 }
@@ -1149,13 +1135,7 @@ int main()
 		UpdateFont();
 	} while (isGameActive == true);*/
 	
-	//Level 1
-	/*system("cls");
-	isGameActive = true;
-	levelSelector = 1;
-	Initialise(std::begin(levelData1), std::end(levelData1));
-	InitVectors();*/
-	NextLevel();
+	NextLevel(levelSelector);
 	do
 	{
 		Render();
@@ -1163,32 +1143,6 @@ int main()
 	} 
 	while ( isGameActive );
 
-	// Level 2
-	//system("cls");
-	//isGameActive = true;
-	//levelSelector = 2;
-	//Initialise(std::begin(levelData2), std::end(levelData2));
-	//InitVectors(); // Bombs and Boxes vectors
-	//do
-	//{
-	//	Render();
-	//	Update();
-	//} while (isGameActive);
-	
-	// Level 3
-	//system("cls");
-	//isGameActive = true;
-	//levelSelector = 3;
-	////Initialise(std::begin(levelData3), std::end(levelData3));
-	//LevelClear();	// Initialise + RandomizeCrystals
-	//InitVectors();
-	////RandomizeCrystals(randomCrystals);
-	//do
-	//{
-	//	Render();
-	//	Update();
-	//} while (isGameActive);
-	
 
 	Shutdown();
 	

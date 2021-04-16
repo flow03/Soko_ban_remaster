@@ -23,18 +23,17 @@ void Warnings(short &x_position) {
 
 	setlocale(LC_ALL, "Russian");
 
-	//auto cont = warning1._Get_container();
+	//auto cont = warning._Get_container();
 
-	Warning warn;
-
+	
 	// new warning clear
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0, x_position });
 	std::cout << std::setw(80) << std::right << "";		// don't work properly without empty str
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0, x_position });
 
-	if (!warning1.empty())
+	if (!warning.empty())
 	{
-		warn = warning1.front();
+		Warning warn = warning.front();
 		
 		switch (warn)
 		{
@@ -302,7 +301,7 @@ void Warnings(short &x_position) {
 			break;
 		}
 
-		warning1.pop();
+		warning.pop();
 	}
 
 	//++x_position;

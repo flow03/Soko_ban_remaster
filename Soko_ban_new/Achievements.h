@@ -29,7 +29,7 @@ struct Achieve
 	Achieve operator=(bool val)
 	{
 		this->value = val;
-		if (val) warning1.push(static_cast<Warning>(this->id));
+		if (val) warning.push(static_cast<Warning>(this->id));
 		//warning = static_cast<Warning>(this->id);
 		return *this;
 	}

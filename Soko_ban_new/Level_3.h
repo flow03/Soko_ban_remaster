@@ -120,7 +120,7 @@ void LoadFutureFunction()
 				Future[r][c] = levelData3sub[r][c];
 
 		futureSelector = true;
-		warning = bonusLevelWarning;
+		warning.push(bonusLevelWarning);
 		//InitVectors();	// NOT GOOD, make init 1 time per game
 	}
 
@@ -132,6 +132,7 @@ void LoadFutureFunction()
 
 	heroRow = 10;	// 5
 	heroColumn = 6;	// 7
+	levelData[heroRow][heroColumn] = symbolHero;
 }
 
 void SavePastFunction()
@@ -205,7 +206,7 @@ void CheckBomb(short x, short  y)
 		if (a_lvl2_Mines && a_lvl4_Mines)
 			AllMinesAchieve_ = true;		// carefull, maybe double warning
 		else
-			warning1.push((Warning)AllMinesAchieve);
+			warning.push((Warning)AllMinesAchieve);
 	}
 }
 

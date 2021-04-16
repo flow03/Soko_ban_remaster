@@ -44,7 +44,7 @@ const unsigned char levelData3[rowsCount3][columnsCount] = {
 	"#######2#######",
 	"#          XkX#",
 	"#           XX#",
-	"#    b        #",
+	"#             #",
 	"#             #",
 	"2      1      2",
 	"#             #",
@@ -77,19 +77,19 @@ unsigned char Past[rowsCount3][columnsCount];
 unsigned char Future[rowsCount3][columnsCount];
 int heroRow = 0;
 int heroColumn = 0;
-int levelSelector = 1;	// level = level - 1
+int levelSelector = 2;
 int CrystalCount = 0;
 int CrystalMaxCount = 0;
+int randomCrystals = 10;
 int KeyCount = 0;
 int Localization = 2;	// Language
 int font = 1;			// Font
 TCHAR szbuff[255];		// StringCchPrintf
 CONSOLE_FONT_INFOEX defaultFont;
-int randomCrystals = 10;
 time_t start_time = 0;
 enum Warning;
-Warning warning = Warning(0); //None
-std::queue<Warning> warning1;
+//Warning warning = Warning(0); //None
+std::queue<Warning> warning;
 bool EasyMode = false;
 //short render_x = 2;
 
