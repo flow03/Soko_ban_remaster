@@ -10,6 +10,7 @@ enum Warning
 	bombWarning,    
 	bonusWallWarning,
 	bonusLevelWarning,
+	portalWarning,
 	secretDoorWarning,
 	secretBombsWarning,
 	secretBombLeft, 
@@ -268,6 +269,22 @@ void Warnings(short &x_position) {
 			}
 			}
 			break;
+		case portalWarning:
+			switch (Localization)
+			{
+			case 1:
+				printColorText(consoleHandle, "\t\t\t       Тобi точно туди треба?", Yellow);
+				break;
+			case 2:
+				printColorText(consoleHandle, "\t\t\t\t      Не надо!", Yellow);
+				break;
+			case 3:
+				printColorText(consoleHandle, "\t\t\t\t       DON'T!", Yellow);
+				break;
+			}
+		break;
+
+		// Ahievements
 		case (Warning)lvl3_RestartsAchieve:
 			std::cout << "\t\t\t  ";
 			printColorText(consoleHandle, lvl3_RestartsAchieve_.getLabel(), Yellow);
@@ -415,7 +432,7 @@ void Description()
 			SetConsoleTextAttribute(consoleHandle, Red);
 			printf("%c", symbolBomb);
 			SetConsoleTextAttribute(consoleHandle, 7);
-			printf("). Gl hf");
+			printf(").\n\tGood luck");
 			break;
 		}
 	}

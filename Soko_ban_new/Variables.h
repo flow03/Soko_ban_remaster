@@ -77,12 +77,12 @@ unsigned char Past[rowsCount3][columnsCount];
 unsigned char Future[rowsCount3][columnsCount];
 int heroRow = 0;
 int heroColumn = 0;
-int levelSelector = 2;
+int levelSelector = 3;	// Level
 int CrystalCount = 0;
 int CrystalMaxCount = 0;
 int randomCrystals = 10;
 int KeyCount = 0;
-int Localization = 2;	// Language
+int Localization = 3;	// Language
 int font = 1;			// Font
 TCHAR szbuff[255];		// StringCchPrintf
 CONSOLE_FONT_INFOEX defaultFont;
@@ -91,7 +91,9 @@ enum Warning;
 //Warning warning = Warning(0); //None
 std::queue<Warning> warning;
 bool EasyMode = false;
-//short render_x = 2;
+bool futureSelector = false;
+bool portalWarn = false;
+
 
 std::vector<COORD> markedMines;
 std::vector<COORD> markedBoxes;
@@ -99,7 +101,6 @@ std::vector<COORD> futureMines;
 std::vector<COORD> futureBoxes;
 std::vector<COORD> pastBoxes;	// no mines in the past
 
-bool futureSelector = false;
 
 // Global counters
 int global_Crystals = 0;

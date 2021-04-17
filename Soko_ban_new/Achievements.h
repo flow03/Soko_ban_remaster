@@ -19,18 +19,14 @@ struct Achieve
 {
 	// Constructor + implicit conversion from Achieve_id to Achieve
 	Achieve(Achieve_id id_, bool val = false)
-		: id(id_), value(val) {
-		setLabel();
-	}
+		: id(id_), value(val) {}
 
-	void setLabel();
-	const char * getLabel() const { return label; }
+	const char * getLabel() const;
 
 	Achieve operator=(bool val)
 	{
 		this->value = val;
 		if (val) warning.push(static_cast<Warning>(this->id));
-		//warning = static_cast<Warning>(this->id);
 		return *this;
 	}
 	//Achieve operator=(Achieve_id val) { return Achieve(val); }
@@ -41,7 +37,7 @@ struct Achieve
 private:
 	bool value;
 	Achieve_id id;
-	const char * label;
+	//const char * label;
 };
 
 // Achieve sub variables(with a_ prefix)
@@ -66,7 +62,7 @@ Achieve AllMinesAchieve_(AllMinesAchieve);				// +
 
 Achieve* AchievesComplete[a_AchievesMax] = {
 	
-	&AllCrystalsAchieve_, 
+	&AllCrystalsAchieve_,
 	&lvl3_CrystalsAchieve_,
 	&lvl3_RestartsAchieve_,
 	&NullRestartsAchieve_,
@@ -77,9 +73,32 @@ Achieve* AchievesComplete[a_AchievesMax] = {
 };
 
 
-void Achieve::setLabel()
+const char * Achieve::getLabel() const
 {
-	if (Localization == 2)
+	const char * label = nullptr;
+
+	if (Localization == 1)
+	switch (id)
+	{
+	case AllCrystalsAchieve:
+		label = "Çiáðàòè óñi êðèñòàëè â ãði"; break;
+	case lvl3_CrystalsAchieve:
+		label = "Çiáðàòè óñi êðèñòàëè íà ðiâíi 3"; break;
+	case lvl3_RestartsAchieve:
+		label = "10 ðåñòàðòiâ ïiäðÿä íà ðiâíi 3"; break;
+	case NullRestartsAchieve:
+		label = "0 ðåñòàðòiâ ãðè"; break;
+	case PovorotNeTydaAchieve:
+		label = "Çâåðíóâ íå òóäè"; break;
+	case OnMyWayAchieve:
+		label = "Ïî ñâî¿õ ñëiäàõ"; break;
+	case AllMinesAchieve:
+		label = "Ï³ä³ðâàòèñü íà óñ³õ ì³íàõ"; break;
+
+	case AllAchievesAchieve:
+		label = "ÂÑI ÄÎÑßÃÍÅÍÍß ÐÎÇÁËÎÊÎÂÀÍÎ"; break;
+	}
+	else if (Localization == 2)
 		switch (id)
 		{
 		case AllCrystalsAchieve:
@@ -100,17 +119,32 @@ void Achieve::setLabel()
 		case AllAchievesAchieve:
 			label = "ÂÑÅ ÄÎÑÒÈÆÅÍÈß ÎÒÊÐÛÒÛ"; break;
 		}
+	
+	else if (Localization == 3)
+		switch (id)
+		{
+		case AllCrystalsAchieve:
+			label = "Collect all crystals"; break;
+		case lvl3_CrystalsAchieve:
+			label = "Collect all crystals on level 3"; break;
+		case lvl3_RestartsAchieve:
+			label = "10 restarts on level 3"; break;
+		case NullRestartsAchieve:
+			label = "0 restarts"; break;
+		case PovorotNeTydaAchieve:
+			label = "Wrong Turn"; break;
+		case OnMyWayAchieve:
+			label = "On my way"; break;
+		case AllMinesAchieve:
+			label = "Bomberman"; break;
+
+		case AllAchievesAchieve:
+			label = "ALL ACHIEVEMENTS UNLOCKED"; break;
+		}
+
+	return label;
 }
 
-void changeLabels()
-{
-	/*for (Achieve* ach : Achieves)
-		ach->setLabel();*/
-	/*for(size_t i = 0; i < a_AchievesMax; ++i)
-		Achieves[i]->setLabel();*/
-	for (Achieve* ach : AchievesComplete)
-		ach->setLabel();
-}
 
 void AchievesOutput(COORD coord)
 {

@@ -120,6 +120,7 @@ void LoadFutureFunction()
 				Future[r][c] = levelData3sub[r][c];
 
 		futureSelector = true;
+		portalWarn = true;
 		warning.push(bonusLevelWarning);
 		//InitVectors();	// NOT GOOD, make init 1 time per game
 	}

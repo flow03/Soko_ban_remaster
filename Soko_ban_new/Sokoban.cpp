@@ -441,6 +441,7 @@ void LevelClear()
 
 		levelSelector = 3;
 		futureSelector = false;
+		portalWarn = false;
 		randomCrystals = 10;	// maybe better add another const variable
 		Initialise(std::begin(levelData3), std::end(levelData3));
 		RandomizeCrystals(randomCrystals);
@@ -623,6 +624,7 @@ void Render()
 	Counters(render_x);
 
 	// Warnings
+	//warning.push((Warning)OnMyWayAchieve);
 	Warnings(render_x); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
 	
 	//SetConsoleTitle
@@ -744,7 +746,7 @@ void MoveHeroTo(int row, int column)
 					levelData[6][5] = symbolPortal;
 					levelData[6][9] = symbolPortal;
 				}
-				else if (CrystalCount == 2 && futureSelector == false) //13
+				else if (CrystalCount == 13 && futureSelector == false) //13
 				{
 					canMoveToCell = false;
 					levelData[heroRow][heroColumn] = ' ';	// replace hero
@@ -803,10 +805,18 @@ void MoveHeroTo(int row, int column)
 				}
 				else if (row == 6 && column == 5) // Left Portal
 				{
-					// Save Past array
-					SavePastFunction();
-					// Load Future array
-					LoadFutureFunction(); 
+					if (!portalWarn && KeyCount == 0)
+					{
+						warning.push(portalWarning);
+						portalWarn = true;
+					}
+					else
+					{
+						// Save Past array
+						SavePastFunction();
+						// Load Future array
+						LoadFutureFunction();
+					}
 				}
 			}
 			// Level 4 portal
