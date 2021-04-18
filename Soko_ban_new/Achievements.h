@@ -22,6 +22,7 @@ struct Achieve
 		: id(id_), value(val) {}
 
 	const char * getLabel() const;
+	static const char * getLabel(Achieve_id id);
 
 	Achieve operator=(bool val)
 	{
@@ -73,31 +74,30 @@ Achieve* AchievesComplete[a_AchievesMax] = {
 };
 
 
-const char * Achieve::getLabel() const
+const char *  Achieve::getLabel(Achieve_id id)
 {
 	const char * label = nullptr;
 
 	if (Localization == 1)
-	switch (id)
-	{
-	case AllCrystalsAchieve:
-		label = "Çiáğàòè óñi êğèñòàëè â ãği"; break;
-	case lvl3_CrystalsAchieve:
-		label = "Çiáğàòè óñi êğèñòàëè íà ğiâíi 3"; break;
-	case lvl3_RestartsAchieve:
-		label = "10 ğåñòàğòiâ ïiäğÿä íà ğiâíi 3"; break;
-	case NullRestartsAchieve:
-		label = "0 ğåñòàğòiâ ãğè"; break;
-	case PovorotNeTydaAchieve:
-		label = "Çâåğíóâ íå òóäè"; break;
-	case OnMyWayAchieve:
-		label = "Ïî ñâî¿õ ñëiäàõ"; break;
-	case AllMinesAchieve:
-		label = "Ï³ä³ğâàòèñü íà óñ³õ ì³íàõ"; break;
-
-	case AllAchievesAchieve:
-		label = "ÂÑI ÄÎÑßÃÍÅÍÍß ĞÎÇÁËÎÊÎÂÀÍÎ"; break;
-	}
+		switch (id)
+		{
+		case AllCrystalsAchieve:
+			label = "Çiáğàòè óñi êğèñòàëè â ãği"; break;
+		case lvl3_CrystalsAchieve:
+			label = "Çiáğàòè óñi êğèñòàëè íà ğiâíi 3"; break;
+		case lvl3_RestartsAchieve:
+			label = "10 ğåñòàğòiâ ïiäğÿä íà ğiâíi 3"; break;
+		case NullRestartsAchieve:
+			label = "0 ğåñòàğòiâ ãğè"; break;
+		case PovorotNeTydaAchieve:
+			label = "Çâåğíóâ íå òóäè"; break;
+		case OnMyWayAchieve:
+			label = "Ïî ñâî¿õ ñëiäàõ"; break;
+		case AllMinesAchieve:
+			label = "Ïiäiğâàòèñü íà óñiõ ìiíàõ"; break;
+		case AllAchievesAchieve:
+			label = "ÂÑI ÄÎÑßÃÍÅÍÍß ĞÎÇÁËÎÊÎÂÀÍÎ"; break;
+		}
 	else if (Localization == 2)
 		switch (id)
 		{
@@ -115,11 +115,9 @@ const char * Achieve::getLabel() const
 			label = "Ïî ñâîèì ñëåäàì"; break;
 		case AllMinesAchieve:
 			label = "Âçîğâàòüñÿ íà âñåõ ìèíàõ"; break;
-
 		case AllAchievesAchieve:
 			label = "ÂÑÅ ÄÎÑÒÈÆÅÍÈß ÎÒÊĞÛÒÛ"; break;
 		}
-	
 	else if (Localization == 3)
 		switch (id)
 		{
@@ -136,13 +134,17 @@ const char * Achieve::getLabel() const
 		case OnMyWayAchieve:
 			label = "On my way"; break;
 		case AllMinesAchieve:
-			label = "Bomberman"; break;
-
+			label = "All bobms were detonated"; break;
 		case AllAchievesAchieve:
 			label = "ALL ACHIEVEMENTS UNLOCKED"; break;
 		}
 
 	return label;
+}
+
+const char * Achieve::getLabel() const
+{
+	return getLabel(this->id);
 }
 
 

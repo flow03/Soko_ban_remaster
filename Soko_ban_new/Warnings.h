@@ -1,7 +1,5 @@
 #pragma once
 
-//#include "Ahievements_Header.h"
-
 enum Warning
 {
 	None,
@@ -18,15 +16,8 @@ enum Warning
 	secretBombDamn = 100,	// set enum range
 };
 
-//Warning warning = None; //None test
-
 void Warnings(short &x_position) {
 
-	setlocale(LC_ALL, "Russian");
-
-	//auto cont = warning._Get_container();
-
-	
 	// new warning clear
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0, x_position });
 	std::cout << std::setw(80) << std::right << "";		// don't work properly without empty str
@@ -35,6 +26,10 @@ void Warnings(short &x_position) {
 	if (!warning.empty())
 	{
 		Warning warn = warning.front();
+		const char * str = nullptr;
+		short y = 0;
+
+		setlocale(LC_ALL, "Russian");
 		
 		switch (warn)
 		{
@@ -53,8 +48,6 @@ void Warnings(short &x_position) {
 			}
 			case 2:
 			{
-				/*if (levelSelector == 3 || levelSelector == 4)
-				printf(" ");*/
 				printColorText(consoleHandle, "\t\t\t\t    Нужен ", Yellow);
 				printColorText(consoleHandle, "Ключ     ", LightMagenta);
 				break;
@@ -286,18 +279,22 @@ void Warnings(short &x_position) {
 
 		// Ahievements
 		case (Warning)lvl3_RestartsAchieve:
-			std::cout << "\t\t\t  ";
-			printColorText(consoleHandle, lvl3_RestartsAchieve_.getLabel(), Yellow);
-			printColorText(consoleHandle, '!', Yellow);
-			break;
 		case (Warning)lvl3_CrystalsAchieve:
-			std::cout << "\t\t\t";
-			printColorText(consoleHandle, lvl3_CrystalsAchieve_.getLabel(), Yellow);
+		case (Warning)OnMyWayAchieve:
+		case (Warning)AllAchievesAchieve:
+			str = Achieve::getLabel(static_cast<Achieve_id>(warn));
+			y = static_cast<short>(40 - (strlen(str) / 2) + 1);		// 40 - the middle of a line
+			SetConsoleCursorPosition(consoleHandle, COORD{ y, x_position });
+
+			printColorText(consoleHandle, str, Yellow);
 			printColorText(consoleHandle, '!', Yellow);
 			break;
 		case (Warning)AllMinesAchieve:
-			std::cout << "\t\t\t   ";
-			printColorText(consoleHandle, AllMinesAchieve_.getLabel(), Yellow);
+			str = AllMinesAchieve_.getLabel();
+			y = static_cast<short>(40 - (strlen(str) / 2 + 2) + 1);	// "(1/2)" = 5 symbols / 2 = 2.5
+			SetConsoleCursorPosition(consoleHandle, COORD{ y, x_position });
+
+			printColorText(consoleHandle, str, Yellow);
 			printColorText(consoleHandle, '(', Yellow);
 			if(AllMinesAchieve_)
 				printColorText(consoleHandle, '2', Yellow);
@@ -305,16 +302,6 @@ void Warnings(short &x_position) {
 				printColorText(consoleHandle, '1', Yellow);
 
 			printColorText(consoleHandle, "/2)", Yellow);
-			break;
-		case (Warning)OnMyWayAchieve:
-			std::cout << "\t\t\t\t  ";
-			printColorText(consoleHandle, OnMyWayAchieve_.getLabel(), Yellow);
-			printColorText(consoleHandle, '!', Yellow);
-			break;
-		case (Warning)AllAchievesAchieve:
-			std::cout << "\t\t\t\t";
-			printColorText(consoleHandle, AllAchievesAchieve_.getLabel(), Yellow);
-			printColorText(consoleHandle, '!', Yellow);
 			break;
 		}
 
@@ -425,13 +412,9 @@ void Description()
 			printf("O");
 			SetConsoleTextAttribute(consoleHandle, 7);
 			printf(") and the Doors (%c, %c). Carreful with ", symbolDoorG, symbolDoorV);
-			SetConsoleTextAttribute(consoleHandle, Red);
-			printf("Mines");
-			SetConsoleTextAttribute(consoleHandle, 7);
+			printColorText(consoleHandle,"Bombs", Red);
 			printf("(");
-			SetConsoleTextAttribute(consoleHandle, Red);
-			printf("%c", symbolBomb);
-			SetConsoleTextAttribute(consoleHandle, 7);
+			printColorText(consoleHandle, symbolBomb, Red);
 			printf(").\n\tGood luck");
 			break;
 		}

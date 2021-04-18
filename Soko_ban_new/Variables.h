@@ -82,7 +82,7 @@ int CrystalCount = 0;
 int CrystalMaxCount = 0;
 int randomCrystals = 10;
 int KeyCount = 0;
-int Localization = 3;	// Language
+int Localization = 2;	// Language
 int font = 1;			// Font
 TCHAR szbuff[255];		// StringCchPrintf
 CONSOLE_FONT_INFOEX defaultFont;

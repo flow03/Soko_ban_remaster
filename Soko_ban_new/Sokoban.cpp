@@ -624,7 +624,11 @@ void Render()
 	Counters(render_x);
 
 	// Warnings
-	//warning.push((Warning)OnMyWayAchieve);
+	/*warning.push((Warning)AllMinesAchieve);
+	warning.push((Warning)OnMyWayAchieve);
+	warning.push((Warning)lvl3_RestartsAchieve);
+	warning.push((Warning)lvl3_CrystalsAchieve);
+	warning.push((Warning)AllAchievesAchieve);*/
 	Warnings(render_x); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
 	
 	//SetConsoleTitle
@@ -1130,21 +1134,22 @@ int main()
 	SetupSystem();
 
 	// Select Language
-	/*do
+	do
 	{
 		RenderLanguage();
 		UpdateLanguage();
 	} 
-	while (isGameActive == true);*/
+	while (isGameActive == true);
 
 	// Select Font Size
-	/*isGameActive = true;
+	isGameActive = true;
 	do
 	{
 		RenderFont();
 		UpdateFont();
-	} while (isGameActive == true);*/
+	} while (isGameActive == true);
 	
+	isGameActive = true;
 	NextLevel(levelSelector);
 	do
 	{
