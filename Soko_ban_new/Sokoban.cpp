@@ -23,6 +23,7 @@
 #include "Achievements.h"
 #include "Warnings.h"
 #include "Level_3.h"
+#include "Save.h"
 
 
 
@@ -314,6 +315,95 @@ void UpdateFont()
 
 	SetupFont();
 	CenterWindow();
+}
+
+void UpdateLoad(int &selector, Save &savegame)
+{
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0, 6 });
+	setlocale(LC_ALL, "Russian");
+
+	std::cout << "\t\t\t     ";
+	if (selector == 0)
+	{
+		printColorText(consoleHandle, symbolHero, LightGreen);
+		printColorText(consoleHandle, " Сохранить игру\n", Yellow);
+	}
+	else
+	{
+		std::cout << "  Сохранить игру   \n";
+	}
+
+	std::cout << "\n\t\t\t     ";
+	if (selector == 1)
+	{
+		printColorText(consoleHandle, symbolHero, LightGreen);
+		printColorText(consoleHandle, " Загрузить игру\n", Yellow);
+	}
+	else
+	{
+		std::cout << "  Загрузить игру   \n";
+	}
+
+	std::cout << "\n\t\t\t     ";
+	if (selector == 2)
+	{
+		printColorText(consoleHandle, symbolHero, LightGreen);
+		printColorText(consoleHandle, " Отмена\n", Yellow);
+	}
+	else
+	{
+		std::cout << "  Отмена   \n";
+	}
+
+	std::cout << std::endl << std::endl;
+
+
+	char Key = _getch();
+
+	switch (Key)
+	{
+	// Arrow down
+	case 80:
+	case 's':
+	case 'S':
+	{
+		selector++;
+		if (selector > 2)
+			selector = 0;
+
+		break;
+	}
+	// Arrow up
+	case 72:
+	case 'w':
+	case 'W':
+	{
+		selector--;
+		if (selector < 0)
+			selector = 2;
+
+		break;
+	}
+	// Enter
+	case 13:
+	{
+		if (selector == 0)	// Save
+		{
+			savegame.SaveToFile();
+		}
+		else if (selector == 1)	// Load
+		{
+			savegame.LoadFromFile();
+			savegame.applySave();
+		}
+
+		isMenuActive = false;	// Cancel
+		break;
+	}
+	}
+
+	//SetupFont();
+	//CenterWindow();
 }
 
 //template <size_t N>
@@ -1044,6 +1134,8 @@ void MoveHeroTo(int row, int column)
 
 void MainMenu();
 
+void GameLoadMenu();
+
 void Update()
 {
 	int inputChar = _getch();
@@ -1119,7 +1211,8 @@ void Update()
 	}
 	// Main menu
 	case 27:	// Esc
-		MainMenu();
+		GameLoadMenu();
+		//MainMenu();
 		break;
 
 	}
@@ -1127,6 +1220,9 @@ void Update()
 
 void Shutdown()
 {
+	//time_t total_time = static_cast<time_t>(difftime(time(0), start_time));
+	total_time = time(0) - start_time; // faster
+
 	Statistic();
 	
 	_getch();
@@ -1153,6 +1249,22 @@ void MainMenu()
 		UpdateFont();
 	} while (isMenuActive == true);
 	
+
+	system("cls");
+
+	Description();
+}
+
+void GameLoadMenu()
+{
+	system("cls");
+
+	Save savegame;
+	int selector = 0;
+
+	isMenuActive = true;
+	do UpdateLoad(selector, savegame);
+	while (isMenuActive == true);
 
 	system("cls");
 

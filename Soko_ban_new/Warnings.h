@@ -523,11 +523,10 @@ void Statistic()
 {
 	using std::cout; using std::endl;
 
-	//time_t diff_time = static_cast<time_t>(difftime(time(0), start_time));
-	time_t diff_time = time(0) - start_time; // faster
 	struct tm diff_tm;
+	gmtime_s(&diff_tm, &total_time);
+
 	char time_buffer[10];
-	gmtime_s(&diff_tm, &diff_time);
 	strftime(time_buffer, 10, "%H:%M:%S", &diff_tm);
 
 	size_t f_size = 3; // size of global values output
@@ -557,7 +556,7 @@ void Statistic()
 			setlocale(LC_ALL, "RUS");
 			SetConsoleCursorPosition(consoleHandle, COORD{ 6, 1 }); // 30, 1
 			cout << "Статистика игрока\t\t\tДостижения (" 
-				<< AchievesSize() << '/' << a_AchievesMax << ')';
+				<< AchievesCount() << '/' << a_AchievesMax << ')';
 
 			cout.setf(std::ios::right); // default
 			cout << "\n\n\n Сердечек собрано\t" << std::setw(f_size) << global_Crystals;

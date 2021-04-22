@@ -161,7 +161,7 @@ void AchievesOutput(COORD coord)
 	}
 }
 
-size_t AchievesSize()
+size_t AchievesCount()
 {
 	size_t size = 0;
 	for (Achieve* ach : AchievesComplete)

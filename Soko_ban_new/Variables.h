@@ -77,15 +77,16 @@ unsigned char Future[rowsCount3][columnsCount];
 int heroRow = 0;
 int heroColumn = 0;
 int levelSelector = 3;	// Level
+int KeyCount = 0;
 int CrystalCount = 0;
 int CrystalMaxCount = 0;
 int randomCrystals = 10;
-int KeyCount = 0;
 int Localization = 2;	// Language
 int font = 1;			// Font
 TCHAR szbuff[255];		// StringCchPrintf
 CONSOLE_FONT_INFOEX defaultFont;
 time_t start_time = 0;
+time_t total_time;
 enum Warning;
 //Warning warning = Warning(0); //None
 std::queue<Warning> warning;

@@ -30,6 +30,9 @@
     <ClInclude Include="Achievements.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="Save.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sokoban.cpp">
