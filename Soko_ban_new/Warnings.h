@@ -3,15 +3,15 @@
 enum Warning
 {
 	None,
-	keyWarning,		
-	crystalWarning,	
-	bombWarning,    
+	keyWarning,
+	crystalWarning,
+	bombWarning,
 	bonusWallWarning,
 	bonusLevelWarning,
 	portalWarning,
 	secretDoorWarning,
 	secretBombsWarning,
-	secretBombLeft, 
+	secretBombLeft,
 	secretBombRight,
 	secretBombDamn = 100,	// set enum range
 };

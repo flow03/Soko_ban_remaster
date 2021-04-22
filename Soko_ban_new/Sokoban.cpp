@@ -217,7 +217,7 @@ void UpdateLanguage()
 		// Enter
 		case 13:
 		{
-			isGameActive = false;
+			isMenuActive = false;
 			break;
 		}
 	}
@@ -307,7 +307,7 @@ void UpdateFont()
 	// Enter
 	case 13:
 	{
-		isGameActive = false;
+		isMenuActive = false;
 		break;
 	}
 	}
@@ -1042,6 +1042,8 @@ void MoveHeroTo(int row, int column)
 	}
 }
 
+void MainMenu();
+
 void Update()
 {
 	int inputChar = _getch();
@@ -1115,6 +1117,10 @@ void Update()
 		LevelClear();
 		break;
 	}
+	// Main menu
+	case 27:	// Esc
+		MainMenu();
+		break;
 
 	}
 }
@@ -1128,28 +1134,39 @@ void Shutdown()
 	SetCurrentConsoleFontEx(consoleHandle, TRUE, &defaultFont); // Установить прежний шрифт
 }
 
+void MainMenu()
+{
+	system("cls");
+	// Select Language
+	isMenuActive = true;
+	do
+	{
+		RenderLanguage();
+		UpdateLanguage();
+	} while (isMenuActive == true);
+
+	// Select Font Size
+	isMenuActive = true;
+	do
+	{
+		RenderFont();
+		UpdateFont();
+	} while (isMenuActive == true);
+	
+
+	system("cls");
+
+	Description();
+}
+
 
 int main()
 {
 	SetupSystem();
 
-	// Select Language
-	do
-	{
-		RenderLanguage();
-		UpdateLanguage();
-	} 
-	while (isGameActive == true);
+	//MainMenu();
 
-	// Select Font Size
-	isGameActive = true;
-	do
-	{
-		RenderFont();
-		UpdateFont();
-	} while (isGameActive == true);
-	
-	isGameActive = true;
+	// Main cycle
 	NextLevel(levelSelector);
 	do
 	{
@@ -1157,7 +1174,6 @@ int main()
 		Update();
 	} 
 	while ( isGameActive );
-
 
 	Shutdown();
 	

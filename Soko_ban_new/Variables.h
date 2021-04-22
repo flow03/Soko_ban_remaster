@@ -71,7 +71,6 @@ const unsigned char symbolBomb = 15;
 
 // Logic variables
 HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-bool isGameActive = true;
 unsigned char levelData[rowsCount][columnsCount]; // Change for need
 unsigned char Past[rowsCount3][columnsCount];
 unsigned char Future[rowsCount3][columnsCount];
@@ -90,9 +89,12 @@ time_t start_time = 0;
 enum Warning;
 //Warning warning = Warning(0); //None
 std::queue<Warning> warning;
-bool EasyMode = false;
+bool isGameActive = true;
+bool isMenuActive = true;
+bool EasyMode = true;
 bool futureSelector = false;
 bool portalWarn = false;
+
 
 
 std::vector<COORD> markedMines;
