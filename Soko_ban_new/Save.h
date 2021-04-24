@@ -21,7 +21,8 @@ struct Save
 		this->OnMyWay_A = OnMyWayAchieve_;
 		this->AllMines_A = AllMinesAchieve_;
 
-		this->t_time = total_time;
+		this->t_time = time(0) - start_time;
+		this->l_Selector = levelSelector;
 	};
 
 	void applySave() const
@@ -42,7 +43,8 @@ struct Save
 		OnMyWayAchieve_ = this->OnMyWay_A;
 		AllMinesAchieve_ = this->AllMines_A;
 
-		total_time = this->t_time;
+		start_time = this->t_time;
+		levelSelector = this->l_Selector;
 	}
 
 	void SaveToFile()
@@ -92,7 +94,7 @@ private:
 
 	//int heroRow;
 	//int heroColumn;
-	//int levelSelector = 3;	// Level
+	int l_Selector;	// Level
 	//int KeyCount;
 	//int CrystalCount;
 	//int CrystalMaxCount;
@@ -104,3 +106,33 @@ private:
 	//bool futureSelector = false;
 	//bool portalWarn = false;
 };
+
+void LoadDescription()
+{
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0, 22 });
+
+	setlocale(LC_ALL, "Russian");
+
+	switch (Localization)
+	{
+	case 1: //UA
+	{
+		printColorText(consoleHandle, " ”вага!", Yellow);
+		std::cout << " Ѕуде збережена тiльки статистика гравц€, дос€гненн€ та поточний рiвень";
+		break;
+	}
+	case 2: //RU
+	{
+		printColorText(consoleHandle, "  ¬нимание!", Yellow);
+		std::cout << " »гра сохран€ет только статистику игрока, достижени€ и текущий\n  уровень";
+		//std::cout << " ѕосле загрузки весь остальной прогресс будет сброшен!";
+		break;
+	}
+	case 3: //ENG
+	{
+		printColorText(consoleHandle, "  Attention!", Yellow);
+		std::cout << " The game only saves player statistics, achievements and current\n  level";
+		break;
+	}
+	}
+}

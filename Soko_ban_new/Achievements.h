@@ -52,13 +52,13 @@ const size_t a_AchievesMax = 8;	// Достижений всего
 //int a_AchievesCount = 0;		// Разблокировано достижений
 
 // Achievements
-Achieve AllAchievesAchieve_(AllAchievesAchieve);
+Achieve AllAchievesAchieve_(AllAchievesAchieve);		// +
 Achieve AllCrystalsAchieve_(AllCrystalsAchieve);
 Achieve lvl3_CrystalsAchieve_(lvl3_CrystalsAchieve);	// +
 Achieve lvl3_RestartsAchieve_(lvl3_RestartsAchieve);	// +
-Achieve NullRestartsAchieve_(NullRestartsAchieve);		// +
+Achieve NullRestartsAchieve_(NullRestartsAchieve, true);// +
 Achieve PovorotNeTydaAchieve_(PovorotNeTydaAchieve);
-Achieve OnMyWayAchieve_(OnMyWayAchieve);//In its wake	
+Achieve OnMyWayAchieve_(OnMyWayAchieve);				// +/- In its wake	
 Achieve AllMinesAchieve_(AllMinesAchieve);				// +
 
 Achieve* AchievesComplete[a_AchievesMax] = {

@@ -92,7 +92,7 @@ enum Warning;
 std::queue<Warning> warning;
 bool isGameActive = true;
 bool isMenuActive = true;
-bool EasyMode = true;
+bool EasyMode = false;
 bool futureSelector = false;
 bool portalWarn = false;
 

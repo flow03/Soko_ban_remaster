@@ -523,6 +523,10 @@ void Statistic()
 {
 	using std::cout; using std::endl;
 
+	// time stuff
+	//time_t total_time = static_cast<time_t>(difftime(time(0), start_time));
+	total_time = time(0) - start_time; // faster
+
 	struct tm diff_tm;
 	gmtime_s(&diff_tm, &total_time);
 
@@ -536,11 +540,9 @@ void Statistic()
 	// but cout << std::left manip always work, and reset right manips/flags independently
 	// right flags/manips always works
 
-	if (global_Restarts == 0)
-		NullRestartsAchieve_ = true;
-
-	//AchievesComplete.push_back(&AllCrystalsAchieve_);
-	//AchievesComplete.push_back(&OnMyWayAchieve_);
+	//if (global_Restarts == 0)
+		//NullRestartsAchieve_ = true;
+	//else NullRestartsAchieve_ = false;
 
 	system("cls");
 	switch (Localization)
@@ -604,4 +606,8 @@ void Statistic()
 			break;
 		}
 	}
+
+	_getch();
+
+	system("cls");
 }

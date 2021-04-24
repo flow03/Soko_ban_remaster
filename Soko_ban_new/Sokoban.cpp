@@ -30,6 +30,14 @@
 
 // Functions
 
+void MainMenu();
+
+void GameLoadMenu();
+
+void LevelClear();
+
+void Settings();
+
 void CenterWindow()
 {
 	HWND consoleWindow = GetConsoleWindow();
@@ -319,6 +327,7 @@ void UpdateFont()
 
 void UpdateLoad(int &selector, Save &savegame)
 {
+	// Render
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0, 6 });
 	setlocale(LC_ALL, "Russian");
 
@@ -355,9 +364,10 @@ void UpdateLoad(int &selector, Save &savegame)
 		std::cout << "  Отмена   \n";
 	}
 
-	std::cout << std::endl << std::endl;
+	//std::cout << std::endl << std::endl;
 
 
+	// Update
 	char Key = _getch();
 
 	switch (Key)
@@ -395,8 +405,17 @@ void UpdateLoad(int &selector, Save &savegame)
 		{
 			savegame.LoadFromFile();
 			savegame.applySave();
+			std::queue<Warning> temp_warn;
+			warning.swap(temp_warn);
+			LevelClear();
 		}
 
+		isMenuActive = false;	// Cancel
+		break;
+	}
+	// Esc
+	case 27:
+	{
 		isMenuActive = false;	// Cancel
 		break;
 	}
@@ -405,6 +424,8 @@ void UpdateLoad(int &selector, Save &savegame)
 	//SetupFont();
 	//CenterWindow();
 }
+
+
 
 //template <size_t N>
 void Initialise(const unsigned char(*lvl_begin)[columnsCount], 
@@ -523,8 +544,11 @@ void LevelClear()
 		Initialise(std::begin(levelData2), std::end(levelData2));
 	else if (levelSelector == 3 || levelSelector == 4)
 	{
-		futureBoxes = markedBoxes;
-		futureMines = markedMines;
+		if (levelSelector == 4)
+		{
+			futureBoxes = markedBoxes;
+			futureMines = markedMines;
+		}
 
 		markedBoxes = pastBoxes;
 		//markedMines = pastMines;	// if you need
@@ -1132,10 +1156,6 @@ void MoveHeroTo(int row, int column)
 	}
 }
 
-void MainMenu();
-
-void GameLoadMenu();
-
 void Update()
 {
 	int inputChar = _getch();
@@ -1198,6 +1218,7 @@ void Update()
 	case 138:	//К
 	{
 		++global_Restarts;
+		NullRestartsAchieve_ = false;
 		if (!lvl3_RestartsAchieve_)
 		{
 			++a_lvl3_Restarts;
@@ -1211,8 +1232,8 @@ void Update()
 	}
 	// Main menu
 	case 27:	// Esc
-		GameLoadMenu();
-		//MainMenu();
+		//GameLoadMenu();
+		MainMenu();
 		break;
 
 	}
@@ -1220,17 +1241,173 @@ void Update()
 
 void Shutdown()
 {
-	//time_t total_time = static_cast<time_t>(difftime(time(0), start_time));
-	total_time = time(0) - start_time; // faster
 
 	Statistic();
-	
-	_getch();
 
 	SetCurrentConsoleFontEx(consoleHandle, TRUE, &defaultFont); // Установить прежний шрифт
 }
 
 void MainMenu()
+{
+	auto UpdateMenu = [](int &selector)
+	{
+		// Render
+		SetConsoleCursorPosition(consoleHandle, COORD{ 0, 5 });
+		setlocale(LC_ALL, "Russian");
+		const char * indent = "\n\t\t\t     ";
+
+		std::cout << indent;
+		if (selector == 0)
+		{
+			printColorText(consoleHandle, symbolHero, LightGreen);
+			printColorText(consoleHandle, "     Продолжить\n", Yellow);
+		}
+		else
+		{
+			std::cout << "      Продолжить\n";
+		}
+
+		std::cout << indent;
+		if (selector == 1)
+		{
+			printColorText(consoleHandle, symbolHero, LightGreen);
+			printColorText(consoleHandle, "     Новая игра\n", Yellow);
+		}
+		else
+		{
+			std::cout << "      Новая игра\n";
+		}
+
+		std::cout << indent;
+		if (selector == 2)
+		{
+			printColorText(consoleHandle, symbolHero, LightGreen);
+			printColorText(consoleHandle, " Сохранить/Загрузить\n", Yellow);
+		}
+		else
+		{
+			std::cout << "  Сохранить/Загрузить\n";
+		}
+
+		std::cout << indent;
+		if (selector == 3)
+		{
+			printColorText(consoleHandle, symbolHero, LightGreen);
+			printColorText(consoleHandle, "     Настройки\n", Yellow);
+		}
+		else
+		{
+			std::cout << "      Настройки\n";
+		}
+
+		std::cout << indent;
+		if (selector == 4)
+		{
+			printColorText(consoleHandle, symbolHero, LightGreen);
+			printColorText(consoleHandle, "     Статистика\n", Yellow);
+		}
+		else
+		{
+			std::cout << "      Статистика\n";
+		}
+		
+		std::cout << indent;
+		if (selector == 5)
+		{
+			printColorText(consoleHandle, symbolHero, LightGreen);
+			printColorText(consoleHandle, "       Выйти\n", Yellow);
+		}
+		else
+		{
+			std::cout << "        Выйти\n";
+		}
+
+		// Update
+		char Key = _getch();
+
+		switch (Key)
+		{
+			// Arrow down
+		case 80:
+		case 's':
+		case 'S':
+		{
+			selector++;
+			if (selector > 5)
+				selector = 0;
+
+			break;
+		}
+		// Arrow up
+		case 72:
+		case 'w':
+		case 'W':
+		{
+			selector--;
+			if (selector < 0)
+				selector = 5;
+
+			break;
+		}
+		// Enter
+		case 13:
+		{
+			if (selector == 0)	// Continue
+			{
+				isMenuActive = false;
+			}
+			else if (selector == 1)	// New
+			{
+			}
+			else if (selector == 2)	// Save/Load
+			{
+				GameLoadMenu();
+			}
+			else if (selector == 3)	// Settings
+			{
+				Settings();
+			}
+			else if (selector == 4)	// Statistic
+			{
+				Statistic();
+			}
+			else if (selector == 5)	// Exit
+			{
+				isMenuActive = false;
+				isGameActive = false;
+			}
+			break;
+		}
+		// Esc
+		case 27:
+		{
+			isMenuActive = false;	// Cancel
+			break;
+		}
+		}
+
+		//SetupFont();
+		//CenterWindow();
+	};
+
+	system("cls");
+
+	// Select
+	int selector = 0;
+	isMenuActive = true;
+	do
+	{
+		UpdateMenu(selector);
+	}
+	while (isMenuActive == true);
+
+
+	system("cls");
+
+	if (isGameActive) Description();
+}
+
+void Settings()
 {
 	system("cls");
 	// Select Language
@@ -1252,12 +1429,14 @@ void MainMenu()
 
 	system("cls");
 
-	Description();
+	//Description();
 }
 
 void GameLoadMenu()
 {
 	system("cls");
+
+	LoadDescription();
 
 	Save savegame;
 	int selector = 0;
