@@ -56,7 +56,7 @@ Achieve AllAchievesAchieve_(AllAchievesAchieve);		// +
 Achieve AllCrystalsAchieve_(AllCrystalsAchieve);
 Achieve lvl3_CrystalsAchieve_(lvl3_CrystalsAchieve);	// +
 Achieve lvl3_RestartsAchieve_(lvl3_RestartsAchieve);	// +
-Achieve NullRestartsAchieve_(NullRestartsAchieve, true);// +
+Achieve NullRestartsAchieve_(NullRestartsAchieve);		// +
 Achieve PovorotNeTydaAchieve_(PovorotNeTydaAchieve);
 Achieve OnMyWayAchieve_(OnMyWayAchieve);				// +/- In its wake	
 Achieve AllMinesAchieve_(AllMinesAchieve);				// +
@@ -172,4 +172,16 @@ size_t AchievesCount()
 			AllAchievesAchieve_ = true;
 
 	return size;
+}
+
+void AchievesClear()
+{
+	a_UniBombsDie = 0;
+	a_UniBoxMove = 0;
+	a_lvl3_Restarts = 0;
+	a_lvl2_Mines = false;
+	a_lvl4_Mines = false;
+
+	for (size_t i = 0; i < a_AchievesMax; ++i)
+		AchievesComplete[i]->operator=(false);
 }

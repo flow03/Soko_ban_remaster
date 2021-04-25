@@ -577,8 +577,8 @@ void NextLevel(int new_level)
 		markedMines.push_back(COORD{ 4,12 });
 		markedMines.push_back(COORD{ 4,13 });
 
-		/*futureBoxes = markedBoxes;
-		futureMines = markedMines;*/
+		futureBoxes = markedBoxes;
+		futureMines = markedMines;
 
 		LevelClear();		// future init here
 		InitVectors();
@@ -1223,16 +1223,13 @@ void Update()
 		{
 			++a_lvl3_Restarts;
 			if (a_lvl3_Restarts == 10)
-			{
 				lvl3_RestartsAchieve_ = true;
-			}
 		}
 		LevelClear();
 		break;
 	}
 	// Main menu
 	case 27:	// Esc
-		//GameLoadMenu();
 		MainMenu();
 		break;
 
@@ -1249,7 +1246,108 @@ void Shutdown()
 
 void MainMenu()
 {
-	auto UpdateMenu = [](int &selector)
+	auto NewAsk = []() -> bool
+	{
+		bool result = true;
+		const char * strAsk, * strYes, * strNo = nullptr;
+
+		switch (Localization)
+		{
+			case 1: //UA
+				strAsk = "Затерти всі досягнення?";
+				strYes = "Так";
+				strNo = "Hi";
+				break;
+			case 2: //RU
+				strAsk = "Сбросить все достижения?";
+				strYes = "Да";
+				strNo = "Нет";
+				break;
+			case 3: //ENG
+				strAsk = "Do you want reset all ahievements?";
+				strYes = "Yes";
+				strNo = "No";
+				break;
+			default:
+				strAsk = strYes = strNo = "";
+				break;
+
+		}
+
+		system("cls");
+
+		setlocale(LC_ALL, "Russian");
+		short y = static_cast<short>(40 - (strlen(strAsk) / 2) + 1);
+		SetConsoleCursorPosition(consoleHandle, COORD{ y, 6 });
+		std::cout << strAsk;
+		
+		
+		bool ask = false;
+		const char* indent_ = "           ";
+		y = static_cast<short>(40 - ((strlen(strYes) + strlen(indent_) + strlen(strNo) + 2) / 2));	// 2 spaces inside
+		do {
+			SetConsoleCursorPosition(consoleHandle, COORD{ y, 8 });
+
+			if (ask)
+			{
+				printColorText(consoleHandle, symbolHero, LightGreen);
+				std::cout << ' ';
+				printColorText(consoleHandle, strYes, Yellow);
+				std::cout << indent_ << "  " << strNo;
+			}
+			else
+			{
+				std::cout << "  " << strYes << indent_;
+				printColorText(consoleHandle, symbolHero, LightGreen);
+				std::cout << ' ';
+				printColorText(consoleHandle, strNo, Yellow);
+			}
+
+			// Update
+			char Key = _getch();
+
+			switch (Key)
+			{
+			// Left
+			case 'a':
+			case 'A':
+			case 75:
+			{
+				ask = true;
+				break;
+			}
+			// Right
+			case 'd':
+			case 'D':
+			case 77:
+			{
+				ask = false;
+				break;
+			}
+			// Enter
+			case 13:
+				if (ask) AchievesClear();	// Yes
+				isMenuActive = false;
+				break;
+			// Esc
+			case 27:
+				isMenuActive = false;	// Cancel
+				result = false;
+				break;
+			}
+		} while (isMenuActive);
+
+		return result;
+	};
+
+	auto NewGame = [&NewAsk]()
+	{
+		//levelSelector = 1;
+		//if (!isGameActive) 
+		if (NewAsk()) NextLevel(1);
+	};
+
+	auto UpdateMenu = [&NewGame](int &selector)
 	{
 		// Render
 		SetConsoleCursorPosition(consoleHandle, COORD{ 0, 5 });
@@ -1358,6 +1456,7 @@ void MainMenu()
 			}
 			else if (selector == 1)	// New
 			{
+				NewGame();
 			}
 			else if (selector == 2)	// Save/Load
 			{
@@ -1447,7 +1546,7 @@ void GameLoadMenu()
 
 	system("cls");
 
-	Description();
+	//Description();
 }
 
 

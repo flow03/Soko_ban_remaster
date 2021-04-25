@@ -540,9 +540,9 @@ void Statistic()
 	// but cout << std::left manip always work, and reset right manips/flags independently
 	// right flags/manips always works
 
-	//if (global_Restarts == 0)
-		//NullRestartsAchieve_ = true;
-	//else NullRestartsAchieve_ = false;
+	if (global_Restarts == 0)
+		NullRestartsAchieve_ = true;
+	else NullRestartsAchieve_ = false;
 
 	system("cls");
 	switch (Localization)
