@@ -90,7 +90,7 @@ time_t total_time;
 enum Warning;
 //Warning warning = Warning(0); //None
 std::queue<Warning> warning;
-bool isGameActive = true;
+bool isGameActive = false;
 bool isMenuActive = true;
 bool EasyMode = false;
 bool futureSelector = false;

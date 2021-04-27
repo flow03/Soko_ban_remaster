@@ -36,6 +36,8 @@ void GameLoadMenu();
 
 void LevelClear();
 
+void NextLevel(int);
+
 void Settings();
 
 void CenterWindow()
@@ -407,7 +409,7 @@ void UpdateLoad(int &selector, Save &savegame)
 			savegame.applySave();
 			std::queue<Warning> temp_warn;
 			warning.swap(temp_warn);
-			LevelClear();
+			NextLevel(savegame.getLevel());
 		}
 
 		isMenuActive = false;	// Cancel
@@ -596,6 +598,7 @@ void NextLevel(int new_level)
 	}
 
 	if (levelSelector > 4) isGameActive = false;
+	else isGameActive = true;
 
 	if (isGameActive) Description();
 }
@@ -1342,27 +1345,30 @@ void MainMenu()
 
 	auto NewGame = [&NewAsk]()
 	{
-		//levelSelector = 1;
-		//if (!isGameActive) 
-		if (NewAsk()) NextLevel(1);
+		if (!isGameActive)
+			NextLevel(1);
+		else if (NewAsk()) NextLevel(1);
+
+		isMenuActive = false;
 	};
 
-	auto UpdateMenu = [&NewGame](int &selector)
+	auto UpdateMenu = [&NewGame](int &selector, int up, int down)
 	{
 		// Render
 		SetConsoleCursorPosition(consoleHandle, COORD{ 0, 5 });
 		setlocale(LC_ALL, "Russian");
 		const char * indent = "\n\t\t\t     ";
 
-		std::cout << indent;
-		if (selector == 0)
+		
+		if (isGameActive)
 		{
-			printColorText(consoleHandle, symbolHero, LightGreen);
-			printColorText(consoleHandle, "     Продолжить\n", Yellow);
-		}
-		else
-		{
-			std::cout << "      Продолжить\n";
+			std::cout << indent;
+			if (selector == 0)
+			{
+				printColorText(consoleHandle, symbolHero, LightGreen);
+				printColorText(consoleHandle, "     Продолжить\n", Yellow);
+			}
+			else std::cout << "      Продолжить\n";
 		}
 
 		std::cout << indent;
@@ -1372,9 +1378,7 @@ void MainMenu()
 			printColorText(consoleHandle, "     Новая игра\n", Yellow);
 		}
 		else
-		{
 			std::cout << "      Новая игра\n";
-		}
 
 		std::cout << indent;
 		if (selector == 2)
@@ -1383,9 +1387,7 @@ void MainMenu()
 			printColorText(consoleHandle, " Сохранить/Загрузить\n", Yellow);
 		}
 		else
-		{
 			std::cout << "  Сохранить/Загрузить\n";
-		}
 
 		std::cout << indent;
 		if (selector == 3)
@@ -1394,9 +1396,7 @@ void MainMenu()
 			printColorText(consoleHandle, "     Настройки\n", Yellow);
 		}
 		else
-		{
 			std::cout << "      Настройки\n";
-		}
 
 		std::cout << indent;
 		if (selector == 4)
@@ -1404,10 +1404,7 @@ void MainMenu()
 			printColorText(consoleHandle, symbolHero, LightGreen);
 			printColorText(consoleHandle, "     Статистика\n", Yellow);
 		}
-		else
-		{
-			std::cout << "      Статистика\n";
-		}
+		else std::cout << "      Статистика\n";
 		
 		std::cout << indent;
 		if (selector == 5)
@@ -1415,10 +1412,7 @@ void MainMenu()
 			printColorText(consoleHandle, symbolHero, LightGreen);
 			printColorText(consoleHandle, "       Выйти\n", Yellow);
 		}
-		else
-		{
-			std::cout << "        Выйти\n";
-		}
+		else std::cout << "        Выйти\n";
 
 		// Update
 		char Key = _getch();
@@ -1431,8 +1425,8 @@ void MainMenu()
 		case 'S':
 		{
 			selector++;
-			if (selector > 5)
-				selector = 0;
+			if (selector > up)
+				selector = down;
 
 			break;
 		}
@@ -1442,8 +1436,8 @@ void MainMenu()
 		case 'W':
 		{
 			selector--;
-			if (selector < 0)
-				selector = 5;
+			if (selector < down)
+				selector = up;
 
 			break;
 		}
@@ -1492,11 +1486,17 @@ void MainMenu()
 	system("cls");
 
 	// Select
-	int selector = 0;
+	int up = 5;
+	int down = 0;
+
+	if (!isGameActive) down = 1;
+
+	int selector = down;
+	
 	isMenuActive = true;
 	do
 	{
-		UpdateMenu(selector);
+		UpdateMenu(selector, up, down);
 	}
 	while (isMenuActive == true);
 
@@ -1527,8 +1527,6 @@ void Settings()
 	
 
 	system("cls");
-
-	//Description();
 }
 
 void GameLoadMenu()
@@ -1545,8 +1543,6 @@ void GameLoadMenu()
 	while (isMenuActive == true);
 
 	system("cls");
-
-	//Description();
 }
 
 
@@ -1554,10 +1550,10 @@ int main()
 {
 	SetupSystem();
 
-	//MainMenu();
+	MainMenu();
 
 	// Main cycle
-	NextLevel(levelSelector);
+	//NextLevel(levelSelector);
 	do
 	{
 		Render();

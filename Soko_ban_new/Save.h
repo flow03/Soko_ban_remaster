@@ -71,6 +71,8 @@ struct Save
 		else cout << "file open read error";
 	}
 
+	int getLevel() { return l_Selector; }
+
 private:
 	// Global counters
 	int g_Crystals;
