@@ -24,6 +24,7 @@
 #include "Warnings.h"
 #include "Level_3.h"
 #include "Save.h"
+#include "MultiStr.h"
 
 
 
@@ -327,21 +328,24 @@ void UpdateFont()
 	CenterWindow();
 }
 
-void UpdateLoad(int &selector, Save &savegame)
+void UpdateLoad(int &selector, Save &savegame, int down)
 {
 	// Render
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0, 6 });
 	setlocale(LC_ALL, "Russian");
 
-	std::cout << "\t\t\t     ";
-	if (selector == 0)
+	if (isGameStart)
 	{
-		printColorText(consoleHandle, symbolHero, LightGreen);
-		printColorText(consoleHandle, " Сохранить игру\n", Yellow);
-	}
-	else
-	{
-		std::cout << "  Сохранить игру   \n";
+		std::cout << "\t\t\t     ";
+		if (selector == 0)
+		{
+			printColorText(consoleHandle, symbolHero, LightGreen);
+			printColorText(consoleHandle, " Сохранить игру\n", Yellow);
+		}
+		else
+		{
+			std::cout << "  Сохранить игру   \n";
+		}
 	}
 
 	std::cout << "\n\t\t\t     ";
@@ -366,9 +370,6 @@ void UpdateLoad(int &selector, Save &savegame)
 		std::cout << "  Отмена   \n";
 	}
 
-	//std::cout << std::endl << std::endl;
-
-
 	// Update
 	char Key = _getch();
 
@@ -381,7 +382,7 @@ void UpdateLoad(int &selector, Save &savegame)
 	{
 		selector++;
 		if (selector > 2)
-			selector = 0;
+			selector = down;
 
 		break;
 	}
@@ -391,7 +392,7 @@ void UpdateLoad(int &selector, Save &savegame)
 	case 'W':
 	{
 		selector--;
-		if (selector < 0)
+		if (selector < down)
 			selector = 2;
 
 		break;
@@ -410,6 +411,7 @@ void UpdateLoad(int &selector, Save &savegame)
 			std::queue<Warning> temp_warn;
 			warning.swap(temp_warn);
 			NextLevel(savegame.getLevel());
+			isGameStart = true;
 		}
 
 		isMenuActive = false;	// Cancel
@@ -598,9 +600,9 @@ void NextLevel(int new_level)
 	}
 
 	if (levelSelector > 4) isGameActive = false;
-	else isGameActive = true;
+	//else isGameActive = true;
 
-	if (isGameActive) Description();
+	if (isGameActive && isGameStart) Description();
 }
 
 void Render()
@@ -1274,7 +1276,6 @@ void MainMenu()
 			default:
 				strAsk = strYes = strNo = "";
 				break;
-
 		}
 
 		system("cls");
@@ -1345,8 +1346,11 @@ void MainMenu()
 
 	auto NewGame = [&NewAsk]()
 	{
-		if (!isGameActive)
+		if (!isGameStart)
+		{
 			NextLevel(1);
+			isGameStart = true;
+		}
 		else if (NewAsk()) NextLevel(1);
 
 		isMenuActive = false;
@@ -1359,8 +1363,40 @@ void MainMenu()
 		setlocale(LC_ALL, "Russian");
 		const char * indent = "\n\t\t\t     ";
 
+		const char *continueStr, *newGameStr, *loadStr, *settingsStr, *staticsticStr, *exitStr = nullptr;
 		
-		if (isGameActive)
+		switch (Localization)
+		{
+		case 1: //UA
+			continueStr = "Продовжити";
+			newGameStr = "Нова гра";
+			loadStr = "Завантажити/Зберегти";
+			settingsStr = "Налаштування";
+			staticsticStr = "Статистика";
+			exitStr = "Вихiд";
+			break;
+		case 2: //RU
+			continueStr = "Продолжить";
+			newGameStr = "Новая игра";
+			loadStr = "Сохранить/Загрузить";
+			settingsStr = "Настройки";
+			staticsticStr = "Статистика";
+			exitStr = "Выход";
+			break;
+		case 3: //ENG
+			continueStr = "Continue";
+			newGameStr = "New game";
+			loadStr = "Save/Load";
+			settingsStr = "Settings";
+			staticsticStr = "Statistic";
+			exitStr = "Exit";
+			break;
+		default:
+			continueStr = newGameStr = loadStr = settingsStr = staticsticStr = exitStr = "";
+			break;
+		}
+
+		if (isGameStart)
 		{
 			std::cout << indent;
 			if (selector == 0)
@@ -1466,15 +1502,16 @@ void MainMenu()
 			}
 			else if (selector == 5)	// Exit
 			{
-				isMenuActive = false;
 				isGameActive = false;
+				isMenuActive = false;
 			}
 			break;
 		}
 		// Esc
 		case 27:
 		{
-			isMenuActive = false;	// Cancel
+			if (isGameStart) isMenuActive = false;	// Cancel
+			//else ExitAsk();
 			break;
 		}
 		}
@@ -1489,7 +1526,7 @@ void MainMenu()
 	int up = 5;
 	int down = 0;
 
-	if (!isGameActive) down = 1;
+	if (!isGameStart) down = 1;
 
 	int selector = down;
 	
@@ -1524,9 +1561,9 @@ void Settings()
 		RenderFont();
 		UpdateFont();
 	} while (isMenuActive == true);
-	
 
 	system("cls");
+	isMenuActive = true;
 }
 
 void GameLoadMenu()
@@ -1536,13 +1573,16 @@ void GameLoadMenu()
 	LoadDescription();
 
 	Save savegame;
-	int selector = 0;
+	int down = 0;
+	if (!isGameStart) down = 1;
+	int selector = down;
 
 	isMenuActive = true;
-	do UpdateLoad(selector, savegame);
+	do UpdateLoad(selector, savegame, down);
 	while (isMenuActive == true);
 
 	system("cls");
+	if (!isGameStart) isMenuActive = true;
 }
 
 
@@ -1554,6 +1594,7 @@ int main()
 
 	// Main cycle
 	//NextLevel(levelSelector);
+	if (isGameStart)
 	do
 	{
 		Render();

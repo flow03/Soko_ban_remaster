@@ -128,12 +128,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="MultiStr.cpp" />
     <ClCompile Include="Sokoban.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Achievements.h" />
     <ClInclude Include="ConsoleColor.h" />
     <ClInclude Include="Level_3.h" />
+    <ClInclude Include="MultiStr.h" />
     <ClInclude Include="Save.h" />
     <ClInclude Include="Variables.h" />
     <ClInclude Include="Warnings.h" />
