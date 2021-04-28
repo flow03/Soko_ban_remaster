@@ -65,7 +65,6 @@ const unsigned char symbolCrystal = 3;
 const unsigned char symbolDoorV = 186;
 const unsigned char symbolDoorG = 205;
 const unsigned char symbolPortal = 79;
-//const unsigned char symbolPoint = 46;
 const unsigned char symbolKey = 21;
 const unsigned char symbolBomb = 15;
 
@@ -87,9 +86,9 @@ TCHAR szbuff[255];		// StringCchPrintf
 CONSOLE_FONT_INFOEX defaultFont;
 time_t start_time = 0;
 time_t total_time;
-enum Warning;
+//enum Warning;
 //Warning warning = Warning(0); //None
-std::queue<Warning> warning;
+
 bool isGameStart = false;
 bool isGameActive = true;
 bool isMenuActive = true;
@@ -104,7 +103,6 @@ std::vector<COORD> markedBoxes;
 std::vector<COORD> futureMines;
 std::vector<COORD> futureBoxes;
 std::vector<COORD> pastBoxes;	// no mines in the past
-
 
 // Global counters
 int global_Crystals = 0;

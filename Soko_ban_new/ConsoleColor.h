@@ -1,5 +1,4 @@
 #pragma once
-//#include <Windows.h>
 
 enum ConsoleColor
 {
@@ -21,33 +20,21 @@ enum ConsoleColor
 	White = 15
 };
 
-void SetColor(HANDLE hStdOut, int textColor, int backgroundColor = 0)
+inline void SetColor(HANDLE hStdOut, int textColor, int backgroundColor = 0)
 {
 	SetConsoleTextAttribute(hStdOut, (WORD)((backgroundColor << 4) | textColor));
 }
 
-void printColorText(HANDLE hStdOut, const char* text, int textColor)
+inline void printColorText(HANDLE hStdOut, const char* text, int textColor)
 {
 	SetColor(hStdOut, textColor);
 	std::cout << text;
 	SetColor(hStdOut, LightGray, Black);
 }
 
-void printColorText(HANDLE hStdOut, const unsigned char symbol, int textColor)
+inline void printColorText(HANDLE hStdOut, const unsigned char symbol, int textColor)
 {
 	SetColor(hStdOut, textColor);
 	std::cout << symbol;
 	SetColor(hStdOut, LightGray, Black);
 }
-
-//void SetColor(int textColor, int backgroundColor)
-//{
-//	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-//	SetConsoleTextAttribute(hStdOut, (WORD)((backgroundColor << 4) | textColor));
-//}
-
-//void SetColor(int textColor, ConsoleColor backgroundColor)
-//{
-//	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-//	SetConsoleTextAttribute(hStdOut, (WORD)((backgroundColor << 4) | textColor));
-//}

@@ -128,8 +128,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Achievements.cpp" />
     <ClCompile Include="MultiStr.cpp" />
     <ClCompile Include="Sokoban.cpp" />
+    <ClCompile Include="Warnings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Achievements.h" />

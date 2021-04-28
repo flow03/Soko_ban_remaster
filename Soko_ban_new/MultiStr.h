@@ -1,15 +1,25 @@
 #pragma once
-#include <cstring>
+#include <cstring>	// strlen
 #include <iostream>
 #include <Windows.h>
+
+#include "ConsoleColor.h"
 
 class MultiStr
 {
 public:
 	MultiStr();
-	MultiStr(const char * c_str);
+	MultiStr(const char *);
 	friend std::ostream& operator<< (std::ostream &, const MultiStr &);
+	operator const char *() const;
+	short getI() const;
 private:
-	char * str;
+	const char * str;
 	short indent;
 };
+
+
+
+void MenuInit();
+
+void MenuOut(int);

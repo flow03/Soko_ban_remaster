@@ -229,6 +229,7 @@ void UpdateLanguage()
 		// Enter
 		case 13:
 		{
+			MenuInit();
 			isMenuActive = false;
 			break;
 		}
@@ -1251,6 +1252,8 @@ void Shutdown()
 
 void MainMenu()
 {
+	MenuInit();
+
 	auto NewAsk = []() -> bool
 	{
 		bool result = true;
@@ -1359,96 +1362,7 @@ void MainMenu()
 	auto UpdateMenu = [&NewGame](int &selector, int up, int down)
 	{
 		// Render
-		SetConsoleCursorPosition(consoleHandle, COORD{ 0, 5 });
-		setlocale(LC_ALL, "Russian");
-		const char * indent = "\n\t\t\t     ";
-
-		const char *continueStr, *newGameStr, *loadStr, *settingsStr, *staticsticStr, *exitStr = nullptr;
-		
-		switch (Localization)
-		{
-		case 1: //UA
-			continueStr = "Продовжити";
-			newGameStr = "Нова гра";
-			loadStr = "Завантажити/Зберегти";
-			settingsStr = "Налаштування";
-			staticsticStr = "Статистика";
-			exitStr = "Вихiд";
-			break;
-		case 2: //RU
-			continueStr = "Продолжить";
-			newGameStr = "Новая игра";
-			loadStr = "Сохранить/Загрузить";
-			settingsStr = "Настройки";
-			staticsticStr = "Статистика";
-			exitStr = "Выход";
-			break;
-		case 3: //ENG
-			continueStr = "Continue";
-			newGameStr = "New game";
-			loadStr = "Save/Load";
-			settingsStr = "Settings";
-			staticsticStr = "Statistic";
-			exitStr = "Exit";
-			break;
-		default:
-			continueStr = newGameStr = loadStr = settingsStr = staticsticStr = exitStr = "";
-			break;
-		}
-
-		if (isGameStart)
-		{
-			std::cout << indent;
-			if (selector == 0)
-			{
-				printColorText(consoleHandle, symbolHero, LightGreen);
-				printColorText(consoleHandle, "     Продолжить\n", Yellow);
-			}
-			else std::cout << "      Продолжить\n";
-		}
-
-		std::cout << indent;
-		if (selector == 1)
-		{
-			printColorText(consoleHandle, symbolHero, LightGreen);
-			printColorText(consoleHandle, "     Новая игра\n", Yellow);
-		}
-		else
-			std::cout << "      Новая игра\n";
-
-		std::cout << indent;
-		if (selector == 2)
-		{
-			printColorText(consoleHandle, symbolHero, LightGreen);
-			printColorText(consoleHandle, " Сохранить/Загрузить\n", Yellow);
-		}
-		else
-			std::cout << "  Сохранить/Загрузить\n";
-
-		std::cout << indent;
-		if (selector == 3)
-		{
-			printColorText(consoleHandle, symbolHero, LightGreen);
-			printColorText(consoleHandle, "     Настройки\n", Yellow);
-		}
-		else
-			std::cout << "      Настройки\n";
-
-		std::cout << indent;
-		if (selector == 4)
-		{
-			printColorText(consoleHandle, symbolHero, LightGreen);
-			printColorText(consoleHandle, "     Статистика\n", Yellow);
-		}
-		else std::cout << "      Статистика\n";
-		
-		std::cout << indent;
-		if (selector == 5)
-		{
-			printColorText(consoleHandle, symbolHero, LightGreen);
-			printColorText(consoleHandle, "       Выйти\n", Yellow);
-		}
-		else std::cout << "        Выйти\n";
+		MenuOut(selector);
 
 		// Update
 		char Key = _getch();
@@ -1588,6 +1502,7 @@ void GameLoadMenu()
 
 int main()
 {
+	//MultiStr s("abcdefg");
 	SetupSystem();
 
 	MainMenu();
