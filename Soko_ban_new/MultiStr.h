@@ -19,7 +19,8 @@ private:
 };
 
 
-
 void MenuInit();
 
 void MenuOut(int);
+
+void YesNoOut(bool);

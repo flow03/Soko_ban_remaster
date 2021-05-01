@@ -7,6 +7,7 @@ const unsigned char symbolHero = 2;
 //short y = 6; // start value
 
 MultiStr continueStr, newGameStr, loadStr, settingsStr, staticsticStr, exitStr;
+MultiStr strYes, strNo;
 
 MultiStr::MultiStr()
 {
@@ -24,7 +25,7 @@ MultiStr::MultiStr(const char * c_str)
 
 MultiStr::operator const char*() const { return str; }
 
-short MultiStr::getI() const { return indent - 2; }	// + symbolHero and space
+short MultiStr::getI() const { return indent; }	// + symbolHero and space
 
 std::ostream & operator<<(std::ostream &out, const MultiStr &multi)
 {
@@ -45,6 +46,10 @@ void MenuInit()
 		settingsStr = "Налаштування";
 		staticsticStr = "Статистика";
 		exitStr = "Вихiд";
+
+		strYes = "Так";
+		strNo = "Hi";
+
 		break;
 	case 2: //RU
 		continueStr = "Продолжить";
@@ -53,6 +58,10 @@ void MenuInit()
 		settingsStr = "Настройки";
 		staticsticStr = "Статистика";
 		exitStr = "Выход";
+
+		strYes = "Да";
+		strNo = "Нет";
+
 		break;
 	case 3: //ENG
 		continueStr = "Continue";
@@ -61,6 +70,10 @@ void MenuInit()
 		settingsStr = "Settings";
 		staticsticStr = "Statistic";
 		exitStr = "Exit";
+
+		strYes = "Yes";
+		strNo = "No";
+
 		break;
 	default:
 		continueStr = newGameStr = loadStr = settingsStr = staticsticStr = exitStr = "";
@@ -75,7 +88,7 @@ void MenuOut(int selector)
 
 	if (isGameStart)
 	{
-		SetConsoleCursorPosition(consoleHandle, COORD{ continueStr.getI(), y });
+		SetConsoleCursorPosition(consoleHandle, COORD{ continueStr.getI() - 2, y });
 		if (selector == 0)
 		{
 			printColorText(consoleHandle, symbolHero, LightGreen);
@@ -86,7 +99,7 @@ void MenuOut(int selector)
 		y += 2;
 	}
 
-	SetConsoleCursorPosition(consoleHandle, COORD{ newGameStr.getI(), y });
+	SetConsoleCursorPosition(consoleHandle, COORD{ newGameStr.getI() - 2, y });
 	if (selector == 1)
 	{
 		printColorText(consoleHandle, symbolHero, LightGreen);
@@ -96,7 +109,7 @@ void MenuOut(int selector)
 	else std::cout << "  " << newGameStr;
 	y += 2;
 
-	SetConsoleCursorPosition(consoleHandle, COORD{ loadStr.getI(), y });
+	SetConsoleCursorPosition(consoleHandle, COORD{ loadStr.getI() - 2, y });
 	if (selector == 2)
 	{
 		printColorText(consoleHandle, symbolHero, LightGreen);
@@ -106,7 +119,7 @@ void MenuOut(int selector)
 	else std::cout << "  " << loadStr;
 	y += 2;
 
-	SetConsoleCursorPosition(consoleHandle, COORD{ settingsStr.getI(), y });
+	SetConsoleCursorPosition(consoleHandle, COORD{ settingsStr.getI() - 2, y });
 	if (selector == 3)
 	{
 		printColorText(consoleHandle, symbolHero, LightGreen);
@@ -116,7 +129,7 @@ void MenuOut(int selector)
 	else std::cout << "  " << settingsStr;
 	y += 2;
 
-	SetConsoleCursorPosition(consoleHandle, COORD{ staticsticStr.getI(), y });
+	SetConsoleCursorPosition(consoleHandle, COORD{ staticsticStr.getI() - 2, y });
 	if (selector == 4)
 	{
 		printColorText(consoleHandle, symbolHero, LightGreen);
@@ -126,7 +139,7 @@ void MenuOut(int selector)
 	else std::cout << "  " << staticsticStr;
 	y += 2;
 
-	SetConsoleCursorPosition(consoleHandle, COORD{ exitStr.getI(), y });
+	SetConsoleCursorPosition(consoleHandle, COORD{ exitStr.getI() - 2, y });
 	if (selector == 5)
 	{
 		printColorText(consoleHandle, symbolHero, LightGreen);
@@ -135,4 +148,26 @@ void MenuOut(int selector)
 	}
 	else std::cout << "  " << exitStr;
 	//y += 2;
+}
+
+void YesNoOut(bool ask)
+{
+	const char* indent_ = "           ";
+	short y = static_cast<short>(40 - ((strlen(strYes) + strlen(indent_) + strlen(strNo) + 2) / 2));	// 2 + 2 + 2
+	SetConsoleCursorPosition(consoleHandle, COORD{ y, 8 });
+
+	if (ask)
+	{
+		printColorText(consoleHandle, symbolHero, LightGreen);
+		std::cout << ' ';
+		printColorText(consoleHandle, strYes, Yellow);
+		std::cout << indent_ << "  " << strNo;
+	}
+	else
+	{
+		std::cout << "  " << strYes << indent_;
+		printColorText(consoleHandle, symbolHero, LightGreen);
+		std::cout << ' ';
+		printColorText(consoleHandle, strNo, Yellow);
+	}
 }

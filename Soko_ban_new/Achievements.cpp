@@ -1,7 +1,7 @@
 #include "Achievements.h"
 
-extern int Localization;
-extern HANDLE consoleHandle;
+//extern int Localization;
+//extern HANDLE consoleHandle;
 
 // Achieve sub variables(with a_ prefix)
 int a_UniBombsDie = 0;				// Ñלונעü םא םמגמי במלבו
