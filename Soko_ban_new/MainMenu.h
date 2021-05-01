@@ -10,8 +10,8 @@
 #include "MultiStr.h"
 
 
-extern int Localization;
-extern HANDLE consoleHandle;
+//extern int Localization;
+//extern HANDLE consoleHandle;
 extern bool isMenuActive;
 extern bool isGameActive;
 extern bool isGameStart;
@@ -27,11 +27,9 @@ void RenderFont();
 
 void UpdateFont();
 
-void UpdateLoad(int &selector, Save &savegame, int down);
-
 void MainMenu();
 
-void Settings();
+void NewSettings();
 
 void GameLoadMenu();
 

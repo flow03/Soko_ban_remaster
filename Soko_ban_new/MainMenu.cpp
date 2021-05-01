@@ -217,112 +217,11 @@ void UpdateFont()
 	SetupFont();
 	CenterWindow();
 }
-
-void UpdateLoad(int &selector, Save &savegame, int down)
-{
-	// Render
-	SetConsoleCursorPosition(consoleHandle, COORD{ 0, 6 });
-	setlocale(LC_ALL, "Russian");
-
-	if (isGameStart)
-	{
-		std::cout << "\t\t\t     ";
-		if (selector == 0)
-		{
-			printColorText(consoleHandle, symbolHero, LightGreen);
-			printColorText(consoleHandle, " Сохранить игру\n", Yellow);
-		}
-		else
-		{
-			std::cout << "  Сохранить игру   \n";
-		}
-	}
-
-	std::cout << "\n\t\t\t     ";
-	if (selector == 1)
-	{
-		printColorText(consoleHandle, symbolHero, LightGreen);
-		printColorText(consoleHandle, " Загрузить игру\n", Yellow);
-	}
-	else
-	{
-		std::cout << "  Загрузить игру   \n";
-	}
-
-	std::cout << "\n\t\t\t     ";
-	if (selector == 2)
-	{
-		printColorText(consoleHandle, symbolHero, LightGreen);
-		printColorText(consoleHandle, " Отмена\n", Yellow);
-	}
-	else
-	{
-		std::cout << "  Отмена   \n";
-	}
-
-	// Update
-	char Key = _getch();
-
-	switch (Key)
-	{
-		// Arrow down
-	case 80:
-	case 's':
-	case 'S':
-	{
-		selector++;
-		if (selector > 2)
-			selector = down;
-
-		break;
-	}
-	// Arrow up
-	case 72:
-	case 'w':
-	case 'W':
-	{
-		selector--;
-		if (selector < down)
-			selector = 2;
-
-		break;
-	}
-	// Enter
-	case 13:
-	{
-		if (selector == 0)	// Save
-		{
-			savegame.SaveToFile();
-		}
-		else if (selector == 1)	// Load
-		{
-			savegame.LoadFromFile();
-			savegame.applySave();
-			std::queue<Warning> temp_warn;
-			warning.swap(temp_warn);
-			NextLevel(savegame.getLevel());
-			isGameStart = true;
-		}
-
-		isMenuActive = false;	// Cancel
-		break;
-	}
-	// Esc
-	case 27:
-	{
-		isMenuActive = false;	// Cancel
-		break;
-	}
-	}
-
-	//SetupFont();
-	//CenterWindow();
-}
-
 // internal	  
 bool ExitAsk()
 {
 	bool result = false;
+	bool ask = true;
 	const char * strAsk;
 	bool ExitMenuActive = true;
 
@@ -349,7 +248,6 @@ bool ExitAsk()
 	SetConsoleCursorPosition(consoleHandle, COORD{ y, 6 });
 	std::cout << strAsk;
 
-	bool ask = false;
 	do {
 		// Render
 		YesNoOut(ask);
@@ -397,6 +295,8 @@ bool ExitAsk()
 bool NewAsk()
 {
 	bool result = true;
+	bool NewAskActive = true;
+	bool ask = false;
 	const char * strAsk;
 
 	switch (Localization)
@@ -422,7 +322,6 @@ bool NewAsk()
 	SetConsoleCursorPosition(consoleHandle, COORD{ y, 6 });
 	std::cout << strAsk;
 
-	bool ask = false;
 	do {
 		// Render
 		YesNoOut(ask);
@@ -451,17 +350,17 @@ bool NewAsk()
 		// Enter
 		case 13:
 			if (ask) AchievesClear();	// Yes
-			isMenuActive = false;
+			NewAskActive = false;
 			break;
-			// Esc
+		// Esc
 		case 27:
-			isMenuActive = false;	// Cancel
+			NewAskActive = false;	// Cancel
 			result = false;
 			break;
 		}
-	} while (isMenuActive);
+	} while (NewAskActive);
 
-	//system("cls");
+	system("cls");
 
 	return result;
 }
@@ -472,10 +371,13 @@ void NewGame()
 	{
 		NextLevel(1);
 		isGameStart = true;
+		isMenuActive = false;
 	}
-	else if (NewAsk()) NextLevel(1);
-
-	isMenuActive = false;
+	else if (NewAsk()) 
+	{ 
+		NextLevel(1); 
+		isMenuActive = false;
+	}
 }
 // internal	
 void UpdateMenu(int &selector, int up, int down)
@@ -527,7 +429,7 @@ void UpdateMenu(int &selector, int up, int down)
 		}
 		else if (selector == 3)	// Settings
 		{
-			Settings();
+			NewSettings();
 		}
 		else if (selector == 4)	// Statistic
 		{
@@ -545,15 +447,10 @@ void UpdateMenu(int &selector, int up, int down)
 	}
 	// Esc
 	case 27:
-	{
 		if (isGameStart) isMenuActive = false;	// Cancel
 		else ExitAsk();
 		break;
 	}
-	}
-
-	//SetupFont();
-	//CenterWindow();
 }
 
 void MainMenu()
@@ -605,23 +502,140 @@ void Settings()
 	isMenuActive = true;
 }
 
-void GameLoadMenu()
+void NewSettings()
 {
+	bool isSettingsActive = true;
+
 	system("cls");
 
-	LoadDescription();
+	//do
+	//{
+		RenderSettings(0);
+		_getch();
+		//UpdateSettings();
+	//} while (isSettingsActive == true);
 
+	system("cls");
+	//isMenuActive = true;
+}
+
+void GameLoadMenu()
+{
+	bool LoadMenuActive = true;
 	Save savegame;
 	int down = 0;
 	if (!isGameStart) down = 1;
 	int selector = down;
 
-	isMenuActive = true;
-	do UpdateLoad(selector, savegame, down);
-	while (isMenuActive == true);
+	auto UpdateLoad = [&selector, &savegame, &LoadMenuActive, down]()
+	{
+		// Render
+		SetConsoleCursorPosition(consoleHandle, COORD{ 0, 6 });
+		setlocale(LC_ALL, "Russian");
+
+		if (isGameStart)
+		{
+			std::cout << "\t\t\t     ";
+			if (selector == 0)
+			{
+				printColorText(consoleHandle, symbolHero, LightGreen);
+				printColorText(consoleHandle, " Сохранить игру\n", Yellow);
+			}
+			else
+			{
+				std::cout << "  Сохранить игру   \n";
+			}
+		}
+
+		std::cout << "\n\t\t\t     ";
+		if (selector == 1)
+		{
+			printColorText(consoleHandle, symbolHero, LightGreen);
+			printColorText(consoleHandle, " Загрузить игру\n", Yellow);
+		}
+		else
+		{
+			std::cout << "  Загрузить игру   \n";
+		}
+
+		std::cout << "\n\t\t\t     ";
+		if (selector == 2)
+		{
+			printColorText(consoleHandle, symbolHero, LightGreen);
+			printColorText(consoleHandle, " Отмена\n", Yellow);
+		}
+		else
+		{
+			std::cout << "  Отмена   \n";
+		}
+
+		// Update
+		char Key = _getch();
+
+		switch (Key)
+		{
+		// Arrow down
+		case 80:
+		case 's':
+		case 'S':
+		{
+			selector++;
+			if (selector > 2)
+				selector = down;
+			break;
+		}
+		// Arrow up
+		case 72:
+		case 'w':
+		case 'W':
+		{
+			selector--;
+			if (selector < down)
+				selector = 2;
+			break;
+		}
+		// Enter
+		case 13:
+		{
+			if (selector == 0)	// Save
+			{
+				savegame.SaveToFile();
+			}
+			else if (selector == 1)	// Load
+			{
+				savegame.LoadFromFile();
+				savegame.applySave();
+				std::queue<Warning> temp_warn;
+				warning.swap(temp_warn);
+				NextLevel(savegame.getLevel());
+				isGameStart = true;
+				isMenuActive = false;
+			}
+
+			LoadMenuActive = false;
+			break;
+		}
+		// Esc
+		case 27:
+		{
+			LoadMenuActive = false;	// Cancel
+			break;
+		}
+		}
+
+		//SetupFont();
+		//CenterWindow();
+	};
 
 	system("cls");
-	if (!isGameStart) isMenuActive = true;
+
+	LoadDescription();
+
+	do UpdateLoad();
+	while (LoadMenuActive == true);
+
+	system("cls");
+	//if (!isGameStart) isMenuActive = true;
 }
 
 void CenterWindow()

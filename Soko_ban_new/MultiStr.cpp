@@ -171,3 +171,66 @@ void YesNoOut(bool ask)
 		printColorText(consoleHandle, strNo, Yellow);
 	}
 }
+
+void RenderSettings(int selector)
+{
+	setlocale(LC_ALL, "Russian");
+	short y = 1;
+	SetConsoleCursorPosition(consoleHandle, COORD{ settingsStr.getI(), y });
+	std::cout << settingsStr;
+
+	const char *languageStr, *fontStr, *currentLanguage, *currentFont;
+	const char *ukr = "Українська";
+	const char *rus = "Русский";
+	const char *eng = "English";
+	const char *fontSmall = "8x12";
+	const char *fontNormal = "12x16";
+
+	switch (Localization)
+	{
+	case 1:
+		languageStr = "Будь ласка, оберiть вашу мову";
+		fontStr = "Розмiр шрифту";
+		currentLanguage = ukr;
+		break;
+	case 2:
+		languageStr = "Выберите язык";
+		fontStr = "Выберите шрифт";
+		currentLanguage = rus;
+		break;
+	case 3:
+		languageStr = "Select your language";
+		fontStr = "Select font size";
+		currentLanguage = eng;
+		break;
+	default:
+		languageStr = fontStr = currentLanguage = "Language Error";
+		break;
+	}
+
+	switch (font)
+	{
+	case 0:
+		currentFont = fontSmall;
+		break;
+	case 1:
+		currentFont = fontNormal;
+		break;
+	default:
+		currentFont = "Font Error";
+		break;
+	}
+
+	y += 2;
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0, y });
+	std::cout << std::setw(40) << std::left << languageStr;
+	SetConsoleCursorPosition(consoleHandle, COORD{ 40, y });
+	std::cout << std::setw(15) << std::right << currentLanguage;
+
+	y += 2;
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0, y });
+	std::cout << std::setw(40) << std::left << fontStr;
+	SetConsoleCursorPosition(consoleHandle, COORD{ 40, y });
+	std::cout << std::setw(15) << std::right << currentFont;
+
+}
