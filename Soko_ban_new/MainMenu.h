@@ -17,8 +17,6 @@ extern bool isGameActive;
 extern bool isGameStart;
 extern int font;
 
-void NextLevel(int); // extern
-
 void RenderLanguage();
 
 void UpdateLanguage();
@@ -36,4 +34,3 @@ void GameLoadMenu();
 void CenterWindow();
 
 void SetupFont();
-

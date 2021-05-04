@@ -2,6 +2,11 @@
 
 const unsigned char symbolHero = 2;
 
+
+void NextLevel(int); // extern
+
+int readKey();
+
 void RenderLanguage()
 {
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
@@ -257,7 +262,7 @@ bool ExitAsk()
 
 		switch (Key)
 		{
-			// Left
+		// Left
 		case 'a':
 		case 'A':
 		case 75:
@@ -453,6 +458,84 @@ void UpdateMenu(int &selector, int up, int down)
 	}
 }
 
+void UpdateSettings(int &selector, bool &isSettingsActive)
+{
+	// Update
+	//char Key = _getch();
+
+	switch (readKey())
+	{
+	// Arrow down
+	case 80:
+	case 's':
+	case 'S':
+	{
+		selector++;
+		if (selector > 1)
+			selector = 0;
+		break;
+	}
+	// Arrow up
+	case 72:
+	case 'w':
+	case 'W':
+	{
+		selector--;
+		if (selector < 0)
+			selector = 1;
+		break;
+	}
+	// Left
+	case 'a':
+	case 'A':
+	case 75:
+	{
+		if (selector == 0)		// Language
+		{
+			Localization--;
+			if (Localization < 1) Localization = 3;
+			MenuInit();
+		}
+		else if (selector == 1)	// Font
+		{
+			font--;
+			if (font < 0) font = 1;
+			SetupFont();
+			CenterWindow();
+		}
+		break;
+	}
+	// Right
+	case 'd':
+	case 'D':
+	case 77:
+	{
+		if (selector == 0)		// Language
+		{
+			Localization++;
+			if (Localization > 3) Localization = 1;
+			MenuInit();
+		}
+		else if (selector == 1)	// Font
+		{
+			font++;
+			if (font > 1) font = 0;
+			SetupFont();
+			CenterWindow();
+		}
+		break;
+	}
+	// Enter
+	case 13:
+	// Esc
+	case 27:
+	{
+		isSettingsActive = false;	// Cancel
+		break;
+	}
+	}
+}
+
 void MainMenu()
 {
 	MenuInit();
@@ -505,15 +588,16 @@ void Settings()
 void NewSettings()
 {
 	bool isSettingsActive = true;
+	int selector = 0;
 
 	system("cls");
 
-	//do
-	//{
-		RenderSettings(0);
-		_getch();
-		//UpdateSettings();
-	//} while (isSettingsActive == true);
+	do
+	{
+		RenderSettings(selector);
+		UpdateSettings(selector, isSettingsActive);
+	} 
+	while (isSettingsActive == true);
 
 	system("cls");
 	//isMenuActive = true;
@@ -622,9 +706,6 @@ void GameLoadMenu()
 			break;
 		}
 		}
-
-		//SetupFont();
-		//CenterWindow();
 	};
 
 	system("cls");

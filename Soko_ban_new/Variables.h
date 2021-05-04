@@ -15,9 +15,14 @@ const unsigned char levelData1[10][columnsCount] = {
 	"#   X   XX #X #",
 	"#XXX # # X   ##",
 	"#1 X #   X X  #",
+#ifdef _DEBUG
 	"##2############",
+#else
+	"###############",
+#endif
 };
 
+#ifdef _DEBUG
 const unsigned char levelData2[rowsCount][columnsCount] = {
 	"###2#########",
 	"#cb   # k# p#",
@@ -39,7 +44,28 @@ const unsigned char levelData2[rowsCount][columnsCount] = {
 	"##2##########",
 
 };
-
+#else
+const unsigned char levelData2[rowsCount][columnsCount] = {
+	"#############",
+	"#cb   # k# p#",
+	"#  c#g## X  #",
+	"#####   ## ##",
+	"#     1 X   #",
+	"#g# #   ## X#",
+	"# # c# #  X #",
+	"#  # #   # ##",
+	"#X # # ##c c#",
+	"#  # #  #####",
+	"# #   # v #k#",
+	"#c#XXX# # b #",
+	"#p#   X #   #",
+	"####  ### ###",
+	"#  c# c  X  #",
+	"#   #XbX  bc#",
+	"#c  #c c c t#",
+	"##2##########",
+};
+#endif
 const unsigned char levelData3[rowsCount3][columnsCount] = {
 	"#######2#######",
 	"#          XkX#",
@@ -86,8 +112,7 @@ TCHAR szbuff[255];		// StringCchPrintf
 CONSOLE_FONT_INFOEX defaultFont;
 time_t start_time = 0;
 time_t total_time;
-//enum Warning;
-//Warning warning = Warning(0); //None
+const int RestartKey = 'R';
 
 bool isGameStart = false;
 bool isGameActive = true;

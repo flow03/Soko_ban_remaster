@@ -131,8 +131,13 @@ void LoadFutureFunction()
 	markedBoxes = futureBoxes;
 	markedMines = futureMines;
 
+#ifdef _DEBUG
 	heroRow = 10;	// 5
 	heroColumn = 6;	// 7
+#else
+	heroRow = 5;
+	heroColumn = 7;
+#endif
 	levelData[heroRow][heroColumn] = symbolHero;
 }
 

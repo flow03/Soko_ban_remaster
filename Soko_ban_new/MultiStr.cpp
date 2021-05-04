@@ -4,7 +4,8 @@ extern HANDLE consoleHandle;
 extern int Localization;
 extern bool isGameStart;
 const unsigned char symbolHero = 2;
-//short y = 6; // start value
+const char *fontSmall = "8x12";
+const char *fontNormal = "12x16";
 
 MultiStr continueStr, newGameStr, loadStr, settingsStr, staticsticStr, exitStr;
 MultiStr strYes, strNo;
@@ -174,34 +175,37 @@ void YesNoOut(bool ask)
 
 void RenderSettings(int selector)
 {
+	//system("cls");
+	
 	setlocale(LC_ALL, "Russian");
 	short y = 1;
+	SetConsoleCursorPosition(consoleHandle, COORD{ 35, y });	// ukr indent
+	std::cout << std::setw(12) << std::setfill(' ') << "";
 	SetConsoleCursorPosition(consoleHandle, COORD{ settingsStr.getI(), y });
 	std::cout << settingsStr;
 
-	const char *languageStr, *fontStr, *currentLanguage, *currentFont;
-	const char *ukr = "Українська";
-	const char *rus = "Русский";
-	const char *eng = "English";
-	const char *fontSmall = "8x12";
-	const char *fontNormal = "12x16";
+	const char *languageStr, *fontStr, *currentLanguage, *currentFont, *RkeyStr;
+	
 
 	switch (Localization)
 	{
 	case 1:
 		languageStr = "Будь ласка, оберiть вашу мову";
 		fontStr = "Розмiр шрифту";
-		currentLanguage = ukr;
+		currentLanguage = "Українська";
+		RkeyStr = "Клавіша перезапуску";
 		break;
 	case 2:
 		languageStr = "Выберите язык";
 		fontStr = "Выберите шрифт";
-		currentLanguage = rus;
+		currentLanguage = "Русский";
+		RkeyStr = "Кнопка рестарта";
 		break;
 	case 3:
 		languageStr = "Select your language";
 		fontStr = "Select font size";
-		currentLanguage = eng;
+		currentLanguage = "English";
+		RkeyStr = "Restart key";
 		break;
 	default:
 		languageStr = fontStr = currentLanguage = "Language Error";
@@ -221,16 +225,20 @@ void RenderSettings(int selector)
 		break;
 	}
 
-	y += 2;
+	y += 3;
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0, y });
-	std::cout << std::setw(40) << std::left << languageStr;
-	SetConsoleCursorPosition(consoleHandle, COORD{ 40, y });
-	std::cout << std::setw(15) << std::right << currentLanguage;
+	std::cout << "\t\t" << std::setw(40) << std::left << languageStr;
+	SetConsoleCursorPosition(consoleHandle, COORD{ 45, y });
+	std::cout << std::setw(15) << std::right;
+	if (selector == 0) printColorText(consoleHandle, currentLanguage, Yellow);
+	else std::cout << currentLanguage;
 
 	y += 2;
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0, y });
-	std::cout << std::setw(40) << std::left << fontStr;
-	SetConsoleCursorPosition(consoleHandle, COORD{ 40, y });
-	std::cout << std::setw(15) << std::right << currentFont;
+	std::cout << "\t\t" << std::setw(40) << std::left << fontStr;
+	SetConsoleCursorPosition(consoleHandle, COORD{ 45, y });
+	std::cout << std::setw(15) << std::right;
+	if (selector == 1) printColorText(consoleHandle, currentFont, Yellow);
+	else std::cout << currentFont;
 
 }

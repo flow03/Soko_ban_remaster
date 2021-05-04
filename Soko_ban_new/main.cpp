@@ -385,7 +385,11 @@ void Render()
 	Warnings(render_x); //warning reset in the end of Warnings func(not in the MoveHeroTo func)
 	
 	//SetConsoleTitle
+#ifdef _DEBUG
 	StringCchPrintf(szbuff, 255, TEXT("Level %d row %d column %d"), levelSelector, heroRow, heroColumn);
+#else
+	StringCchPrintf(szbuff, 255, TEXT("Level %d"), levelSelector);
+#endif
 	SetConsoleTitle(szbuff);
 }
 
@@ -454,7 +458,11 @@ void MoveHeroTo(int row, int column)
 		case symbolExit:
 		{
 			canMoveToCell = false;
+#ifdef _DEBUG
 			if ((levelSelector == 2) && (CrystalCount < 1)) //13
+#else
+			if ((levelSelector == 2) && (CrystalCount < 13))
+#endif
 			{
 				warning.push(crystalWarning);
 				CrystalMaxCount = 1;
@@ -463,7 +471,7 @@ void MoveHeroTo(int row, int column)
 			{
 				levelData[row][column] = symbolWall;
 			}
-			else if ((levelSelector == 4) && (CrystalCount < 14)) //13
+			else if ((levelSelector == 4) && (CrystalCount < 14))
 			{
 				warning.push(crystalWarning);
 				CrystalMaxCount = 14;
@@ -498,7 +506,11 @@ void MoveHeroTo(int row, int column)
 				if (!lvl3_RestartsAchieve_)
 					a_lvl3_Restarts = 0;
 
+#ifdef _DEBUG
 				if (CrystalCount == 1) //5
+#else
+				if (CrystalCount == 5)
+#endif
 				{
 					levelData[6][5] = symbolPortal;
 					levelData[6][9] = symbolPortal;
@@ -795,16 +807,28 @@ void MoveHeroTo(int row, int column)
 	}
 }
 
-void Update()
+int readKey()
 {
 	int inputChar = _getch();
+
+	if (inputChar == 0 || inputChar == 224)
+		inputChar = _getch();
+
+	inputChar = toupper(inputChar);
+
+	return inputChar;
+}
+
+void Update()
+{
+	//int inputChar = _getch();
 	//inputChar = tolower(inputChar); // work only with english symbols
 
 	// miss first char arrows and Num codes
-	if (inputChar == 0 || inputChar == 224)
-		inputChar = _getch();
+	//if (inputChar == 0 || inputChar == 224)
+		//inputChar = _getch();
 	
-	switch (inputChar)
+	switch (readKey())
 	{
 	// Up
 	case 'w':
@@ -851,8 +875,7 @@ void Update()
 	// Restart level
 	/*case 114:
 	case 82:*/
-	case 'r':
-	case 'R':
+	case RestartKey:
 	case 170:	//к
 	case 138:	//К
 	{
@@ -877,8 +900,7 @@ void Update()
 
 void Shutdown()
 {
-
-	Statistic();
+	//Statistic();
 
 	SetCurrentConsoleFontEx(consoleHandle, TRUE, &defaultFont); // Установить прежний шрифт
 }
