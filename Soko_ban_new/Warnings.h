@@ -51,3 +51,7 @@ void Description();
 void Counters(short &x_position);
 
 void Statistic();
+
+void SaveDescription();
+
+void WrongKeyWarning(int);

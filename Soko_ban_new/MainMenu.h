@@ -17,14 +17,6 @@ extern bool isGameActive;
 extern bool isGameStart;
 extern int font;
 
-void RenderLanguage();
-
-void UpdateLanguage();
-
-void RenderFont();
-
-void UpdateFont();
-
 void MainMenu();
 
 void NewSettings();

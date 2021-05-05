@@ -3,9 +3,8 @@
 extern HANDLE consoleHandle;
 extern int Localization;
 extern bool isGameStart;
+extern int RestartKey;
 const unsigned char symbolHero = 2;
-const char *fontSmall = "8x12";
-const char *fontNormal = "12x16";
 
 MultiStr continueStr, newGameStr, loadStr, settingsStr, staticsticStr, exitStr;
 MultiStr strYes, strNo;
@@ -208,17 +207,17 @@ void RenderSettings(int selector)
 		RkeyStr = "Restart key";
 		break;
 	default:
-		languageStr = fontStr = currentLanguage = "Language Error";
+		languageStr = fontStr = currentLanguage = RkeyStr = "Language Error";
 		break;
 	}
 
 	switch (font)
 	{
 	case 0:
-		currentFont = fontSmall;
+		currentFont = "8x12";
 		break;
 	case 1:
-		currentFont = fontNormal;
+		currentFont = "12x16";
 		break;
 	default:
 		currentFont = "Font Error";
@@ -241,4 +240,11 @@ void RenderSettings(int selector)
 	if (selector == 1) printColorText(consoleHandle, currentFont, Yellow);
 	else std::cout << currentFont;
 
+	y += 2;
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0, y });
+	std::cout << "\t\t" << std::setw(40) << std::left << RkeyStr;
+	SetConsoleCursorPosition(consoleHandle, COORD{ 45, y });
+	std::cout << std::setw(15) << std::right;
+	if (selector == 2) printColorText(consoleHandle, static_cast<char>(RestartKey), Yellow);
+	else std::cout << static_cast<char>(RestartKey);
 }

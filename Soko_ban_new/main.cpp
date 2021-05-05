@@ -807,7 +807,13 @@ void MoveHeroTo(int row, int column)
 	}
 }
 
-int readKey()
+bool KeyValidation(int key)
+{
+	return (key != 'W' && key != 'S' && key != 'A' && key != 'D' &&
+			key != 72 && key != 80 && key != 75 && key != 77 && key != 27);
+}
+
+int ReadKey()
 {
 	int inputChar = _getch();
 
@@ -821,14 +827,22 @@ int readKey()
 
 void Update()
 {
-	//int inputChar = _getch();
-	//inputChar = tolower(inputChar); // work only with english symbols
+	int inputChar = ReadKey();
 
-	// miss first char arrows and Num codes
-	//if (inputChar == 0 || inputChar == 224)
-		//inputChar = _getch();
-	
-	switch (readKey())
+	if (inputChar == RestartKey)	// Restart
+	{
+		++global_Restarts;
+		NullRestartsAchieve_ = false;
+		if (!lvl3_RestartsAchieve_)
+		{
+			++a_lvl3_Restarts;
+			if (a_lvl3_Restarts == 10)
+				lvl3_RestartsAchieve_ = true;
+		}
+		LevelClear();
+	}
+	else
+	switch (inputChar)
 	{
 	// Up
 	case 'w':
@@ -873,23 +887,22 @@ void Update()
 	}
 
 	// Restart level
-	/*case 114:
-	case 82:*/
-	case RestartKey:
-	case 170:	//ê
-	case 138:	//Ê
-	{
-		++global_Restarts;
-		NullRestartsAchieve_ = false;
-		if (!lvl3_RestartsAchieve_)
-		{
-			++a_lvl3_Restarts;
-			if (a_lvl3_Restarts == 10)
-				lvl3_RestartsAchieve_ = true;
-		}
-		LevelClear();
-		break;
-	}
+	//case 114:
+	//case 82:
+	//case 170:	//ê
+	//case 138:	//Ê
+	//{
+	//	++global_Restarts;
+	//	NullRestartsAchieve_ = false;
+	//	if (!lvl3_RestartsAchieve_)
+	//	{
+	//		++a_lvl3_Restarts;
+	//		if (a_lvl3_Restarts == 10)
+	//			lvl3_RestartsAchieve_ = true;
+	//	}
+	//	LevelClear();
+	//	break;
+	//}
 	// Main menu
 	case 27:	// Esc
 		MainMenu();

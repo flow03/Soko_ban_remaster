@@ -53,5 +53,3 @@ private:
 	//bool futureSelector = false;
 	//bool portalWarn = false;
 };
-
-void LoadDescription();
