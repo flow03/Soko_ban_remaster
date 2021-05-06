@@ -809,16 +809,37 @@ void MoveHeroTo(int row, int column)
 
 bool KeyValidation(int key)
 {
-	return (key != 'W' && key != 'S' && key != 'A' && key != 'D' &&
-			key != 72 && key != 80 && key != 75 && key != 77 && key != 27);
+	return	(key >= 65 && key <= 90) &&
+			(key != 'W' && key != 'S' && key != 'A' && key != 'D' && key != 27);
 }
 
 int ReadKey()
 {
 	int inputChar = _getch();
 
-	if (inputChar == 0 || inputChar == 224)
+	if (inputChar == 224)
+	{
 		inputChar = _getch();
+		switch (inputChar)
+		{
+		case 80:
+			inputChar = 'S';
+			break;
+		case 77:
+			inputChar = 'D';
+			break;
+		case 75:
+			inputChar = 'A';
+			break;
+		case 72:
+			inputChar = 'W';
+			break;
+		default:
+			inputChar = 224;
+			break;
+		}
+	}
+	else if (inputChar == 0) _getch();
 
 	inputChar = toupper(inputChar);
 

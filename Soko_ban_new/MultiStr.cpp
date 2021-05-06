@@ -8,6 +8,7 @@ const unsigned char symbolHero = 2;
 
 MultiStr continueStr, newGameStr, loadStr, settingsStr, staticsticStr, exitStr;
 MultiStr strYes, strNo;
+MultiStr attentionSrt, keyWarningOne, keyWarningTwo;
 
 MultiStr::MultiStr()
 {
@@ -20,7 +21,7 @@ MultiStr::MultiStr(const char * c_str)
 	//strcpy_s(str, strlen(c_str) + 1, c_str);
 	//strncpy_s(str, c_str, strlen(c_str) + 1);
 	str = c_str;
-	indent = static_cast<short>(40 - (strlen(str) / 2) + 1);
+	indent = static_cast<short>(40 - (strlen(str) / 2 + 1));
 }
 
 MultiStr::operator const char*() const { return str; }
@@ -49,6 +50,9 @@ void MenuInit()
 
 		strYes = "Так";
 		strNo = "Hi";
+		attentionSrt = "Увага!";
+		keyWarningOne = "Клавiша _ не може перезапускати гру";
+		keyWarningTwo = "Перезапускати гру можна тiльки клавiшами латинського алфавiту A-Z";
 
 		break;
 	case 2: //RU
@@ -61,6 +65,9 @@ void MenuInit()
 
 		strYes = "Да";
 		strNo = "Нет";
+		attentionSrt = "Внимание!";
+		keyWarningOne = "Клавиша _ не может быть назначена для рестарта игры";
+		keyWarningTwo = "Допускаются только клавиши латиницы от A до Z";
 
 		break;
 	case 3: //ENG
@@ -73,6 +80,9 @@ void MenuInit()
 
 		strYes = "Yes";
 		strNo = "No";
+		attentionSrt = "Attention!";
+		keyWarningOne = "Key _ cannot be a restart key";
+		keyWarningTwo = "Please, use A-Z keys only";
 
 		break;
 	default:
@@ -172,7 +182,7 @@ void YesNoOut(bool ask)
 	}
 }
 
-void RenderSettings(int selector)
+void RenderSettings(int selector, char &key)
 {
 	//system("cls");
 	
@@ -192,7 +202,7 @@ void RenderSettings(int selector)
 		languageStr = "Будь ласка, оберiть вашу мову";
 		fontStr = "Розмiр шрифту";
 		currentLanguage = "Українська";
-		RkeyStr = "Клавіша перезапуску";
+		RkeyStr = "Клавiша перезапуску";
 		break;
 	case 2:
 		languageStr = "Выберите язык";
@@ -247,4 +257,99 @@ void RenderSettings(int selector)
 	std::cout << std::setw(15) << std::right;
 	if (selector == 2) printColorText(consoleHandle, static_cast<char>(RestartKey), Yellow);
 	else std::cout << static_cast<char>(RestartKey);
+
+	if (selector == 2 && key != 0)
+	{
+		WrongKeyWarning(key);
+		key = 0;
+	}
+	else
+	{
+		SetConsoleCursorPosition(consoleHandle, COORD{ 0, 21 });
+		std::cout << std::setw(80) << std::right;
+		SetConsoleCursorPosition(consoleHandle, COORD{ 0, 22 });
+		std::cout << std::setw(80) << std::right;
+	}
+}
+
+void WrongKeyWarning(char key)
+{
+	char keyStr[4];
+	bool otherKey = false;
+	//short x = 22;
+	//short y = 0;
+	COORD coord = { 0, 21 };
+
+	switch (key)
+	{
+	case 27:
+		strcpy_s(keyStr, "Esc");
+		break;
+		//case 80:
+		//	keyStr = "\2193";	//"Arrow Down";
+		//	break;
+		//case 77:
+		//	keyStr = "\2192";		//"Arrow Right";
+		//	break;
+		//case 75:
+		//	keyStr = "\2190";	//"Arrow Left";
+		//	break;
+		//case 72:
+		//	keyStr = "\2191";	//"Arrow Up";
+		//	break;
+	case 'W':
+	case 'A':
+	case 'S':
+	case 'D':
+		keyStr[0] = key;
+		keyStr[1] = '\0';
+		//strcat(keyStr, key);
+		break;
+	default:
+		//keyStr = "Error";
+		otherKey = true;
+		break;
+	}
+
+	setlocale(LC_ALL, "Russian");
+	/*SetConsoleCursorPosition(consoleHandle, coord);
+	std::cout << std::setw(80) << std::right << "";
+	SetConsoleCursorPosition(consoleHandle, coord);*/
+
+
+	//if (!strcmp(keyStr, "Error Key"))
+	if (!otherKey)
+	{
+		SetConsoleCursorPosition(consoleHandle, COORD{ attentionSrt.getI(), coord.Y });
+		printColorText(consoleHandle, attentionSrt, Yellow);
+		coord.Y += 1;
+		coord.X = keyWarningOne.getI();
+		SetConsoleCursorPosition(consoleHandle, coord);
+		std::cout << keyWarningOne;
+		coord.X += 8;
+		SetConsoleCursorPosition(consoleHandle, coord);
+		std::cout << keyStr;
+	}
+	//else
+	//	switch (Localization)
+	//	{
+	//	case 1: //UA
+	//	{
+	//		printColorText(consoleHandle, "Увага!", Yellow);
+	//		std::cout << " Перезапускати гру можна тiльки клавiшами латинського алфавiту A-Z";
+	//		break;
+	//	}
+	//	case 2: //RU
+	//	{
+	//		printColorText(consoleHandle, "Внимание!", Yellow);
+	//		std::cout << " Допускаются только клавиши латиницы от A до Z";
+	//		break;
+	//	}
+	//	case 3: //ENG
+	//	{
+	//		printColorText(consoleHandle, "Attention!", Yellow);
+	//		std::cout << " Please, use A-Z only";
+	//		break;
+	//	}
+	//	}
 }

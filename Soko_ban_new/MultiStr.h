@@ -28,4 +28,6 @@ void MenuOut(int);
 
 void YesNoOut(bool);
 
-void RenderSettings(int);
+void RenderSettings(int, char &);
+
+void WrongKeyWarning(char);

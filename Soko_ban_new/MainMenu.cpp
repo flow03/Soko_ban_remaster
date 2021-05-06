@@ -3,229 +3,11 @@
 const unsigned char symbolHero = 2;
 extern int RestartKey;
 
-
-void NextLevel(int); // extern
-void WrongKeyWarning(int);
-
+// extern
+void NextLevel(int); 
 int ReadKey();
 bool KeyValidation(int);
 
-//void RenderLanguage()
-//{
-//	SetConsoleCursorPosition(consoleHandle, COORD{ 0,0 });
-//	setlocale(LC_ALL, "Russian");
-//	//setlocale(LC_ALL, ".UTF-8");
-//	//setlocale(LC_CTYPE, ".866");
-//	//setlocale(0, "");
-//	std::cout << std::endl;
-//
-//	switch (Localization)
-//	{
-//	case 1:
-//	{
-//		std::wcout << L"\n\t\t\t Будь ласка, оберiть вашу мову"; //54
-//		break;
-//	}
-//	case 2:
-//	{
-//		std::wcout << L"\n\t\t\t\t Выберите язык\t\t\t"; //46
-//		break;
-//	}
-//	case 3:
-//	{
-//		std::wcout << L"\n\t\t\t      Select your language    ";
-//		break;
-//	}
-//	}
-//
-//	std::cout << "\n\n";
-//
-//	if (Localization == 1)
-//	{
-//		std::cout << "\n\t\t\t\t ";
-//		printColorText(consoleHandle, symbolHero, LightGreen);
-//		printColorText(consoleHandle, " Українська\n", Yellow);
-//	}
-//	else
-//	{
-//		std::cout << "\n\t\t\t\t   Українська\n";
-//	}
-//
-//	if (Localization == 2)
-//	{
-//		std::cout << "\n\t\t\t\t ";
-//		printColorText(consoleHandle, symbolHero, LightGreen);
-//		printColorText(consoleHandle, "  Русский\n", Yellow);
-//	}
-//	else
-//	{
-//		std::cout << "\n\t\t\t\t    Русский\n";
-//	}
-//
-//	if (Localization == 3)
-//	{
-//		std::cout << "\n\t\t\t\t ";
-//		printColorText(consoleHandle, symbolHero, LightGreen);
-//		printColorText(consoleHandle, "  English\n", Yellow);
-//	}
-//	else
-//	{
-//		std::cout << "\n\t\t\t\t    English\n";
-//	}
-//
-//	std::cout << "\n\n";
-//
-//	switch (Localization)
-//	{
-//	case 1:
-//	{
-//		std::cout << "\n\t\t\t\tНатиснiть Enter"; //32+15
-//		break;
-//	}
-//	case 2:
-//	{
-//		std::cout << "\n\t\t\t\t Нажмите Enter\t"; //33+13
-//		break;
-//	}
-//	case 3:
-//	{
-//		std::cout << "\n\t\t\t\t  Press Enter\t"; //34+11
-//		break;
-//	}
-//	}
-//}
-//
-//void UpdateLanguage()
-//{
-//	char Key = _getch();
-//
-//	switch (Key)
-//	{
-//		// Arrow down
-//	case 80:
-//	case 's':
-//	case 'S':
-//	{
-//		Localization++;
-//		if (Localization > 3)
-//			Localization = 1;
-//
-//		break;
-//	}
-//	// Arrow up
-//	case 72:
-//	case 'w':
-//	case 'W':
-//	{
-//		Localization--;
-//		if (Localization < 1)
-//			Localization = 3;
-//
-//		break;
-//	}
-//	// Enter
-//	case 13:
-//	{
-//		MenuInit();
-//		isMenuActive = false;
-//		break;
-//	}
-//	}
-//}
-//
-//void RenderFont()
-//{
-//	SetConsoleCursorPosition(consoleHandle, COORD{ 0, 13 }); //(y, x)
-//	//system("cls");
-//	setlocale(LC_ALL, "Russian");
-//	//setlocale(0, "");
-//	std::cout << std::endl << std::endl;
-//
-//
-//	std::cout << "\n\t\t\t\t   ";
-//	if (font == 0)
-//	{
-//		printColorText(consoleHandle, symbolHero, LightGreen);
-//		printColorText(consoleHandle, " 8x12\n", Yellow);
-//	}
-//	else
-//	{
-//		std::cout << "  8x12\n";
-//	}
-//
-//	std::cout << "\n\t\t\t\t   ";
-//	if (font == 1)
-//	{
-//		printColorText(consoleHandle, symbolHero, LightGreen);
-//		printColorText(consoleHandle, " 12x16\n", Yellow);
-//	}
-//	else
-//	{
-//		std::cout << "  12x16\n";
-//	}
-//
-//	std::cout << std::endl << std::endl;
-//
-//	switch (Localization)
-//	{
-//	case 1:
-//	{
-//		std::cout << "\t\t\t\t Розмiр шрифту";
-//		break;
-//	}
-//	case 2:
-//	{
-//		std::cout << "\t\t\t\t Выберите шрифт\t\t\t";
-//		break;
-//	}
-//	case 3:
-//	{
-//		std::cout << "\t\t\t     Select your font size";
-//		break;
-//	}
-//	}
-//}
-//
-//void UpdateFont()
-//{
-//	char Key = _getch();
-//
-//	switch (Key)
-//	{
-//		// Arrow down
-//	case 80:
-//	case 's':
-//	case 'S':
-//	{
-//		font++;
-//		if (font > 1)
-//			font = 0;
-//
-//		break;
-//	}
-//	// Arrow up
-//	case 72:
-//	case 'w':
-//	case 'W':
-//	{
-//		font--;
-//		if (font < 0)
-//			font = 1;
-//
-//		break;
-//	}
-//	// Enter
-//	case 13:
-//	{
-//		isMenuActive = false;
-//		break;
-//	}
-//	}
-//
-//	SetupFont();
-//	CenterWindow();
-//}
-// internal	  
 bool ExitAsk()
 {
 	bool result = false;
@@ -461,7 +243,7 @@ void UpdateMenu(int &selector, int up, int down)
 	}
 }
 
-void UpdateSettings(int &selector, bool &isSettingsActive)
+void UpdateSettings(int &selector, char &key, bool &isSettingsActive)
 {
 	// Update
 	switch (ReadKey())
@@ -530,10 +312,15 @@ void UpdateSettings(int &selector, bool &isSettingsActive)
 	case 13:
 		if (selector == 2)
 		{
+			SetConsoleCursorPosition(consoleHandle, COORD{ 59, 8 });
+			printColorText(consoleHandle, '_', Yellow);
 			int tempKey = ReadKey();
 			
-			if (KeyValidation(tempKey)) RestartKey = tempKey;
-			else WrongKeyWarning(tempKey);
+			if (KeyValidation(tempKey))
+			{
+				RestartKey = tempKey;
+			}
+			else key = tempKey;
 		}
 		//isSettingsActive = false;
 		break;
@@ -599,13 +386,14 @@ void NewSettings()
 {
 	bool isSettingsActive = true;
 	int selector = 0;
+	char key = 0;
 
 	system("cls");
 
 	do
 	{
-		RenderSettings(selector);
-		UpdateSettings(selector, isSettingsActive);
+		RenderSettings(selector, key);
+		UpdateSettings(selector, key, isSettingsActive);
 	} 
 	while (isSettingsActive == true);
 
