@@ -3,7 +3,7 @@
 extern HANDLE consoleHandle;
 extern int Localization;
 extern bool isGameStart;
-extern int RestartKey;
+extern unsigned char RestartKey;
 const unsigned char symbolHero = 2;
 
 MultiStr continueStr, newGameStr, loadStr, settingsStr, staticsticStr, exitStr;
@@ -51,7 +51,7 @@ void MenuInit()
 		strYes = "Так";
 		strNo = "Hi";
 		attentionSrt = "Увага!";
-		keyWarningOne = "Клавiша _ не може перезапускати гру";
+		keyWarningOne = "Клавiшi W, A, S, D, Esc та стрiлки не можуть перезапускати гру";
 		keyWarningTwo = "Перезапускати гру можна тiльки клавiшами латинського алфавiту A-Z";
 
 		break;
@@ -66,7 +66,7 @@ void MenuInit()
 		strYes = "Да";
 		strNo = "Нет";
 		attentionSrt = "Внимание!";
-		keyWarningOne = "Клавиша _ не может быть назначена для рестарта игры";
+		keyWarningOne = "Клавиши W, A, S, D, Esc и стрелочки отвечают за управление";
 		keyWarningTwo = "Допускаются только клавиши латиницы от A до Z";
 
 		break;
@@ -81,7 +81,7 @@ void MenuInit()
 		strYes = "Yes";
 		strNo = "No";
 		attentionSrt = "Attention!";
-		keyWarningOne = "Key _ cannot be a restart key";
+		keyWarningOne = "Keys W, A, S, D, Esc and arrows couldn't restart the game";
 		keyWarningTwo = "Please, use A-Z keys only";
 
 		break;
@@ -91,7 +91,7 @@ void MenuInit()
 	}
 }
 
-void MenuOut(int selector)
+void out_Menu(int selector)
 {
 	setlocale(LC_ALL, "Russian");
 	short y = 6;
@@ -160,7 +160,7 @@ void MenuOut(int selector)
 	//y += 2;
 }
 
-void YesNoOut(bool ask)
+void out_YesNo(bool ask)
 {
 	const char* indent_ = "           ";
 	short y = static_cast<short>(40 - ((strlen(strYes) + strlen(indent_) + strlen(strNo) + 2) / 2));	// 2 + 2 + 2
@@ -182,14 +182,14 @@ void YesNoOut(bool ask)
 	}
 }
 
-void RenderSettings(int selector, char &key)
+void out_RenderSettings(int selector, char &key)
 {
 	//system("cls");
 	
 	setlocale(LC_ALL, "Russian");
 	short y = 1;
-	SetConsoleCursorPosition(consoleHandle, COORD{ 35, y });	// ukr indent
-	std::cout << std::setw(12) << std::setfill(' ') << "";
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0, y });
+	std::cout << std::setw(80) << std::setfill(' ') << "";
 	SetConsoleCursorPosition(consoleHandle, COORD{ settingsStr.getI(), y });
 	std::cout << settingsStr;
 
@@ -255,101 +255,49 @@ void RenderSettings(int selector, char &key)
 	std::cout << "\t\t" << std::setw(40) << std::left << RkeyStr;
 	SetConsoleCursorPosition(consoleHandle, COORD{ 45, y });
 	std::cout << std::setw(15) << std::right;
-	if (selector == 2) printColorText(consoleHandle, static_cast<char>(RestartKey), Yellow);
-	else std::cout << static_cast<char>(RestartKey);
+	if (selector == 2) printColorText(consoleHandle, RestartKey, Yellow);
+	else std::cout << RestartKey;
 
 	if (selector == 2 && key != 0)
 	{
-		WrongKeyWarning(key);
+		out_WrongKey(key);
 		key = 0;
 	}
 	else
 	{
 		SetConsoleCursorPosition(consoleHandle, COORD{ 0, 21 });
-		std::cout << std::setw(80) << std::right;
-		SetConsoleCursorPosition(consoleHandle, COORD{ 0, 22 });
-		std::cout << std::setw(80) << std::right;
+		std::cout << std::setw(80) << std::setfill(' ') << "";
+		//SetConsoleCursorPosition(consoleHandle, COORD{ 0, 22 });
+		std::cout << std::setw(80) << std::setfill(' ') << "";
 	}
 }
 
-void WrongKeyWarning(char key)
+void out_WrongKey(char key)
 {
-	char keyStr[4];
 	bool otherKey = false;
-	//short x = 22;
-	//short y = 0;
 	COORD coord = { 0, 21 };
 
-	switch (key)
-	{
-	case 27:
-		strcpy_s(keyStr, "Esc");
-		break;
-		//case 80:
-		//	keyStr = "\2193";	//"Arrow Down";
-		//	break;
-		//case 77:
-		//	keyStr = "\2192";		//"Arrow Right";
-		//	break;
-		//case 75:
-		//	keyStr = "\2190";	//"Arrow Left";
-		//	break;
-		//case 72:
-		//	keyStr = "\2191";	//"Arrow Up";
-		//	break;
-	case 'W':
-	case 'A':
-	case 'S':
-	case 'D':
-		keyStr[0] = key;
-		keyStr[1] = '\0';
-		//strcat(keyStr, key);
-		break;
-	default:
-		//keyStr = "Error";
+	if (key != 'W' && key != 'S' && key != 'A' && key != 'D' && key != 27)
 		otherKey = true;
-		break;
-	}
 
 	setlocale(LC_ALL, "Russian");
-	/*SetConsoleCursorPosition(consoleHandle, coord);
-	std::cout << std::setw(80) << std::right << "";
-	SetConsoleCursorPosition(consoleHandle, coord);*/
+	SetConsoleCursorPosition(consoleHandle, coord);
+	std::cout << std::setw(80) << std::setfill(' ') << "";
+	std::cout << std::setw(80) << std::setfill(' ') << "";
+	SetConsoleCursorPosition(consoleHandle, COORD{ attentionSrt.getI(), coord.Y });
+	printColorText(consoleHandle, attentionSrt, Yellow);
+	coord.Y += 1;
 
-
-	//if (!strcmp(keyStr, "Error Key"))
 	if (!otherKey)
 	{
-		SetConsoleCursorPosition(consoleHandle, COORD{ attentionSrt.getI(), coord.Y });
-		printColorText(consoleHandle, attentionSrt, Yellow);
-		coord.Y += 1;
 		coord.X = keyWarningOne.getI();
 		SetConsoleCursorPosition(consoleHandle, coord);
 		std::cout << keyWarningOne;
-		coord.X += 8;
-		SetConsoleCursorPosition(consoleHandle, coord);
-		std::cout << keyStr;
 	}
-	//else
-	//	switch (Localization)
-	//	{
-	//	case 1: //UA
-	//	{
-	//		printColorText(consoleHandle, "Увага!", Yellow);
-	//		std::cout << " Перезапускати гру можна тiльки клавiшами латинського алфавiту A-Z";
-	//		break;
-	//	}
-	//	case 2: //RU
-	//	{
-	//		printColorText(consoleHandle, "Внимание!", Yellow);
-	//		std::cout << " Допускаются только клавиши латиницы от A до Z";
-	//		break;
-	//	}
-	//	case 3: //ENG
-	//	{
-	//		printColorText(consoleHandle, "Attention!", Yellow);
-	//		std::cout << " Please, use A-Z only";
-	//		break;
-	//	}
-	//	}
+	else
+	{
+		coord.X = keyWarningTwo.getI();
+		SetConsoleCursorPosition(consoleHandle, coord);
+		std::cout << keyWarningTwo;
+	}
 }

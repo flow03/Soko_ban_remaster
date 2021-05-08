@@ -24,10 +24,10 @@ private:
 
 void MenuInit();
 
-void MenuOut(int);
+void out_Menu(int);
 
-void YesNoOut(bool);
+void out_YesNo(bool);
 
-void RenderSettings(int, char &);
+void out_RenderSettings(int, char &);
 
-void WrongKeyWarning(char);
+void out_WrongKey(char);

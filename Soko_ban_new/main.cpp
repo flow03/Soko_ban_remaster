@@ -810,7 +810,7 @@ void MoveHeroTo(int row, int column)
 bool KeyValidation(int key)
 {
 	return	(key >= 65 && key <= 90) &&
-			(key != 'W' && key != 'S' && key != 'A' && key != 'D' && key != 27);
+		(key != 'W' && key != 'S' && key != 'A' && key != 'D' && key != 27);
 }
 
 int ReadKey()

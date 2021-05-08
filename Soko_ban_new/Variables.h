@@ -112,7 +112,7 @@ TCHAR szbuff[255];		// StringCchPrintf
 CONSOLE_FONT_INFOEX defaultFont;
 time_t start_time = 0;
 time_t total_time;
-int RestartKey = 'R';
+unsigned char RestartKey = 'R';
 
 bool isGameStart = false;
 bool isGameActive = true;

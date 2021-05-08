@@ -1,7 +1,7 @@
 #include "MainMenu.h"
 
 const unsigned char symbolHero = 2;
-extern int RestartKey;
+extern unsigned char RestartKey;
 
 // extern
 void NextLevel(int); 
@@ -40,25 +40,21 @@ bool ExitAsk()
 
 	do {
 		// Render
-		YesNoOut(ask);
+		out_YesNo(ask);
 
 		// Update
-		char Key = _getch();
+		char Key = ReadKey();
 
 		switch (Key)
 		{
 		// Left
-		case 'a':
 		case 'A':
-		case 75:
 		{
 			ask = true;
 			break;
 		}
 		// Right
-		case 'd':
 		case 'D':
-		case 77:
 		{
 			ask = false;
 			break;
@@ -114,25 +110,21 @@ bool NewAsk()
 
 	do {
 		// Render
-		YesNoOut(ask);
+		out_YesNo(ask);
 
 		// Update
-		char Key = _getch();
+		char Key = ReadKey();
 
 		switch (Key)
 		{
-			// Left
-		case 'a':
+		// Left
 		case 'A':
-		case 75:
 		{
 			ask = true;
 			break;
 		}
 		// Right
-		case 'd':
 		case 'D':
-		case 77:
 		{
 			ask = false;
 			break;
@@ -170,78 +162,7 @@ void NewGame()
 	}
 }
 // internal	
-void UpdateMenu(int &selector, int up, int down)
-{
-	// Render
-	MenuOut(selector);
 
-	// Update
-	char Key = _getch();
-
-	switch (Key)
-	{
-		// Arrow down
-	case 80:
-	case 's':
-	case 'S':
-	{
-		selector++;
-		if (selector > up)
-			selector = down;
-
-		break;
-	}
-	// Arrow up
-	case 72:
-	case 'w':
-	case 'W':
-	{
-		selector--;
-		if (selector < down)
-			selector = up;
-
-		break;
-	}
-	// Enter
-	case 13:
-	{
-		if (selector == 0)	// Continue
-		{
-			isMenuActive = false;
-		}
-		else if (selector == 1)	// New
-		{
-			NewGame();
-		}
-		else if (selector == 2)	// Save/Load
-		{
-			GameLoadMenu();
-		}
-		else if (selector == 3)	// Settings
-		{
-			NewSettings();
-		}
-		else if (selector == 4)	// Statistic
-		{
-			Statistic();
-		}
-		else if (selector == 5)	// Exit
-		{
-			if (ExitAsk())
-			{
-				isGameActive = false;
-				isMenuActive = false;
-			}
-		}
-		break;
-	}
-	// Esc
-	case 27:
-		if (isGameStart) isMenuActive = false;	// Cancel
-		else ExitAsk();
-		break;
-	}
-}
 
 void UpdateSettings(int &selector, char &key, bool &isSettingsActive)
 {
@@ -310,7 +231,20 @@ void UpdateSettings(int &selector, char &key, bool &isSettingsActive)
 	}
 	// Enter
 	case 13:
-		if (selector == 2)
+		if (selector == 0)		// Language
+		{
+			Localization++;
+			if (Localization > 3) Localization = 1;
+			MenuInit();
+		}
+		else if (selector == 1)	// Font
+		{
+			font++;
+			if (font > 1) font = 0;
+			SetupFont();
+			CenterWindow();
+		}
+		else if (selector == 2)	// Restart key
 		{
 			SetConsoleCursorPosition(consoleHandle, COORD{ 59, 8 });
 			printColorText(consoleHandle, '_', Yellow);
@@ -322,7 +256,6 @@ void UpdateSettings(int &selector, char &key, bool &isSettingsActive)
 			}
 			else key = tempKey;
 		}
-		//isSettingsActive = false;
 		break;
 	// Esc
 	case 27:
@@ -342,45 +275,94 @@ void MainMenu()
 	// Select
 	int up = 5;
 	int down = 0;
-
 	if (!isGameStart) down = 1;
-
 	int selector = down;
+
+	auto UpdateMenu = [&selector](int up, int down)
+	{
+		// Render
+		out_Menu(selector);
+
+		// Update
+		char Key = ReadKey();
+
+		switch (Key)
+		{
+		// Arrow down
+		case 'S':
+		{
+			selector++;
+			if (selector > up)
+				selector = down;
+
+			break;
+		}
+		// Arrow up
+		case 'W':
+		{
+			selector--;
+			if (selector < down)
+				selector = up;
+
+			break;
+		}
+		// Enter
+		case 13:
+		{
+			if (selector == 0)	// Continue
+			{
+				isMenuActive = false;
+			}
+			else if (selector == 1)	// New
+			{
+				NewGame();
+			}
+			else if (selector == 2)	// Save/Load
+			{
+				GameLoadMenu();
+			}
+			else if (selector == 3)	// Settings
+			{
+				NewSettings();
+			}
+			else if (selector == 4)	// Statistic
+			{
+				Statistic();
+			}
+			else if (selector == 5)	// Exit
+			{
+				if (ExitAsk())
+				{
+					isGameActive = false;
+					isMenuActive = false;
+				}
+			}
+			break;
+		}
+		// Esc
+		case 27:
+			if (isGameStart) isMenuActive = false;	// Cancel
+			else if (ExitAsk())
+			{
+				isGameActive = false;
+				isMenuActive = false;
+			}
+			break;
+		}
+	};
 
 	isMenuActive = true;
 	do
 	{
-		UpdateMenu(selector, up, down);
-	} while (isMenuActive == true);
+		UpdateMenu(up, down);
+	} 
+	while (isMenuActive == true);
 
 
 	system("cls");
 
 	if (isGameActive) Description();
 }
-
-//void Settings()
-//{
-//	system("cls");
-//	// Select Language
-//	isMenuActive = true;
-//	do
-//	{
-//		RenderLanguage();
-//		UpdateLanguage();
-//	} while (isMenuActive == true);
-//
-//	// Select Font Size
-//	isMenuActive = true;
-//	do
-//	{
-//		RenderFont();
-//		UpdateFont();
-//	} while (isMenuActive == true);
-//
-//	system("cls");
-//	isMenuActive = true;
-//}
 
 void NewSettings()
 {
@@ -392,7 +374,7 @@ void NewSettings()
 
 	do
 	{
-		RenderSettings(selector, key);
+		out_RenderSettings(selector, key);
 		UpdateSettings(selector, key, isSettingsActive);
 	} 
 	while (isSettingsActive == true);
@@ -508,7 +490,7 @@ void GameLoadMenu()
 
 	system("cls");
 
-	SaveDescription();	// one time output
+	out_SaveDescription();	// one time output
 
 	do UpdateLoad();
 	while (LoadMenuActive == true);

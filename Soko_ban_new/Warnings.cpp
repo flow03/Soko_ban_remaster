@@ -610,7 +610,7 @@ void Statistic()
 	system("cls");
 }
 
-void SaveDescription()
+void out_SaveDescription()
 {
 	SetConsoleCursorPosition(consoleHandle, COORD{ 0, 22 });
 
