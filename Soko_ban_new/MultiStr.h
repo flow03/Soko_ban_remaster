@@ -31,3 +31,7 @@ void out_YesNo(bool);
 void out_RenderSettings(int, char &);
 
 void out_WrongKey(char);
+
+void out_LoadMenu(int);
+
+void out_SaveDescription();

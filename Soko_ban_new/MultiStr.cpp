@@ -6,9 +6,11 @@ extern bool isGameStart;
 extern unsigned char RestartKey;
 const unsigned char symbolHero = 2;
 
-MultiStr continueStr, newGameStr, loadStr, settingsStr, staticsticStr, exitStr;
+MultiStr continueStr, newGameStr, loadMenuStr, settingsStr, staticsticStr, exitStr;
 MultiStr strYes, strNo;
-MultiStr attentionSrt, keyWarningOne, keyWarningTwo;
+MultiStr attentionStr, keyWarningOne, keyWarningTwo, saveWarning;
+MultiStr cancelStr, saveStr, loadStr;
+
 
 MultiStr::MultiStr()
 {
@@ -43,50 +45,65 @@ void MenuInit()
 	case 1: //UA
 		continueStr = "Продовжити";
 		newGameStr = "Нова гра";
-		loadStr = "Завантажити/Зберегти";
+		loadMenuStr = "Завантажити/Зберегти";
 		settingsStr = "Налаштування";
 		staticsticStr = "Статистика";
 		exitStr = "Вихiд";
 
 		strYes = "Так";
 		strNo = "Hi";
-		attentionSrt = "Увага!";
+		attentionStr = "Увага!";
 		keyWarningOne = "Клавiшi W, A, S, D, Esc та стрiлки не можуть перезапускати гру";
 		keyWarningTwo = "Перезапускати гру можна тiльки клавiшами латинського алфавiту A-Z";
+		saveWarning = "Буде збережена тiльки статистика гравця, досягнення та поточний рiвень";
+
+		saveStr = "Зберегти";
+		loadStr = "Завантажити";
+		cancelStr = "Назад";
 
 		break;
 	case 2: //RU
 		continueStr = "Продолжить";
 		newGameStr = "Новая игра";
-		loadStr = "Сохранить/Загрузить";
+		loadMenuStr = "Сохранить/Загрузить";
 		settingsStr = "Настройки";
 		staticsticStr = "Статистика";
 		exitStr = "Выход";
 
 		strYes = "Да";
 		strNo = "Нет";
-		attentionSrt = "Внимание!";
+		attentionStr = "Внимание!";
 		keyWarningOne = "Клавиши W, A, S, D, Esc и стрелочки отвечают за управление";
 		keyWarningTwo = "Допускаются только клавиши латиницы от A до Z";
+		saveWarning = "Игра сохраняет только статистику игрока, достижения и текущий уровень";
+
+		saveStr = "Сохранить игру";
+		loadStr = "Загрузить игру";
+		cancelStr = "Отмена";
 
 		break;
 	case 3: //ENG
 		continueStr = "Continue";
 		newGameStr = "New game";
-		loadStr = "Save/Load";
+		loadMenuStr = "Save/Load";
 		settingsStr = "Settings";
 		staticsticStr = "Statistic";
 		exitStr = "Exit";
 
 		strYes = "Yes";
 		strNo = "No";
-		attentionSrt = "Attention!";
+		attentionStr = "Attention!";
 		keyWarningOne = "Keys W, A, S, D, Esc and arrows couldn't restart the game";
 		keyWarningTwo = "Please, use A-Z keys only";
+		saveWarning = "The game only saves player statistics, achievements and current level";
+
+		saveStr = "Save";
+		loadStr = "Load";
+		cancelStr = "Cancel";
 
 		break;
 	default:
-		continueStr = newGameStr = loadStr = settingsStr = staticsticStr = exitStr = "";
+		continueStr = newGameStr = loadMenuStr = settingsStr = staticsticStr = exitStr = "";
 		break;
 	}
 }
@@ -119,14 +136,14 @@ void out_Menu(int selector)
 	else std::cout << "  " << newGameStr;
 	y += 2;
 
-	SetConsoleCursorPosition(consoleHandle, COORD{ loadStr.getI() - 2, y });
+	SetConsoleCursorPosition(consoleHandle, COORD{ loadMenuStr.getI() - 2, y });
 	if (selector == 2)
 	{
 		printColorText(consoleHandle, symbolHero, LightGreen);
 		std::cout << ' ';
-		printColorText(consoleHandle, loadStr, Yellow);
+		printColorText(consoleHandle, loadMenuStr, Yellow);
 	}
-	else std::cout << "  " << loadStr;
+	else std::cout << "  " << loadMenuStr;
 	y += 2;
 
 	SetConsoleCursorPosition(consoleHandle, COORD{ settingsStr.getI() - 2, y });
@@ -284,8 +301,8 @@ void out_WrongKey(char key)
 	SetConsoleCursorPosition(consoleHandle, coord);
 	std::cout << std::setw(80) << std::setfill(' ') << "";
 	std::cout << std::setw(80) << std::setfill(' ') << "";
-	SetConsoleCursorPosition(consoleHandle, COORD{ attentionSrt.getI(), coord.Y });
-	printColorText(consoleHandle, attentionSrt, Yellow);
+	SetConsoleCursorPosition(consoleHandle, COORD{ attentionStr.getI(), coord.Y });
+	printColorText(consoleHandle, attentionStr, Yellow);
 	coord.Y += 1;
 
 	if (!otherKey)
@@ -300,4 +317,60 @@ void out_WrongKey(char key)
 		SetConsoleCursorPosition(consoleHandle, coord);
 		std::cout << keyWarningTwo;
 	}
+}
+
+void out_LoadMenu(int selector)
+{
+	setlocale(LC_ALL, "Russian");
+	short y = 6;
+
+	if (isGameStart)
+	{
+		SetConsoleCursorPosition(consoleHandle, COORD{ saveStr.getI() - 2, y });
+		if (selector == 0)
+		{
+			printColorText(consoleHandle, symbolHero, LightGreen);
+			std::cout << ' ';
+			printColorText(consoleHandle, saveStr, Yellow);
+		}
+		else std::cout << "  " << saveStr;
+		y += 2;
+	}
+
+	SetConsoleCursorPosition(consoleHandle, COORD{ loadStr.getI() - 2, y });
+	if (selector == 1)
+	{
+		printColorText(consoleHandle, symbolHero, LightGreen);
+		std::cout << ' ';
+		printColorText(consoleHandle, loadStr, Yellow);
+	}
+	else std::cout << "  " << loadStr;
+	y += 2;
+
+	SetConsoleCursorPosition(consoleHandle, COORD{ cancelStr.getI() - 2, y });
+	if (selector == 2)
+	{
+		printColorText(consoleHandle, symbolHero, LightGreen);
+		std::cout << ' ';
+		printColorText(consoleHandle, cancelStr, Yellow);
+	}
+	else std::cout << "  " << cancelStr;
+	//y += 2;
+}
+
+void out_SaveDescription()
+{
+	COORD coord = { 0, 21 };
+
+	setlocale(LC_ALL, "Russian");
+	SetConsoleCursorPosition(consoleHandle, coord);
+	std::cout << std::setw(80) << std::setfill(' ') << "";
+	std::cout << std::setw(80) << std::setfill(' ') << "";
+	SetConsoleCursorPosition(consoleHandle, COORD{ attentionStr.getI(), coord.Y });
+	printColorText(consoleHandle, attentionStr, Yellow);
+	coord.Y += 1;
+
+	coord.X = saveWarning.getI();
+	SetConsoleCursorPosition(consoleHandle, coord);
+	std::cout << saveWarning;
 }

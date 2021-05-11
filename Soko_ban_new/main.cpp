@@ -942,7 +942,6 @@ void Shutdown()
 
 int main()
 {
-	//MultiStr s("abcdefg");
 	SetupSystem();
 
 	MainMenu();
@@ -957,6 +956,7 @@ int main()
 	} 
 	while ( isGameActive );
 
+	if (isGameStart) Statistic();
 	Shutdown();
 	
 	return 0;

@@ -389,52 +389,15 @@ void GameLoadMenu()
 	Save savegame;
 	int down = 0;
 	if (!isGameStart) down = 1;
-	int selector = down;
+	int selector = 2;	// Cancel
 
 	auto UpdateLoad = [&selector, &savegame, &LoadMenuActive, down]()
 	{
 		// Render
-		SetConsoleCursorPosition(consoleHandle, COORD{ 0, 6 });
-		setlocale(LC_ALL, "Russian");
-
-		if (isGameStart)
-		{
-			std::cout << "\t\t\t     ";
-			if (selector == 0)
-			{
-				printColorText(consoleHandle, symbolHero, LightGreen);
-				printColorText(consoleHandle, " Сохранить игру\n", Yellow);
-			}
-			else
-			{
-				std::cout << "  Сохранить игру   \n";
-			}
-		}
-
-		std::cout << "\n\t\t\t     ";
-		if (selector == 1)
-		{
-			printColorText(consoleHandle, symbolHero, LightGreen);
-			printColorText(consoleHandle, " Загрузить игру\n", Yellow);
-		}
-		else
-		{
-			std::cout << "  Загрузить игру   \n";
-		}
-
-		std::cout << "\n\t\t\t     ";
-		if (selector == 2)
-		{
-			printColorText(consoleHandle, symbolHero, LightGreen);
-			printColorText(consoleHandle, " Отмена\n", Yellow);
-		}
-		else
-		{
-			std::cout << "  Отмена   \n";
-		}
+		out_LoadMenu(selector);
 
 		// Update
-		char Key = _getch();
+		char Key = ReadKey();
 
 		switch (Key)
 		{
@@ -471,7 +434,7 @@ void GameLoadMenu()
 				savegame.applySave();
 				std::queue<Warning> temp_warn;
 				warning.swap(temp_warn);
-				NextLevel(savegame.getLevel());
+				NextLevel(levelSelector);
 				isGameStart = true;
 				isMenuActive = false;
 			}

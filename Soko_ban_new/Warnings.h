@@ -51,5 +51,3 @@ void Description();
 void Counters(short &x_position);
 
 void Statistic();
-
-void out_SaveDescription();

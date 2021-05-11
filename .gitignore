@@ -262,3 +262,6 @@ __pycache__/
 
 # binary data files
 *.bin
+# images
+*.png
+*.jpg

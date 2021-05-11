@@ -609,32 +609,3 @@ void Statistic()
 
 	system("cls");
 }
-
-void out_SaveDescription()
-{
-	SetConsoleCursorPosition(consoleHandle, COORD{ 0, 22 });
-
-	setlocale(LC_ALL, "Russian");
-
-	switch (Localization)
-	{
-	case 1: //UA
-	{
-		printColorText(consoleHandle, " ”вага!", Yellow);
-		std::cout << " Ѕуде збережена тiльки статистика гравц€, дос€гненн€ та поточний рiвень";
-		break;
-	}
-	case 2: //RU
-	{
-		printColorText(consoleHandle, "  ¬нимание!", Yellow);
-		std::cout << " »гра сохран€ет только статистику игрока, достижени€ и текущий\n  уровень";
-		break;
-	}
-	case 3: //ENG
-	{
-		printColorText(consoleHandle, "  Attention!", Yellow);
-		std::cout << " The game only saves player statistics, achievements and current\n  level";
-		break;
-	}
-	}
-}
