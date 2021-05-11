@@ -32,9 +32,9 @@ inline void printColorText(HANDLE hStdOut, const char* text, int textColor)
 	SetColor(hStdOut, LightGray, Black);
 }
 
-inline void printColorText(HANDLE hStdOut, const unsigned char symbol, int textColor)
+inline void printColorText(HANDLE hStdOut, const unsigned char symbol, int textColor, std::ostream &out = std::cout)
 {
 	SetColor(hStdOut, textColor);
-	std::cout << symbol;
+	out << symbol;
 	SetColor(hStdOut, LightGray, Black);
 }

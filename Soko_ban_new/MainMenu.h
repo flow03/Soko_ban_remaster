@@ -26,3 +26,5 @@ void GameLoadMenu();
 void CenterWindow();
 
 void SetupFont();
+
+void SaveList();

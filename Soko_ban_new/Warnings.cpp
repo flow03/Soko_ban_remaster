@@ -545,12 +545,6 @@ void Statistic()
 	system("cls");
 	switch (Localization)
 	{
-	case 3:
-	{
-		setlocale(LC_ALL, "C");
-		printf("\n\t Well play. Press any key to exit...");
-		break;
-	}
 	case 2:
 	{
 		setlocale(LC_ALL, "RUS");
@@ -595,6 +589,12 @@ void Statistic()
 
 
 
+		break;
+	}
+	case 3:
+	{
+		setlocale(LC_ALL, "C");
+		printf("\n\t Well play. Press any key to exit...");
 		break;
 	}
 	case 1:

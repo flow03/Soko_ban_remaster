@@ -5,6 +5,7 @@
 #include <Windows.h>
 
 #include "ConsoleColor.h"
+#include "Save.h"
 
 extern int font;
 
@@ -35,3 +36,5 @@ void out_WrongKey(char);
 void out_LoadMenu(int);
 
 void out_SaveDescription();
+
+void out_SaveList(std::vector<Save> &, int);

@@ -374,3 +374,18 @@ void out_SaveDescription()
 	SetConsoleCursorPosition(consoleHandle, coord);
 	std::cout << saveWarning;
 }
+
+void out_SaveList(std::vector<Save>&saves, int selector)
+{
+	SetConsoleCursorPosition(consoleHandle, COORD{ 0, 0 });
+
+	int i = 0;
+	for (auto iter = saves.rbegin(); iter != saves.rend(); ++iter)
+	{
+		if (i == selector) SetColor(consoleHandle, Yellow);
+		std::cout << *iter << std::endl << std::endl;
+		++i;
+	}
+
+	//_getch();
+}

@@ -391,6 +391,8 @@ void GameLoadMenu()
 	if (!isGameStart) down = 1;
 	int selector = 2;	// Cancel
 
+	
+
 	auto UpdateLoad = [&selector, &savegame, &LoadMenuActive, down]()
 	{
 		// Render
@@ -426,17 +428,21 @@ void GameLoadMenu()
 		{
 			if (selector == 0)	// Save
 			{
-				savegame.SaveToFile();
+				AppendSave();
+				//savegame.SaveToFile();
 			}
 			else if (selector == 1)	// Load
 			{
-				savegame.LoadFromFile();
+				LoadAllSaves();
+				if (!Saves.empty()) SaveList();
+				//out_SaveList(Saves);
+				/*savegame.LoadFromFile();
 				savegame.applySave();
 				std::queue<Warning> temp_warn;
 				warning.swap(temp_warn);
 				NextLevel(levelSelector);
 				isGameStart = true;
-				isMenuActive = false;
+				isMenuActive = false;*/
 			}
 
 			LoadMenuActive = false;
@@ -499,4 +505,62 @@ void SetupFont()
 	SetCurrentConsoleFontEx(consoleHandle, TRUE, &fontInfo); // Установить измененный шрифт
 
 	CenterWindow();
+}
+
+void SaveList()
+{
+	//LoadAllSaves();
+	bool ListMenuActive = true;
+	int up = static_cast<int>(Saves.size()) - 1;
+	//if (!isGameStart) down = 1;
+	int selector = 0;	// Cancel
+	
+	auto UpdateList = [&selector, &ListMenuActive, up]()
+	{
+		char Key = ReadKey();
+
+		switch (Key)
+		{
+		// Arrow down
+		case 'S':
+		{
+			selector++;
+			if (selector > up)
+				selector = 0;
+			break;
+		}
+		// Arrow up
+		case 'W':
+		{
+			selector--;
+			if (selector < 0)
+				selector = up;
+			break;
+		}
+		// Enter
+		case 13:
+		{
+			
+
+			ListMenuActive = false;
+			break;
+		}
+		// Esc
+		case 27:
+		{
+			ListMenuActive = false;	// Cancel
+			break;
+		}
+		}
+	};
+
+	system("cls");
+	do
+	{
+		out_SaveList(Saves, selector);	// Render
+		UpdateList();					// Update
+	}
+	while (ListMenuActive == true);
+
+	system("cls");
 }

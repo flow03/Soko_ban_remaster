@@ -2,9 +2,8 @@
 #include <fstream>
 
 #include "Achievements.h"
+#include "ConsoleColor.h"
 
-//extern HANDLE consoleHandle;
-//extern int Localization;
 
 struct Save
 {
@@ -16,7 +15,7 @@ struct Save
 
 	void LoadFromFile();
 
-	int getLevel();
+	friend std::ostream& operator<< (std::ostream &, const Save &);
 
 private:
 	// Global counters
@@ -37,7 +36,8 @@ private:
 	bool OnMyWay_A;
 	bool AllMines_A;
 
-	time_t t_time;
+	//time_t t_time;
+	struct tm current_tm;
 
 	//int heroRow;
 	//int heroColumn;
@@ -53,3 +53,9 @@ private:
 	//bool futureSelector = false;
 	//bool portalWarn = false;
 };
+
+void LoadAllSaves();
+
+void AppendSave();
+
+extern std::vector<Save> Saves;
