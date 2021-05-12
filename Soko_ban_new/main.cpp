@@ -236,7 +236,7 @@ void NextLevel(int new_level)
 	if (levelSelector > 4) isGameActive = false;
 	//else isGameActive = true;
 
-	if (isGameActive && isGameStart) Description();
+	if (isGameActive && isGameStart && !isMenuActive) Description();
 }
 
 void Render()
@@ -956,7 +956,7 @@ int main()
 	} 
 	while ( isGameActive );
 
-	if (isGameStart) Statistic();
+	//if (isGameStart) Statistic();
 	Shutdown();
 	
 	return 0;

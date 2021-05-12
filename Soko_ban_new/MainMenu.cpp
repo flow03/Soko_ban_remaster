@@ -385,13 +385,12 @@ void NewSettings()
 
 void GameLoadMenu()
 {
+	LoadAllSaves();
 	bool LoadMenuActive = true;
 	Save savegame;
 	int down = 0;
 	if (!isGameStart) down = 1;
 	int selector = 2;	// Cancel
-
-	
 
 	auto UpdateLoad = [&selector, &savegame, &LoadMenuActive, down]()
 	{
@@ -428,14 +427,15 @@ void GameLoadMenu()
 		{
 			if (selector == 0)	// Save
 			{
-				AppendSave();
+				
+				//LoadAllSaves();
+				SaveList();
 				//savegame.SaveToFile();
 			}
 			else if (selector == 1)	// Load
 			{
-				LoadAllSaves();
-				if (!Saves.empty()) SaveList();
-				//out_SaveList(Saves);
+				//LoadAllSaves();
+				if (!Saves.empty()) LoadList();
 				/*savegame.LoadFromFile();
 				savegame.applySave();
 				std::queue<Warning> temp_warn;
@@ -507,13 +507,13 @@ void SetupFont()
 	CenterWindow();
 }
 
-void SaveList()
+void LoadList()
 {
 	//LoadAllSaves();
 	bool ListMenuActive = true;
 	int up = static_cast<int>(Saves.size()) - 1;
 	//if (!isGameStart) down = 1;
-	int selector = 0;	// Cancel
+	int selector = 0;
 	
 	auto UpdateList = [&selector, &ListMenuActive, up]()
 	{
@@ -540,9 +540,11 @@ void SaveList()
 		// Enter
 		case 13:
 		{
-			
+			(Saves.rbegin() + selector)->ApplySave();
 
+			isGameStart = true;
 			ListMenuActive = false;
+			isMenuActive = false;
 			break;
 		}
 		// Esc
@@ -561,6 +563,65 @@ void SaveList()
 		UpdateList();					// Update
 	}
 	while (ListMenuActive == true);
+
+	system("cls");
+}
+
+void SaveList()
+{
+	//LoadAllSaves();
+	bool ListMenuActive = true;
+	//int up = static_cast<int>(Saves.size()) - 1;
+	//if (!isGameStart) down = 1;
+	int selector = 0;
+
+	auto UpdateList = [&selector, &ListMenuActive]()
+	{
+		char Key = ReadKey();
+
+		switch (Key)
+		{
+		// Arrow down
+		case 'S':
+		{
+			selector++;
+			if (selector > 5)
+				selector = 0;
+			break;
+		}
+		// Arrow up
+		case 'W':
+		{
+			selector--;
+			if (selector < 0)
+				selector = 5;
+			break;
+		}
+		// Enter
+		case 13:
+		{
+			//(Saves.rbegin() + selector)->ApplySave();
+			
+			//isGameStart = true;
+			ListMenuActive = false;
+			//isMenuActive = false;
+			break;
+		}
+		// Esc
+		case 27:
+		{
+			ListMenuActive = false;	// Cancel
+			break;
+		}
+		}
+	};
+
+	system("cls");
+	do
+	{
+		out_SaveList(Saves, selector);	// Render
+		UpdateList();					// Update
+	} while (ListMenuActive == true);
 
 	system("cls");
 }

@@ -4,12 +4,15 @@
 #include "Achievements.h"
 #include "ConsoleColor.h"
 
+extern bool isGameStart;
+void NextLevel(int);
+
 
 struct Save
 {
 	Save();
 
-	void applySave() const;
+	void ApplySave() const;
 
 	void SaveToFile();
 

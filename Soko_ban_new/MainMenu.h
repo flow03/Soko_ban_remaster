@@ -27,4 +27,6 @@ void CenterWindow();
 
 void SetupFont();
 
+void LoadList();
+
 void SaveList();

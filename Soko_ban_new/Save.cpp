@@ -30,7 +30,7 @@ Save::Save()
 	this->l_Selector = levelSelector;
 };
 
-void Save::applySave() const
+void Save::ApplySave() const
 {
 	global_Crystals = this->g_Crystals;
 	global_Keys = this->g_Keys;
@@ -49,6 +49,11 @@ void Save::applySave() const
 	AllMinesAchieve_ = this->AllMines_A;
 
 	levelSelector = this->l_Selector;
+
+	std::queue<Warning> temp_warn;
+	warning.swap(temp_warn);
+	NextLevel(levelSelector);
+	//isGameStart = true;
 }
 
 void Save::SaveToFile()
