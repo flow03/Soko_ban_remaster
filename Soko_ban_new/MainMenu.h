@@ -21,7 +21,7 @@ void MainMenu();
 
 void NewSettings();
 
-void GameLoadMenu();
+void SaveLoadMenu();
 
 void CenterWindow();
 

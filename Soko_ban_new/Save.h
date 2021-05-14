@@ -18,6 +18,10 @@ struct Save
 
 	void LoadFromFile();
 
+	void outDate();
+
+	void outParam();
+
 	friend std::ostream& operator<< (std::ostream &, const Save &);
 
 private:
@@ -57,8 +61,10 @@ private:
 	//bool portalWarn = false;
 };
 
+extern std::vector<Save> Saves;
+
 void LoadAllSaves();
 
 void AppendSave();
 
-extern std::vector<Save> Saves;
+void RemoveSave(int);

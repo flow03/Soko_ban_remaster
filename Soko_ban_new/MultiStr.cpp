@@ -377,13 +377,27 @@ void out_SaveDescription()
 
 void out_SaveList(std::vector<Save>&saves, int selector)
 {
-	SetConsoleCursorPosition(consoleHandle, COORD{ 0, 0 });
-
+	//SetConsoleCursorPosition(consoleHandle, COORD{ 0, 0 });
+	short x1 = static_cast<short>(40 - (25 / 2 + 1));
+	//short x2 = static_cast<short>(40 - (22 / 2 + 1));
+	COORD coord = { x1, 3 };
 	int i = 0;
+
 	for (auto iter = saves.rbegin(); iter != saves.rend(); ++iter)
 	{
-		if (i == selector) SetColor(consoleHandle, Yellow);
-		std::cout << *iter << std::endl << std::endl;
+		SetConsoleCursorPosition(consoleHandle, coord);
+		if (i == selector)
+		{
+			SetColor(consoleHandle, Yellow);
+			iter->outDate(); 
+			SetColor(consoleHandle, LightGray);
+		}
+		else iter->outDate();
+
+		coord.Y++;
+		SetConsoleCursorPosition(consoleHandle, coord);
+		iter->outParam();
+		coord.Y += 2;
 		++i;
 	}
 

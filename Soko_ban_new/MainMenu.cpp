@@ -319,7 +319,7 @@ void MainMenu()
 			}
 			else if (selector == 2)	// Save/Load
 			{
-				GameLoadMenu();
+				SaveLoadMenu();
 			}
 			else if (selector == 3)	// Settings
 			{
@@ -383,7 +383,7 @@ void NewSettings()
 	//isMenuActive = true;
 }
 
-void GameLoadMenu()
+void SaveLoadMenu()
 {
 	LoadAllSaves();
 	bool LoadMenuActive = true;
@@ -509,10 +509,8 @@ void SetupFont()
 
 void LoadList()
 {
-	//LoadAllSaves();
 	bool ListMenuActive = true;
 	int up = static_cast<int>(Saves.size()) - 1;
-	//if (!isGameStart) down = 1;
 	int selector = 0;
 	
 	auto UpdateList = [&selector, &ListMenuActive, up]()
@@ -569,13 +567,11 @@ void LoadList()
 
 void SaveList()
 {
-	//LoadAllSaves();
 	bool ListMenuActive = true;
-	//int up = static_cast<int>(Saves.size()) - 1;
-	//if (!isGameStart) down = 1;
+	int up = static_cast<int>(Saves.size()) - 1;
 	int selector = 0;
 
-	auto UpdateList = [&selector, &ListMenuActive]()
+	auto UpdateList = [&selector, &ListMenuActive, up]()
 	{
 		char Key = ReadKey();
 
@@ -585,7 +581,7 @@ void SaveList()
 		case 'S':
 		{
 			selector++;
-			if (selector > 5)
+			if (selector > up)
 				selector = 0;
 			break;
 		}
@@ -594,14 +590,14 @@ void SaveList()
 		{
 			selector--;
 			if (selector < 0)
-				selector = 5;
+				selector = up;
 			break;
 		}
 		// Enter
 		case 13:
 		{
 			//(Saves.rbegin() + selector)->ApplySave();
-			
+			RemoveSave(selector);
 			//isGameStart = true;
 			ListMenuActive = false;
 			//isMenuActive = false;

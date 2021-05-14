@@ -84,6 +84,35 @@ void Save::LoadFromFile()
 	fin.close();
 }
 
+void Save::outDate()
+{
+	char time_buffer[50];
+	strftime(time_buffer, 50, "%T %d.%m.%G %a", &this->current_tm);
+	std::cout << time_buffer << std::endl;
+}
+
+void Save::outParam()
+{
+	size_t width = 3;
+
+	setlocale(LC_ALL, "C");
+
+	std::cout << std::setw(width) << this->g_Crystals;
+	printColorText(consoleHandle, symbolCrystal, Magenta, std::cout);
+
+	std::cout << std::setw(width) << this->g_Keys;
+	printColorText(consoleHandle, symbolKey, LightMagenta, std::cout);
+
+	std::cout << std::setw(width) << this->g_Boxes;
+	printColorText(consoleHandle, symbolBox, Yellow, std::cout);
+
+	std::cout << std::setw(width) << this->g_Bombs;
+	printColorText(consoleHandle, symbolBomb, Red, std::cout);
+
+	std::cout << "  Level " << this->l_Selector;
+	setlocale(LC_ALL, "RUS");
+}
+
 std::ostream & operator<<(std::ostream &out, const Save &save)
 {
 	size_t width = 3;
@@ -98,7 +127,7 @@ std::ostream & operator<<(std::ostream &out, const Save &save)
 	//out << time_buffer;
 
 	setlocale(LC_ALL, "C");
-	SetColor(consoleHandle, LightGray);
+	//SetColor(consoleHandle, LightGray);
 
 	out << std::setw(width) << save.g_Crystals;
 	printColorText(consoleHandle, symbolCrystal, Magenta, out);
@@ -133,6 +162,7 @@ void LoadAllSaves()
 		{
 			Saves.push_back(temp);
 		}
+
 		if (fin.eof()) fin.clear();
 		else
 		{
@@ -145,7 +175,7 @@ void LoadAllSaves()
 	fin.close();
 }
 
-void AppendSave()
+void AppendSave()	// Write
 {
 	using namespace std;
 
@@ -162,4 +192,28 @@ void AppendSave()
 		cerr << "Error on attempted write\n";
 
 	fout.close();
+}
+
+void RemoveSave(int selector)
+{
+	//std::vector<Save>::reverse_iterator iter = Saves.rbegin() + selector;
+	std::vector<Save>::iterator iter = (Saves.end() - 1) - selector;
+	//Saves.erase(iter.base());
+	Saves.erase(iter);
+
+	using namespace std;
+
+	ofstream fout("Saves.bin", ios::out | ios::trunc | ios::binary);
+	if (fout.is_open())
+	{
+		for (const Save &save : Saves)
+			fout.write((char *)&save, sizeof save);
+	}
+	else cout << "File open to rewrite error";
+
+	if (fout.fail())
+		cerr << "Error on write attempt\n";
+
+	fout.close();
+
 }
