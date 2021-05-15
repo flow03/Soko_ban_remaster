@@ -3,8 +3,8 @@
 
 #include "Achievements.h"
 #include "ConsoleColor.h"
+#include "Global_Variables.h"
 
-extern bool isGameStart;
 void NextLevel(int);
 
 

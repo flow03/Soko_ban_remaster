@@ -1,7 +1,8 @@
 #include "MainMenu.h"
 
-const unsigned char symbolHero = 2;
-extern unsigned char RestartKey;
+//const unsigned char symbolHero = 2;
+//extern unsigned char RestartKey;
+extern MultiStr saveStr, loadStr;
 
 // extern
 void NextLevel(int); 
@@ -538,9 +539,8 @@ void LoadList()
 		// Enter
 		case 13:
 		{
-			(Saves.rbegin() + selector)->ApplySave();
+			Confirmation(loadStr, [&selector]() { (Saves.rbegin() + selector)->ApplySave(); });
 
-			isGameStart = true;
 			ListMenuActive = false;
 			isMenuActive = false;
 			break;
@@ -596,10 +596,10 @@ void SaveList()
 		// Enter
 		case 13:
 		{
-			//(Saves.rbegin() + selector)->ApplySave();
-			RemoveSave(selector);
-			//isGameStart = true;
-			ListMenuActive = false;
+			Confirmation(saveStr, [&selector]() { AppendSave(); });
+			
+			//RemoveSave(selector);
+			//ListMenuActive = false;
 			//isMenuActive = false;
 			break;
 		}
@@ -618,6 +618,57 @@ void SaveList()
 		out_SaveList(Saves, selector);	// Render
 		UpdateList();					// Update
 	} while (ListMenuActive == true);
+
+	system("cls");
+}
+
+template <class f_type>
+void Confirmation(MultiStr str, f_type func)
+{
+	bool Active = true;
+	bool selector = true;
+
+	auto Update = [&selector, &Active, &func]()
+	{
+		char Key = ReadKey();
+
+		switch (Key)
+		{
+		// Arrow left
+		case 'A':
+		{
+			selector = true;
+			break;
+		}
+		// Arrow right
+		case 'D':
+		{
+			selector = false;
+			break;
+		}
+		// Enter
+		case 13:
+		{
+			if (selector) func();
+			else RemoveSave(selector);
+			Active = false;
+			break;
+		}
+		// Esc
+		case 27:
+		{
+			Active = false;	// Cancel
+			break;
+		}
+		}
+	};
+
+	//system("cls");
+	do
+	{
+		out_Confirmation(str, selector);
+		Update();
+	} while (Active == true);
 
 	system("cls");
 }

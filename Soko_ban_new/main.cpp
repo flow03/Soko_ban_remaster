@@ -14,11 +14,11 @@
 #include <vector>
 #include <queue>		// #include <deque>
 
-#include "Variables.h"
+#include "Global_Variables.h"
 #include "ConsoleColor.h"
 #include "Achievements.h"
 #include "Warnings.h"
-#include "Level_3.h"
+#include "Functions.h"
 #include "Save.h"
 #include "MultiStr.h"
 #include "MainMenu.h"

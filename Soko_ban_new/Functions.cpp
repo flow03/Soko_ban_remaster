@@ -1,26 +1,8 @@
-#pragma once
-
-const unsigned char levelData3sub[rowsCount3][columnsCount] = {
-	"############22#",
-	"#   X   X  #  #",
-	"#X  X  X XX#tt#",
-	"#  ####### #  #",
-	"#  # v   # #  #",
-	"#XX# #   # #  #",
-	"#  # ##### #tt#",
-	"#  #       #  #",
-	"#XX#########  #",
-	"#  b   bXXXXtt#",
-	"#    b tXXXX  #",
-	"###############",
-	"               ",
-};
-
-//void InitVectors();
+#include "Functions.h"
 
 void Initialise(const unsigned char(*)[columnsCount], const unsigned char(*)[columnsCount]);
 
-void RandomizeCrystals(int crystalCount, short clear_x = heroRow, short clear_y = heroColumn)
+void RandomizeCrystals(int crystalCount, short clear_x, short clear_y)
 {
 	std::vector<COORD> crystals;
 	crystals.reserve((rowsCount3 - 5) * (columnsCount - 5)); // 8 * 11 = 88 - 6 = 82
@@ -88,7 +70,7 @@ void RandomizeCrystals(int crystalCount, short clear_x = heroRow, short clear_y 
 	}
 }
 
-void ClearCrystals() 
+void ClearCrystals()
 {
 	for (short i = 2; i < rowsCount3 - 3; ++i)
 		for (short j = 2; j < columnsCount - 3; ++j)
@@ -162,7 +144,7 @@ void LoadPastFunction()
 
 	Initialise(std::begin(Past), std::end(Past));
 	//InitVectors();
-	
+
 	markedBoxes = pastBoxes;
 
 	levelSelector = 3;
@@ -199,10 +181,10 @@ void CheckBomb(short x, short  y)
 			break;
 		}
 	}
-	
+
 	if (markedMines.size() == 0)
 	{
-		markedMines.push_back(COORD{0, 0});
+		markedMines.push_back(COORD{ 0, 0 });
 
 		if (levelSelector == 2)
 			a_lvl2_Mines = true;

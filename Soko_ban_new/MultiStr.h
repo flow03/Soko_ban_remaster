@@ -5,9 +5,8 @@
 #include <Windows.h>
 
 #include "ConsoleColor.h"
+#include "Global_Variables.h"
 #include "Save.h"
-
-extern int font;
 
 class MultiStr
 {
@@ -21,7 +20,6 @@ private:
 	const char * str;
 	short indent;
 };
-
 
 void MenuInit();
 
@@ -38,3 +36,5 @@ void out_LoadMenu(int);
 void out_SaveDescription();
 
 void out_SaveList(std::vector<Save> &, int);
+
+void out_Confirmation(MultiStr, bool);

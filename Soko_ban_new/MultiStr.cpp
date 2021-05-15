@@ -1,15 +1,10 @@
 #include "MultiStr.h"
 
-extern HANDLE consoleHandle;
-extern int Localization;
-extern bool isGameStart;
-extern unsigned char RestartKey;
-const unsigned char symbolHero = 2;
 
 MultiStr continueStr, newGameStr, loadMenuStr, settingsStr, staticsticStr, exitStr;
 MultiStr strYes, strNo;
 MultiStr attentionStr, keyWarningOne, keyWarningTwo, saveWarning;
-MultiStr cancelStr, saveStr, loadStr;
+MultiStr cancelStr, saveStr, loadStr, removeStr;
 
 
 MultiStr::MultiStr()
@@ -59,6 +54,7 @@ void MenuInit()
 
 		saveStr = "Зберегти";
 		loadStr = "Завантажити";
+		removeStr = "Видалити";
 		cancelStr = "Назад";
 
 		break;
@@ -79,6 +75,7 @@ void MenuInit()
 
 		saveStr = "Сохранить игру";
 		loadStr = "Загрузить игру";
+		removeStr = "Удалить игру";
 		cancelStr = "Отмена";
 
 		break;
@@ -99,6 +96,7 @@ void MenuInit()
 
 		saveStr = "Save";
 		loadStr = "Load";
+		removeStr = "Delete";
 		cancelStr = "Cancel";
 
 		break;
@@ -402,4 +400,20 @@ void out_SaveList(std::vector<Save>&saves, int selector)
 	}
 
 	//_getch();
+}
+
+void out_Confirmation(MultiStr str, bool selector)
+{
+	COORD coord = { 0, 22 };
+	coord.X = str.getI();
+
+	setlocale(LC_ALL, "Russian");
+	SetConsoleCursorPosition(consoleHandle, coord);
+	if (selector) printColorText(consoleHandle, str, Yellow);
+	else std::cout << str;
+
+	std::cout << "    ";
+
+	if (!selector) printColorText(consoleHandle, removeStr, Yellow);
+	else std::cout << removeStr;
 }

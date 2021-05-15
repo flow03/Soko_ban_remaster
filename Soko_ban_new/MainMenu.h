@@ -12,10 +12,10 @@
 
 //extern int Localization;
 //extern HANDLE consoleHandle;
-extern bool isMenuActive;
-extern bool isGameActive;
-extern bool isGameStart;
-extern int font;
+//extern bool isMenuActive;
+//extern bool isGameActive;
+//extern bool isGameStart;
+//extern int font;
 
 void MainMenu();
 
@@ -30,3 +30,6 @@ void SetupFont();
 void LoadList();
 
 void SaveList();
+
+template <class f_type>
+void Confirmation(MultiStr str, f_type func);

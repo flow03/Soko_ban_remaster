@@ -129,20 +129,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Achievements.cpp" />
+    <ClCompile Include="Functions.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="MultiStr.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Save.cpp" />
+    <ClCompile Include="Variables.cpp" />
     <ClCompile Include="Warnings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Achievements.h" />
     <ClInclude Include="ConsoleColor.h" />
-    <ClInclude Include="Level_3.h" />
+    <ClInclude Include="Functions.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MultiStr.h" />
     <ClInclude Include="Save.h" />
-    <ClInclude Include="Variables.h" />
+    <ClInclude Include="Global_Variables.h" />
     <ClInclude Include="Warnings.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

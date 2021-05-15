@@ -1,5 +1,9 @@
 #pragma once
 
+#include <Windows.h>
+#include <vector>
+#include <ctime>
+
 // Level settings
 const int rowsCount = 18;
 const int columnsCount = 16;
@@ -95,45 +99,47 @@ const unsigned char symbolKey = 21;
 const unsigned char symbolBomb = 15;
 
 // Logic variables
-HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-unsigned char levelData[rowsCount][columnsCount]; // Change for need
-unsigned char Past[rowsCount3][columnsCount];
-unsigned char Future[rowsCount3][columnsCount];
-int heroRow = 0;
-int heroColumn = 0;
-int levelSelector = 3;	// Level
-int KeyCount = 0;
-int CrystalCount = 0;
-int CrystalMaxCount = 0;
-int randomCrystals = 10;
-int Localization = 2;	// Language
-int font = 1;			// Font
-TCHAR szbuff[255];		// StringCchPrintf
-CONSOLE_FONT_INFOEX defaultFont;
-time_t start_time = 0;
-time_t total_time;
-unsigned char RestartKey = 'R';
+extern HANDLE consoleHandle;
+extern unsigned char levelData[rowsCount][columnsCount]; // Change for need
+extern unsigned char Past[rowsCount3][columnsCount];
+extern unsigned char Future[rowsCount3][columnsCount];
+extern int heroRow;
+extern int heroColumn;
+extern int levelSelector;
+extern int KeyCount;
+extern int CrystalCount;
+extern int CrystalMaxCount;
+extern int randomCrystals;
+extern int Localization;
+extern int font;
+extern TCHAR szbuff[255];
+extern CONSOLE_FONT_INFOEX defaultFont;
+extern time_t start_time;
+extern time_t total_time;
+extern unsigned char RestartKey;
 
-bool isGameStart = false;
-bool isGameActive = true;
-bool isMenuActive = true;
-bool EasyMode = false;
-bool futureSelector = false;
-bool portalWarn = false;
+extern bool isGameStart;
+extern bool isGameActive;
+extern bool isMenuActive;
+extern bool EasyMode;
+extern bool futureSelector;
+extern bool portalWarn;
 
+typedef std::vector<COORD> vec;
 
+extern std::vector<vec> new_markedMines;
+extern std::vector<vec> new_markedBoxes;
 
-std::vector<COORD> markedMines;
-std::vector<COORD> markedBoxes;
-std::vector<COORD> futureMines;
-std::vector<COORD> futureBoxes;
-std::vector<COORD> pastBoxes;	// no mines in the past
+extern std::vector<COORD> markedMines;
+extern std::vector<COORD> markedBoxes;
+extern std::vector<COORD> futureMines;
+extern std::vector<COORD> futureBoxes;
+extern std::vector<COORD> pastBoxes;
 
 // Global counters
-int global_Crystals = 0;
-int global_Keys = 0;
-int global_Bombs = 0;
-int global_Portals = 0;
-int global_Boxes = 0;			// Всего ящиков подвигано раз
-int global_Restarts = 0;
-
+extern int global_Crystals;
+extern int global_Keys;
+extern int global_Bombs;
+extern int global_Portals;
+extern int global_Boxes;
+extern int global_Restarts;

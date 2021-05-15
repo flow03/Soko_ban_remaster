@@ -8,6 +8,7 @@
 
 #include "ConsoleColor.h"
 #include "Achievements.h"
+#include "Global_Variables.h"
 
 enum Warning
 {
@@ -24,23 +25,6 @@ enum Warning
 	secretBombRight,
 	secretBombDamn = 100,	// set enum range
 };
-
-extern int levelSelector;
-extern int Localization;
-extern HANDLE consoleHandle;
-extern int CrystalCount;
-extern int CrystalMaxCount;
-extern int KeyCount;
-extern time_t start_time;
-extern time_t total_time;
-
-// Global counters
-extern int global_Crystals;
-extern int global_Keys;
-extern int global_Bombs;
-extern int global_Portals;
-extern int global_Boxes;
-extern int global_Restarts;
 
 extern std::queue<Warning> warning;
 

@@ -1,11 +1,5 @@
 #include "Save.h"
 
-const unsigned char symbolBox = 254;
-const unsigned char symbolCrystal = 3;
-const unsigned char symbolPortal = 79;
-const unsigned char symbolKey = 21;
-const unsigned char symbolBomb = 15;
-
 Save::Save()
 {
 	this->g_Crystals = global_Crystals;
@@ -53,7 +47,7 @@ void Save::ApplySave() const
 	std::queue<Warning> temp_warn;
 	warning.swap(temp_warn);
 	NextLevel(levelSelector);
-	//isGameStart = true;
+	isGameStart = true;
 }
 
 void Save::SaveToFile()
@@ -215,5 +209,4 @@ void RemoveSave(int selector)
 		cerr << "Error on write attempt\n";
 
 	fout.close();
-
 }

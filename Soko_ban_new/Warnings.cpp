@@ -2,18 +2,6 @@
 
 std::queue<Warning> warning;
 
-// Symbols
-const unsigned char symbolHero = 2;
-const unsigned char symbolWall = 219;
-const unsigned char symbolBox = 254;
-const unsigned char symbolExit = 176;
-const unsigned char symbolCrystal = 3;
-const unsigned char symbolDoorV = 186;
-const unsigned char symbolDoorG = 205;
-const unsigned char symbolPortal = 79;
-const unsigned char symbolKey = 21;
-const unsigned char symbolBomb = 15;
-
 void Warnings(short &x_position) {
 
 	// new warning clear
